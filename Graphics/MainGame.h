@@ -27,6 +27,8 @@ class MainGame
 		void gameLoop();
 		void processInput();
 
+		void drawGame();
+
 		SDL_Window* _window;
 		int _screenWidth;
 		int _screenHeight;
