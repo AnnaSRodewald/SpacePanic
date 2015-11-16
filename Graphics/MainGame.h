@@ -20,10 +20,7 @@ class MainGame
 
 		void run();
 
-		
-
-
-
+	
 	private:
 		void initSystems();
 		void initShaders();
@@ -40,5 +37,7 @@ class MainGame
 		Sprite _sprite;
 
 		GLSLProgram _colorProgram;
+
+		float _time;
 	};
 

@@ -4,8 +4,10 @@
 in vec2 vertexPosition;
 in vec4 vertexColor;
 
+out vec2 fragmentPosition;
 //out = interpolation --- flat out = not interpolation
 out  vec4 fragmentColor;
+
 
 void main() {
 	//Set the x,y position on the screen
@@ -15,6 +17,8 @@ void main() {
 	
 	//Indicate that the coordinates are normalized
 	gl_Position.w = 1.0;	
+	 
+	fragmentPosition = vertexPosition;
 	
 	fragmentColor = vertexColor;
 }

@@ -15,18 +15,25 @@ class GLSLProgram
 
 		void addAttribute(const std::string& attributeName);
 
+		GLuint getUniformLocation(const std::string& uniformName);
+
 		void use();
 
 		void unuse();
 
+
 	private:
 		int _numAttributes;
+
+		void compileShaders(const std::string& filePath, GLuint shaderID);
 
 		GLuint _programID;
 
 		GLuint _vertexShaderID;
 		GLuint _fragmentShaderID;
 
-		void compileShaders(const std::string& filePath, GLuint shaderID);
+		
+
+
 	};
 

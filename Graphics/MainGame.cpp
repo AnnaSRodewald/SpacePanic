@@ -7,12 +7,14 @@
 #include "Errors.h"
 
 
-MainGame::MainGame(void)
+MainGame::MainGame(void) : 
+		_screenWidth(1024),   //Initialzation list
+		_screenHeight(768), 
+		_time(0),
+		_window(nullptr),
+		_gameState(GameState::PLAY)  
 	{
-	_window = nullptr;
-	_screenWidth = 1024;
-	_screenHeight = 768;
-	_gameState = GameState::PLAY;
+
 	}
 
 
@@ -75,6 +77,7 @@ void MainGame::gameLoop(){
 
 	while (_gameState != GameState::EXIT ){
 		processInput();
+		_time += 0.01;
 		drawGame();
 		}
 
@@ -97,12 +100,16 @@ void MainGame::processInput(){
 	}
 
 void MainGame::drawGame() {
+
 	//Set the base depth to 1.0
 	glClearDepth(1.0);
 	//clear the color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // same as callinglClear fot both variables
 	
 	_colorProgram.use();
+
+	GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, _time);
 
 	//Draw our sprite!
 	_sprite.draw();
