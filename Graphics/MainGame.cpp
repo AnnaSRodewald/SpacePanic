@@ -6,6 +6,8 @@
 
 #include "Errors.h"
 
+#include "ImageLoader.h"
+
 
 MainGame::MainGame(void) : 
 		_screenWidth(1024),   //Initialzation list
@@ -27,6 +29,8 @@ void MainGame::run(){
 
 	//fix it later
 	_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
+
+	_playerTexture = ImageLoader::loadPNG("Textures/JimmyJump/PNG/CharacterRight_Standing.png");
 
 	gameLoop();
 	}
@@ -69,6 +73,7 @@ void MainGame::initShaders(){
 	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
 	_colorProgram.addAttribute("vertexPosition");
 	_colorProgram.addAttribute("vertexColor");
+	_colorProgram.addAttribute("vertexUV");
 	_colorProgram.linkShaders();
 	}
 
@@ -106,13 +111,21 @@ void MainGame::drawGame() {
 	//clear the color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // same as callinglClear fot both variables
 	
+
 	_colorProgram.use();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _playerTexture.id);
+	GLint textureLocation = _colorProgram.getUniformLocation("mySampler");
+	glUniform1i(textureLocation, 0);
 
 	GLuint timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time);
 
 	//Draw our sprite!
 	_sprite.draw();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 
 	_colorProgram.unuse();
 
