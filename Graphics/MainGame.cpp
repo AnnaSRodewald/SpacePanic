@@ -52,29 +52,37 @@ void MainGame::initSystems(){
 	//Initialize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	//Set up our OpenGl Context
+	//Tell SDL that we want a doible buffered window so we dont get any flickering
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // one window is cleared, on the other the stuff is drawn -->prevents the window from flickering --> smoother :)
+
+
+	//Open an SDL window
 	_window = SDL_CreateWindow("Game Engine", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
 	if ( _window == nullptr){
 		fatalError("SDL Window could not be created!");
 		}
 
-	//Set up glew (optional but recommended)
-	//glewExperimental = true; // may/should not need it
+	//Set up our OpenGl Context
 	SDL_GLContext glContext = SDL_GL_CreateContext(_window);
 	if (glContext == nullptr){
 		fatalError("SDL_GL context could not be created!");
 		}
 
+	//Set up glew (optional but recommended)
+	//glewExperimental = true; // may/should not need it
 	GLenum error = glewInit();
 
 	if (error != GLEW_OK ){
 		fatalError("Could not initialize glew!");
 		}
 
-	//Tell SDL that we want a doible buffered window so we dont get any flickering
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // one window is cleared, on the other the stuff is drawn -->prevents the window from flickering --> smoother :)
-
+	//check the OpenGL version
+	std::printf("***	OpenGL Version %s	***\n", glGetString(GL_VERSION));
+	
 	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+
+	//set VSYNC
+	SDL_GL_SetSwapInterval(0);
 
 	initShaders();
 	}
