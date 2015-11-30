@@ -2,15 +2,18 @@
 #include <map>
 #include "GLTexture.h"
 
-class TextureCache
-	{
-	public:
-		TextureCache(void);
-		~TextureCache(void);
+namespace GameEngine{
 
-		GLTexture getTexture(std::string texturePath);
+	class TextureCache
+		{
+		public:
+			TextureCache(void);
+			~TextureCache(void);
 
-	private: 
-		std::map<std::string, GLTexture> _textureMap;
-	};
+			GLTexture getTexture(std::string texturePath);
 
+		private: 
+			std::map<std::string, GLTexture> _textureMap;
+		};
+
+	}

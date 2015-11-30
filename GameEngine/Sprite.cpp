@@ -4,18 +4,20 @@
 #include <cstddef>
 #include "ResourceManager.h"
 
-Sprite::Sprite(void)
-	{
-	_vboID = 0;
-	}
+namespace GameEngine{
 
-
-Sprite::~Sprite(void)
-	{
-	if(_vboID != 0){
-		glDeleteBuffers(1, &_vboID);
+	Sprite::Sprite(void)
+		{
+		_vboID = 0;
 		}
-	}
+
+
+	Sprite::~Sprite(void)
+		{
+		if(_vboID != 0){
+			glDeleteBuffers(1, &_vboID);
+			}
+		}
 
 
 	void Sprite::init(float x, float y, float width, float height, std::string texturePath){
@@ -82,7 +84,7 @@ Sprite::~Sprite(void)
 		//tells openGl where the data is
 		//this is the position attribute pointer
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-		
+
 		//This is the color attribute pointer
 		glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
@@ -97,3 +99,5 @@ Sprite::~Sprite(void)
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
+
+	}

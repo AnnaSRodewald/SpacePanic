@@ -3,37 +3,40 @@
 #include <string>
 #include <GL/glew.h>
 
-class GLSLProgram
-	{
-	public:
-		GLSLProgram(void);
-		~GLSLProgram(void);
+namespace GameEngine{
 
-		void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragementShaderFilePath);
+	class GLSLProgram
+		{
+		public:
+			GLSLProgram(void);
+			~GLSLProgram(void);
 
-		void linkShaders();
+			void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragementShaderFilePath);
 
-		void addAttribute(const std::string& attributeName);
+			void linkShaders();
 
-		GLint getUniformLocation(const std::string& uniformName);
+			void addAttribute(const std::string& attributeName);
 
-		void use();
+			GLint getUniformLocation(const std::string& uniformName);
 
-		void unuse();
+			void use();
 
-
-	private:
-		int _numAttributes;
-
-		void compileShaders(const std::string& filePath, GLuint shaderID);
-
-		GLuint _programID;
-
-		GLuint _vertexShaderID;
-		GLuint _fragmentShaderID;
-
-		
+			void unuse();
 
 
-	};
+		private:
+			int _numAttributes;
 
+			void compileShaders(const std::string& filePath, GLuint shaderID);
+
+			GLuint _programID;
+
+			GLuint _vertexShaderID;
+			GLuint _fragmentShaderID;
+
+
+
+
+		};
+
+	}
