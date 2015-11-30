@@ -12,6 +12,7 @@
 #include <GameEngine/Sprite.h>
 #include <vector>
 #include <GameEngine/Window.h>
+#include <GameEngine/Camera2D.h>
 
 enum class GameState{PLAY, EXIT};
 
@@ -43,6 +44,8 @@ class MainGame
 
 		GameEngine::GLSLProgram _colorProgram;
 		GameEngine::GLTexture _playerTexture;
+
+		GameEngine::Camera2D _camera;
 
 		float _fps;
 		float _maxFPS;
