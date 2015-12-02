@@ -5,6 +5,7 @@
 #include <string>
 
 #include <GameEngine/Errors.h>
+#include <GameEngine/ResourceManager.h>
 
 
 
@@ -27,21 +28,6 @@ MainGame::~MainGame(void)
 void MainGame::run(){
 	initSystems();
 
-	//fix it later
-	_sprites.push_back(new GameEngine::Sprite());
-	_sprites.back()->init(0.0f, 0.0f, _screenWidth/2, _screenWidth/2, "Textures/JimmyJump/PNG/CharacterRight_Standing.png");
-
-	_sprites.push_back(new GameEngine::Sprite());
-	_sprites.back()->init(_screenWidth/2, 0.0f,_screenWidth/2, _screenWidth/2, "Textures/JimmyJump/PNG/CharacterRight_Standing.png");
-
-	//for (int i = 0; i < 1000; i++){
-	//_sprites.push_back(new GameEngine::Sprite());
-	//_sprites.back()->init(-1.0f, 0.0f, 1.0f, 1.0f, "Textures/JimmyJump/PNG/CharacterRight_Standing.png");
-	//	}
-
-
-	//_playerTexture = ImageLoader::loadPNG("Textures/JimmyJump/PNG/CharacterRight_Standing.png");
-
 	gameLoop();
 	}
 
@@ -53,6 +39,8 @@ void MainGame::initSystems(){
 	_window.create("Game Engine", _screenWidth, _screenHeight, 0);
 
 	initShaders();
+
+	_spriteBatch.init();
 	}
 
 
@@ -121,10 +109,10 @@ void MainGame::processInput(){
 						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
 						break;
 					case SDLK_a:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+						_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
 						break;
 					case SDLK_d:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+						_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 						break;
 					case SDLK_q:
 						_camera.setScale(_camera.getScale() + SCALE_SPEED);
@@ -157,14 +145,29 @@ void MainGame::drawGame() {
 	//set the camera matrix
 	GLuint pLocation = _colorProgram.getUniformLocation("P");
 	glm::mat4& cameraMatrix = _camera.getCameraMatrix();
+
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
+	_spriteBatch.begin();
 
-	//Draw our sprites!
-	for (int i = 0; i < _sprites.size(); i++)
-		{
-		_sprites[i]->draw();
-		}
+	glm::vec4 pos(0.0f, 0.0, 50.0f, 50.0f);
+	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
+	static GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture("Textures/JimmyJump/PNG/CharacterRight_Standing.png");
+	GameEngine::Color color;
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255;
+
+	/*for (int i = 0; i < 1000; i++)
+		{*/
+		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos + glm::vec4(50.0f, 0.0f, 0.0f, 0.0f), uv, texture.id, 0.0f, color);
+	/*	}*/
+
+
+	_spriteBatch.end();
+	_spriteBatch.renderBatch();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

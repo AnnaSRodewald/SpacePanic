@@ -5,14 +5,15 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
+#include <vector>
+
 #include <GameEngine/GameEngine.h>
 #include <GameEngine/GLSLProgram.h>
 #include <GameEngine/GLTexture.h>
-
 #include <GameEngine/Sprite.h>
-#include <vector>
 #include <GameEngine/Window.h>
 #include <GameEngine/Camera2D.h>
+#include <GameEngine/SpriteBatch.h>
 
 enum class GameState{PLAY, EXIT};
 
@@ -40,12 +41,12 @@ class MainGame
 
 		GameState _gameState;
 
-		std::vector<GameEngine::Sprite*> _sprites;
-
 		GameEngine::GLSLProgram _colorProgram;
 		GameEngine::GLTexture _playerTexture;
 
 		GameEngine::Camera2D _camera;
+
+		GameEngine::SpriteBatch _spriteBatch;
 
 		float _fps;
 		float _maxFPS;

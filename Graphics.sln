@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Graphics\Graphics.vcxproj", "{4631F647-26C1-45CB-9D78-318AB51E12F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3} = {96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine\GameEngine.vcxproj", "{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}"
 EndProject
