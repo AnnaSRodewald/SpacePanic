@@ -14,6 +14,8 @@
 #include <GameEngine/Window.h>
 #include <GameEngine/Camera2D.h>
 #include <GameEngine/SpriteBatch.h>
+#include <GameEngine/InputManager.h>
+#include <GameEngine/Timing.h>
 
 enum class GameState{PLAY, EXIT};
 
@@ -33,7 +35,6 @@ class MainGame
 		void gameLoop();
 		void processInput();
 		void drawGame();
-		void calculateFPS();
 
 		GameEngine::Window _window;
 		int _screenWidth;
@@ -48,9 +49,12 @@ class MainGame
 
 		GameEngine::SpriteBatch _spriteBatch;
 
+		GameEngine::InputManager _inputManager;
+
+		GameEngine::FpsLimiter _fpsLimiter;
+
 		float _fps;
 		float _maxFPS;
-		float _frameTime;
 
 		float _time;
 	};
