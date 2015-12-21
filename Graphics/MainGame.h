@@ -17,6 +17,9 @@
 #include <GameEngine/InputManager.h>
 #include <GameEngine/Timing.h>
 
+#include "Bullet.h"
+
+
 enum class GameState{PLAY, EXIT};
 
 
@@ -52,6 +55,8 @@ class MainGame
 		GameEngine::InputManager _inputManager;
 
 		GameEngine::FpsLimiter _fpsLimiter;
+
+		std::vector<Bullet> _bullets;
 
 		float _fps;
 		float _maxFPS;
