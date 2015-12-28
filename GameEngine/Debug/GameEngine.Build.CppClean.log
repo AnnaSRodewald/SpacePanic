@@ -1,33 +1,47 @@
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\ERRORS.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\GLSLPROGRAM.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\IMAGELOADER.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\IOMANAGER.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\PICOPNG.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\RESOURCEMANAGER.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\SOURCE.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\SPRITE.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\TEXTURECACHE.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\VC110.PDB
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\WINDOW.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\GAMEENGINE\DEBUG\GAMEENGINE.OBJ
-C:\USERS\D059264\DOCUMENTS\STUDIUM\MASTER\PROJEKTARBEIT\SPACEPANIC\SPACEPANIC\DEBUG\GAMEENGINE.LIB
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\Errors.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\GameEngine.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\GLSLProgram.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\ImageLoader.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\IOManager.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\picoPNG.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\ResourceManager.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\Source.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\Sprite.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\TextureCache.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\Window.obj
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\cl.command.1.tlog
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\CL.read.1.tlog
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\CL.write.1.tlog
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\Lib-link.read.1.tlog
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\Lib-link.write.1.tlog
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\lib.command.1.tlog
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\vc110.idb
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\Debug\vc110.pdb
-C:\Users\D059264\Documents\Studium\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\camera2d.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\errors.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\glslprogram.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\imageloader.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\iomanager.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\picopng.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\resourcemanager.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\sprite.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\texturecache.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\window.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\vc110.pdb
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\spritebatch.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\inputmanager.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\timing.obj
+c:\users\d059264\documents\studium\master\projektarbeit\spacepanic\spacepanic\debug\gameengine.lib
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\vc120.pdb
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\vc120.idb
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\camera2d.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\errors.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\glslprogram.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\imageloader.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\inputmanager.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\iomanager.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\picopng.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\resourcemanager.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\sprite.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\spritebatch.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\texturecache.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\timing.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\window.obj
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\debug\gameengine.lib
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\cl.command.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\cl.read.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\cl.write.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\lib-link.read.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\lib-link.write.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\lib.command.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\vc110.idb
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\vc110.pdb
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.tlog\cl.command.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.tlog\cl.read.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.tlog\cl.write.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.tlog\lib-link.read.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.tlog\lib-link.write.1.tlog
+c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\debug\gameengine.tlog\lib.command.1.tlog

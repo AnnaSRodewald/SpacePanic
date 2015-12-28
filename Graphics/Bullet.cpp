@@ -29,8 +29,6 @@ void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 
 	spriteBatch.draw(posAndSize, uv, texture.id, 0.0f, color);
 
-	//spriteBatch.end();
-	//spriteBatch.renderBatch();
 
 }
 

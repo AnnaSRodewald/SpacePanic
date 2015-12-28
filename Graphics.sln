@@ -1,27 +1,62 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Graphics\Graphics.vcxproj", "{4631F647-26C1-45CB-9D78-318AB51E12F8}"
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheGame", "Graphics\Graphics.vcxproj", "{4631F647-26C1-45CB-9D78-318AB51E12F8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3} = {96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine\GameEngine.vcxproj", "{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{434D7F51-F040-48AE-B8A3-250526310DCE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZombieGame", "..\..\..\..\..\Downloads\ZombieGameChallengeTemplate\ZombieGame\ZombieGame.vcxproj", "{A05CACF1-0860-4739-9183-DD107920F7DA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3} = {96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Debug|Win32.Build.0 = Debug|Win32
+		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Release|Win32.ActiveCfg = Release|Win32
 		{4631F647-26C1-45CB-9D78-318AB51E12F8}.Release|Win32.Build.0 = Release|Win32
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Debug|Win32.ActiveCfg = Debug|Win32
 		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Debug|Win32.Build.0 = Debug|Win32
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Release|Any CPU.ActiveCfg = Release|Win32
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Release|Win32.ActiveCfg = Release|Win32
 		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}.Release|Win32.Build.0 = Release|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Debug|Win32.Build.0 = Debug|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Release|Win32.ActiveCfg = Release|Win32
+		{A05CACF1-0860-4739-9183-DD107920F7DA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
