@@ -1,24 +1,62 @@
 #include "MainGame.h"
 
-#include <Bengine/Bengine.h>
+#include <GameEngine/GameEngine.h>
+#include <GameEngine\Timing.h>
 
 #include <SDL/SDL.h>
 #include <iostream>
 
-MainGame::MainGame() {
+#include "Zombie.h"
+
+
+MainGame::MainGame() : 
+_screenWidth(1024), 
+_screenHeight(768), 
+_gameState(GameState::PLAY),
+_fps(0),
+_player(nullptr){
     // Empty
 }
 
 MainGame::~MainGame() {
-    // IMPLEMENT THIS!
+	for (int i = 0; i < _levels.size(); i++)
+	{
+		delete _levels[i];
+	}
 }
 
 void MainGame::run() {
-    // IMPLEMENT THIS!
+
+	initSystems();
+
+	initLevel();
+
+	gameLoop();
 }
 
 void MainGame::initSystems() {
-    // IMPLEMENT THIS!
+	GameEngine::init();
+
+	_window.create("Game Engine", _screenWidth, _screenHeight, 0);
+	glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+
+	initShaders();
+
+	_agentSpriteBatch.init();
+
+	_camera.init(_screenWidth, _screenHeight);
+}
+
+
+void MainGame::initLevel(){
+	// Level 1
+	_levels.push_back(new Level("Levels/level1.txt"));
+	_currentLevel = 0;
+
+	_player = new Player();
+	_player->init(4.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
+
+	_humans.push_back(_player);
 }
 
 void MainGame::initShaders() {
@@ -31,7 +69,37 @@ void MainGame::initShaders() {
 }
 
 void MainGame::gameLoop() {
-   // IMPLEMENT THIS!
+
+	GameEngine::FpsLimiter fpsLimiter;
+	fpsLimiter.setMaxFPS(60.0f);
+	
+	while (_gameState == GameState::PLAY)
+	{
+		fpsLimiter.beginFrame();
+
+		processInput();
+		
+		updateAgents();
+
+		_camera.setPosition(_player->getPosition());
+
+		_camera.update();
+
+		drawGame();
+
+		_fps = fpsLimiter.end();
+	}
+}
+
+void MainGame::updateAgents(){
+	//Update all humans
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		_humans[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
+	}
+
+	//Don't forget to update zombies
+
 }
 
 void MainGame::processInput() {
@@ -67,7 +135,37 @@ void MainGame::drawGame() {
     // Clear the color and depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // IMPLEMENT THIS!
+	_textureProgram.use();
+
+    //Draw code goes here
+	glActiveTexture(GL_TEXTURE0);
+
+	//Make sure the shader uses texture 0
+	GLint textureUniform = _textureProgram.getUniformLocation("mySampler");
+	glUniform1i(textureUniform, 0);
+
+	//Grab the camera matrix
+	glm::mat4 projectionMatrix = _camera.getCameraMatrix();
+	GLint pUniform = _textureProgram.getUniformLocation("P");
+	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+	//Draw the level
+	_levels[_currentLevel]->draw();
+
+	//Begin drawing agents
+	_agentSpriteBatch.begin();
+
+	//Draw the humans
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		_humans[i]->draw(_agentSpriteBatch);
+	}
+
+	_agentSpriteBatch.end();
+
+	_agentSpriteBatch.renderBatch();
+
+	_textureProgram.unuse();
    
     // Swap our buffer and draw everything to the screen!
     _window.swapBuffer();
