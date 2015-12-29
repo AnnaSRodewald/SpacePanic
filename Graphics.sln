@@ -12,7 +12,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine\Ga
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{434D7F51-F040-48AE-B8A3-250526310DCE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZombieGame", "..\..\..\..\..\Downloads\ZombieGameChallengeTemplate\ZombieGame\ZombieGame.vcxproj", "{A05CACF1-0860-4739-9183-DD107920F7DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZombieGame", "ZombieGame\ZombieGame.vcxproj", "{A05CACF1-0860-4739-9183-DD107920F7DA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{96ADDD8D-5372-43C0-B132-CA69F4FBB0B3} = {96ADDD8D-5372-43C0-B132-CA69F4FBB0B3}
 	EndProjectSection
