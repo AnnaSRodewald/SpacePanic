@@ -127,8 +127,10 @@ void MainGame::gameLoop() {
 	while (_gameState == GameState::PLAY)
 	{
 		fpsLimiter.beginFrame();
-
+		
 		checkVictory();
+
+		_inputManager.update();
 
 		processInput();
 

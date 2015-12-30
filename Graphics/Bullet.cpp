@@ -16,7 +16,7 @@ Bullet::~Bullet()
 
 
 void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
-	GameEngine::Color color;
+	GameEngine::ColorRGBA8 color;
 	color.r = 255;
 	color.g = 255;
 	color.b = 255;

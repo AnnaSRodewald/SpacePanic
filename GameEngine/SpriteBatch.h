@@ -51,7 +51,7 @@ namespace GameEngine{
 			void begin(GlypthSortType sortType = GlypthSortType::TEXTURE); //2
 			void end(); //4
 
-			void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture,  float depth, const Color& color); //3
+			void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color); //3
 
 			void renderBatch(); //5
 

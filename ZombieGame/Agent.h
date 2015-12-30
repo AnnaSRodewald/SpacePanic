@@ -49,7 +49,7 @@ public:
 protected:
 	float _speed;
 	glm::vec2 _position;
-	GameEngine::Color _color;
+	GameEngine::ColorRGBA8 _color;
 
 	void checkTilePosition(const std::vector<std::string>& levelData,
 		std::vector<glm::vec2>& collideTilePosition,

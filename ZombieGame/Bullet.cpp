@@ -37,7 +37,7 @@ void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	static GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture("Textures/circle.png");
 
-	GameEngine::Color color;
+	GameEngine::ColorRGBA8 color;
 	color.r = 75;
 	color.g = 75;
 	color.b = 75;
