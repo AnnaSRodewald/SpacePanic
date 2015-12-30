@@ -3,6 +3,8 @@
 #include <GameEngine/ResourceManager.h>
 #include "Level.h"
 #include "Agent.h"
+#include "Human.h"
+#include "Zombie.h"
 
 
 Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed) : _position(pos),
@@ -49,7 +51,7 @@ void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 bool Bullet::update(const std::vector<std::string>& levelData){
 	_position += _direction * _speed;
 	_lifeTime--;
-	if (collideWithWorld(levelData) || _lifeTime == 0)
+	if (collideWithWorld(levelData))
 	{
 		return true;
 	}

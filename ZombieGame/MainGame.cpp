@@ -179,6 +179,7 @@ void MainGame::updateAgents(){
 
 		//Collide with player
 		if (_zombies[i]->collideWithAgent(_humans[0])){
+			std::printf("Killed by zombie with health: %d at Pos: %d \n", _zombies[i]->getHealth(), _zombies[i]->getPosition());
 			GameEngine::fatalError("YOU LOSE");
 		}
 	}
