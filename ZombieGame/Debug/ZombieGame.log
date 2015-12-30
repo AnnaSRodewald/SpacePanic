@@ -1,10 +1,30 @@
-﻿Build started 29.12.2015 21:33:16.
-     1>Project "C:\Users\D059264\Downloads\ZombieGameChallengeTemplate\ZombieGame\ZombieGame.vcxproj" on node 2 (Build target(s)).
+﻿Build started 30.12.2015 02:00:12.
+     1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Agent.cpp
-         Agent.cpp
-     1>c:\users\d059264\downloads\zombiegamechallengetemplate\zombiegame\agent.cpp(56): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\d059264\downloads\zombiegamechallengetemplate\zombiegame\agent.cpp(67): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt MainGame.cpp Zombie.cpp
+         Zombie.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\human.h(5): warning C4305: 'initializing' : truncation from 'double' to 'const float'
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\human.h(6): warning C4305: 'initializing' : truncation from 'double' to 'const float'
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\zombie.cpp(43): warning C4018: '<' : signed/unsigned mismatch
+         Generating Code...
+         Compiling...
+         MainGame.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\human.h(5): warning C4305: 'initializing' : truncation from 'double' to 'const float'
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\human.h(6): warning C4305: 'initializing' : truncation from 'double' to 'const float'
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(31): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(71): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(85): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(126): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(132): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(138): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(141): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(146): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(165): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(168): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(186): warning C4244: 'argument' : conversion from 'Sint32' to 'float', possible loss of data
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(231): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\maingame.cpp(237): warning C4018: '<' : signed/unsigned mismatch
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\ZombieGame.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib opengl32.lib glew32.lib GameEngine.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\ZombieGame.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\ZombieGame.lib" /MACHINE:X86 Debug\Agent.obj
          Debug\Bullet.obj
@@ -15,8 +35,8 @@
          Debug\Player.obj
          Debug\Zombie.obj
          ZombieGame.vcxproj -> C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\ZombieGame.exe
-     1>Done Building Project "C:\Users\D059264\Downloads\ZombieGameChallengeTemplate\ZombieGame\ZombieGame.vcxproj" (Build target(s)).
+     1>Done Building Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.01
+Time Elapsed 00:00:02.00

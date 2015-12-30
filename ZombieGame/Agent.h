@@ -6,10 +6,10 @@
 #include <GameEngine\SpriteBatch.h>
 
 const float AGENT_WIDTH = 60;
+const float AGENT_RADIUS = AGENT_WIDTH / 2.0f;
 
 class Zombie;
 class Human;
-
 
 class Agent
 {
@@ -30,11 +30,10 @@ public:
 
 	glm::vec2 getPosition() const { return _position; }
 
-	void collideWithLevel(const std::vector<std::string>& levelData);
+	bool collideWithLevel(const std::vector<std::string>& levelData);
 
+	bool collideWithAgent(Agent* agent);
 
-
-	virtual void getsHit(SDL_Event evnt) = 0;
 
 	bool isAlive() {
 		return _alive;
@@ -43,15 +42,11 @@ public:
 		return _id;
 	};
 
-	glm::vec2 getDirection(){
-		return _direction;
-	};
 
 	
 
 protected:
 	float _speed;
-	glm::vec2 _direction;
 	glm::vec2 _position;
 	GameEngine::Color _color;
 	

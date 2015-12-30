@@ -1,13 +1,16 @@
 #include "Human.h"
 #include <SDL\SDL.h>
 #include <glm/glm.hpp>
+#include <random>
+#include <ctime>
+#include <glm\gtx\rotate_vector.hpp>
 
 //
 //Human::Human(int speed, glm::vec2 position, glm::vec2 direction)
 //{
 //}
 
-Human::Human(){
+Human::Human() : _frames(0){
 
 }
 
@@ -17,16 +20,48 @@ Human::~Human()
 }
 
 
-void Human::update(const std::vector<std::string>& levelData,
-	std::vector<Human*>& humans, std::vector<Zombie*>& zombies){
-	//_position += _direction * _speed;
-	/*if (isAlive())
-	{
-		return true;
+void Human::init(float speed, glm::vec2 position){
+
+	static std::mt19937 randomEngine(time(nullptr));
+	static std::uniform_real_distribution<float> randDir(-1.0f, 1.0f);
+
+	_color.r = 200;
+	_color.g = 0;
+	_color.b = 200;
+	_color.a = 255;
+
+	_speed = speed;
+	_position = position;
+	//Get random direction
+	_direction = glm::vec2(randDir(randomEngine), randDir(randomEngine));
+
+	//Make sure direction isn't zero
+	if (_direction.length() == 0){
+		_direction = glm::vec2(1.0f, 0.0f);
 	}
-	return false;*/
+
+	_direction = glm::normalize(_direction);
 }
 
-void Human::getsHit(SDL_Event evnt){
 
+void Human::update(const std::vector<std::string>& levelData,
+	std::vector<Human*>& humans, std::vector<Zombie*>& zombies){
+
+	static std::mt19937 randomEngine(time(nullptr));
+	static std::uniform_real_distribution<float> randRotate(-40.0f * DEG_TO_RAD, 40.0f * DEG_TO_RAD);
+	_position += _direction * _speed;
+
+	//Randomly change direction every 20 frames
+	if (_frames == 20){
+		_direction = glm::rotate(_direction, randRotate(randomEngine));
+		_frames = 0;
+	}
+	else
+	{
+		_frames++;
+	}
+
+	if (collideWithLevel(levelData)){
+		_direction = glm::rotate(_direction, randRotate(randomEngine));
+	}
 }
