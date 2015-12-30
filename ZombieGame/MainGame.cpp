@@ -119,7 +119,10 @@ void MainGame::initShaders() {
 void MainGame::gameLoop() {
 
 	GameEngine::FpsLimiter fpsLimiter;
-	fpsLimiter.setMaxFPS(60.0f);
+	fpsLimiter.setMaxFPS(600000.0f);
+
+	const float CAMERA_SCALE = 1.0f / 4.0f;
+	_camera.setScale(CAMERA_SCALE);
 
 	while (_gameState == GameState::PLAY)
 	{
@@ -140,6 +143,7 @@ void MainGame::gameLoop() {
 		drawGame();
 
 		_fps = fpsLimiter.end();
+		std::cout << _fps << std::endl;
 	}
 }
 
@@ -179,7 +183,7 @@ void MainGame::updateAgents(){
 
 		//Collide with player
 		if (_zombies[i]->collideWithAgent(_humans[0])){
-			std::printf("Killed by zombie with health: %d at Pos: %d \n", _zombies[i]->getHealth(), _zombies[i]->getPosition());
+			std::printf("Killed by zombie %d with health: %d at Pos: %d, %d \n", i, _zombies[i]->getHealth(), _zombies[i]->getPosition().x, _zombies[i]->getPosition().y);
 			GameEngine::fatalError("YOU LOSE");
 		}
 	}

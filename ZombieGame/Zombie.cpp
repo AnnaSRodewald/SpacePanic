@@ -4,6 +4,7 @@
 
 Zombie::Zombie()
 {
+	_health = 150;
 }
 
 
@@ -20,8 +21,6 @@ void Zombie::init(float speed, glm::vec2 position){
 
 	_speed = speed;
 	_position = position;
-
-	_health = 150;
 
 }
 

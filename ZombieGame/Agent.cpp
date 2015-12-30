@@ -96,7 +96,7 @@ bool Agent::collideWithAgent(Agent* agent){
 bool Agent::applyDamage(float damage){
 	_health -= damage;
 
-	if (_health <= 0)
+	if (_health <= 0.0f)
 	{
 		return true;
 	}

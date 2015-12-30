@@ -41,7 +41,7 @@ public:
 		return _id;
 	};
 
-	float getHealth() const {
+	float getHealth() {
 		return _health;
 	};
 
