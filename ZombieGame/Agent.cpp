@@ -93,6 +93,19 @@ bool Agent::collideWithAgent(Agent* agent){
 	return false;
 }
 
+bool Agent::applyDamage(float damage){
+	_health -= damage;
+
+	if (_health <= 0)
+	{
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
+}
+
 
 void Agent::checkTilePosition(const std::vector<std::string>& levelData, std::vector<glm::vec2>& collideTilePositions, float x, float y){
 
@@ -123,7 +136,7 @@ void Agent::collideWithTile(glm::vec2 tilePosition){
 	float yDepth = MIN_DISTANCE - abs(distanceVec.y);
 
 	//If this is true, we are colliding with something
-	if (xDepth > 0 || yDepth > 0){
+	if (xDepth > 0 && yDepth > 0){
 		if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
 			if (distanceVec.x < 0)
 			{

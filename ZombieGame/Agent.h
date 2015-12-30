@@ -34,10 +34,9 @@ public:
 
 	bool collideWithAgent(Agent* agent);
 
+	//Return true if health is zero or less --> agent died
+	bool applyDamage(float damage);
 
-	bool isAlive() {
-		return _alive;
-	};
 	int getID() {
 		return _id;
 	};
@@ -56,12 +55,10 @@ protected:
 
 	void collideWithTile(glm::vec2 tilePosition);
 
-	void kill() {
-		_alive = false;
-	};
+	float _health;
+
 
 private:
-	bool _alive;
 	int _id;
 
 

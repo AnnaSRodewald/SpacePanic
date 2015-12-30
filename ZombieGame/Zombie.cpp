@@ -20,6 +20,9 @@ void Zombie::init(float speed, glm::vec2 position){
 
 	_speed = speed;
 	_position = position;
+
+	_health = 150;
+
 }
 
 void Zombie::update(const std::vector<std::string>& levelData,
@@ -55,6 +58,3 @@ Human* Zombie::getNearestHuman(std::vector<Human*>& humans){
 }
 
 
-void Zombie::getsHit(SDL_Event evnt){
-
-}

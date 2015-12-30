@@ -11,6 +11,7 @@
 #include <ctime>
 
 #include <GameEngine\Errors.h>
+#include "Gun.h"
 
 
 const float PLAYER_SPEED = 5.0f;
@@ -23,14 +24,25 @@ _screenWidth(1024),
 _screenHeight(768),
 _gameState(GameState::PLAY),
 _fps(0),
-_player(nullptr){
+_player(nullptr),
+_numHumansKilled(0),
+_numZombiesKilled(0){
 	// Empty
 }
 
 MainGame::~MainGame() {
+	//Delete levels, humans and zombies
 	for (int i = 0; i < _levels.size(); i++)
 	{
 		delete _levels[i];
+	}
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		delete _humans[i];
+	}
+	for (int i = 0; i < _zombies.size(); i++)
+	{
+		delete _zombies[i];
 	}
 }
 
@@ -63,7 +75,7 @@ void MainGame::initLevel(){
 	_currentLevel = 0;
 
 	_player = new Player();
-	_player->init(PLAYER_SPEED, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
+	_player->init(PLAYER_SPEED, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager, &_camera, &_bullets);
 
 	_humans.push_back(_player);
 
@@ -87,6 +99,12 @@ void MainGame::initLevel(){
 		_zombies.push_back(new Zombie);
 		_zombies.back()->init(ZOMBIE_SPEED, zombiePositions[i]);
 	}
+
+	//Set up the guns of the player (pistol, shot gun, machine gun)
+	const float BULLET_SPEED = 20.0f;
+	_player->addGun(new Gun("Magnum", 10, 1, 5.0f, BULLET_SPEED, 30.0f));
+	_player->addGun(new Gun("Shotgun", 30, 20, 20.0f, BULLET_SPEED, 4.0f));
+	_player->addGun(new Gun("MP5", 2, 1, 12.0f, BULLET_SPEED, 20.0f));
 }
 
 void MainGame::initShaders() {
@@ -107,9 +125,13 @@ void MainGame::gameLoop() {
 	{
 		fpsLimiter.beginFrame();
 
+		checkVictory();
+
 		processInput();
 
 		updateAgents();
+
+		updateBullets();
 
 		_camera.setPosition(_player->getPosition());
 
@@ -169,9 +191,108 @@ void MainGame::updateAgents(){
 			_humans[i]->collideWithAgent(_humans[j]);
 		}
 	}
+}
 
+void MainGame::updateBullets(){
+	//Update and collide with world
+	for (int i = 0; i < _bullets.size();)
+	{
+		//if update returns true, the bullet collided with a wall
+		if (_bullets[i].update(_levels[_currentLevel]->getLevelData())){
+			_bullets[i] = _bullets.back();
+			_bullets.pop_back();
+		}
+		else{
+			i++;
+		}
+	}
 
+	bool wasBulletRemoved;
 
+	//Collide with agents (humans and zombies)
+	for (int i = 0; i < _bullets.size(); i++)
+	{
+		wasBulletRemoved = false;
+		//Loop through zombies
+		for (int j = 0; j < _zombies.size(); j++)
+		{
+			if (_bullets[i].collideWithAgent(_zombies[j])){
+				//Damage zombie and kill it if its out of health
+				if (_zombies[j]->applyDamage(_bullets[i].getDamage())){
+					//If the zombie died, remove it
+					delete _zombies[j];
+					_zombies[j] = _zombies.back();
+					_zombies.pop_back();
+					_numZombiesKilled++;
+				}
+				else{
+					j++;
+				}
+
+				//Remove the bullet 
+				_bullets[i] = _bullets.back();
+				_bullets.pop_back();
+
+				wasBulletRemoved = true;
+
+				i--; //Make sure we don't skip a bullet
+
+				//Since the bullet died, no need to loop though the rest of the agents
+				break;
+			}
+			else{
+				j++;
+			}
+		}
+
+		//Loop through the humans
+		if (wasBulletRemoved == false)
+		{
+			for (int j = 1; j < _humans.size(); j++)
+			{
+				if (_bullets[i].collideWithAgent(_humans[j])){
+					//Damage human and kill it if its out of health
+					if (_humans[j]->applyDamage(_bullets[i].getDamage())){
+						//If the human died, remove it
+						delete _humans[j];
+						_humans[j] = _humans.back();
+						_humans.pop_back();
+						_numHumansKilled++;
+					}
+					else{
+						j++;
+					}
+
+					//Remove the bullet 
+					_bullets[i] = _bullets.back();
+					_bullets.pop_back();
+
+					wasBulletRemoved = true;
+
+					i--; //Make sure we don't skip a bullet
+
+					//Since the bullet died, no need to loop though the rest of the agents
+					break;
+				}
+				else{
+					j++;
+				}
+			}
+		}
+
+	}
+}
+
+void MainGame::checkVictory(){
+	//TODO: Support for multiple levels!
+	// _currentLevel++; initLevel(...);
+	//If all zombies are dead we win!
+	if (_zombies.empty()){
+
+		std::printf("*** YOU WIN! ***\n You killed %d humans and %d zombies. There are %d out of %d civilians remaining.", _numHumansKilled, _numZombiesKilled, _humans.size() - 1, _levels[_currentLevel]->getNumHumans());
+
+		GameEngine::fatalError("");
+	}
 }
 
 void MainGame::processInput() {
@@ -181,6 +302,7 @@ void MainGame::processInput() {
 		switch (evnt.type) {
 		case SDL_QUIT:
 			// Exit the game here!
+			_gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
 			_inputManager.setMouseCoords(evnt.motion.x, evnt.motion.y);
@@ -237,6 +359,12 @@ void MainGame::drawGame() {
 	for (int i = 0; i < _zombies.size(); i++)
 	{
 		_zombies[i]->draw(_agentSpriteBatch);
+	}
+
+	//Draw the bullets
+	for (int i = 0; i < _bullets.size(); i++)
+	{
+		_bullets[i].draw(_agentSpriteBatch);
 	}
 
 	_agentSpriteBatch.end();

@@ -2,8 +2,6 @@
 #include "Agent.h"
 #include <glm/glm.hpp>
 
-const float DEG_TO_RAD = M_PI / 180.0f;
-const float RAD_TO_DEG = 180.0f / M_PI;
 
 class Human :
 	public Agent

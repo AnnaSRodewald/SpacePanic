@@ -40,6 +40,12 @@ private:
 	///Updates all agents
 	void updateAgents();
 
+	///Update all bullets
+	void updateBullets();
+
+	///This checks the victory conditions
+	void checkVictory();
+
     /// Handles input processing
     void processInput();
 
@@ -71,6 +77,9 @@ private:
 	Player* _player;
 	std::vector<Human*> _humans; ///< Vector of all humans
 	std::vector<Zombie*> _zombies; ///< Vector of all zombies
+	std::vector<Bullet> _bullets; ///< Vector of bullets
 
+	int _numHumansKilled; ///< Humans killed by player
+	int _numZombiesKilled; ///< Zombies killed by player
 };
 

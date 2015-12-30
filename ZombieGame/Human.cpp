@@ -5,6 +5,10 @@
 #include <ctime>
 #include <glm\gtx\rotate_vector.hpp>
 
+const float DEG_TO_RAD = M_PI / 180.0f;
+const float RAD_TO_DEG = 180.0f / M_PI;
+
+
 //
 //Human::Human(int speed, glm::vec2 position, glm::vec2 direction)
 //{
@@ -24,6 +28,8 @@ void Human::init(float speed, glm::vec2 position){
 
 	static std::mt19937 randomEngine(time(nullptr));
 	static std::uniform_real_distribution<float> randDir(-1.0f, 1.0f);
+
+	_health = 20;
 
 	_color.r = 200;
 	_color.g = 0;
