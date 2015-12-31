@@ -18,7 +18,7 @@ public:
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 	//Returns true when we are out of life or hit something --> delete bullet
-	bool update(const std::vector<std::string>& levelData);
+	bool update(const std::vector<std::string>& levelData, float deltaTime);
 
 	bool collideWithAgent(Agent* agent);
 

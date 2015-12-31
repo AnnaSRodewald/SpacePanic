@@ -26,7 +26,7 @@ public:
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
 	virtual void update(const std::vector<std::string>& levelData,
-		std::vector<Human*>& humans, std::vector<Zombie*>& zombies) = 0;
+		std::vector<Human*>& humans, std::vector<Zombie*>& zombies, float deltaTime) = 0;
 
 	glm::vec2 getPosition() const { return _position; }
 
@@ -41,7 +41,7 @@ public:
 		return _id;
 	};
 
-	float getHealth() {
+	virtual float getHealth() {
 		return _health;
 	};
 

@@ -48,8 +48,8 @@ void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 }
 
 
-bool Bullet::update(const std::vector<std::string>& levelData){
-	_position += _direction * _speed;
+bool Bullet::update(const std::vector<std::string>& levelData, float deltaTime){
+	_position += _direction * _speed * deltaTime;
 	_lifeTime--;
 	if (collideWithWorld(levelData))
 	{
@@ -59,7 +59,7 @@ bool Bullet::update(const std::vector<std::string>& levelData){
 }
 
 bool Bullet::collideWithAgent(Agent* agent){
-	const float MIN_DISTANCE = AGENT_RADIUS + BULLET_RADIUS;
+	const float MIN_DISTANCE = AGENT_RADIUS + float(BULLET_RADIUS);
 
 	glm::vec2 centerPosA = _position;
 	glm::vec2 centerPosB = agent->getPosition() + glm::vec2(AGENT_RADIUS);
@@ -70,7 +70,7 @@ bool Bullet::collideWithAgent(Agent* agent){
 
 	float collisionDepth = MIN_DISTANCE - distance;
 
-	if (collisionDepth > 0){
+	if (collisionDepth >= 0){
 		//Bullet collided with the agent
 		return true;
 	}
