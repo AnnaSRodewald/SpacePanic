@@ -144,7 +144,7 @@ void MainGame::gameLoop() {
 		float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
 
 		fpsLimiter.beginFrame();
-		
+
 		checkVictory();
 
 		_inputManager.update();
@@ -381,16 +381,24 @@ void MainGame::drawGame() {
 	//Begin drawing agents
 	_agentSpriteBatch.begin();
 
+	const glm::vec2 agentDims(AGENT_RADIUS * 2.0f);
+
 	//Draw the humans
 	for (int i = 0; i < _humans.size(); i++)
 	{
-		_humans[i]->draw(_agentSpriteBatch);
+		if (_camera.isBoxInView(_humans[i]->getPosition(), agentDims))
+		{
+			_humans[i]->draw(_agentSpriteBatch);
+		}
 	}
 
 	//Draw the zombies
 	for (int i = 0; i < _zombies.size(); i++)
 	{
-		_zombies[i]->draw(_agentSpriteBatch);
+		if (_camera.isBoxInView(_zombies[i]->getPosition(), agentDims))
+		{
+			_zombies[i]->draw(_agentSpriteBatch);
+		}
 	}
 
 	//Draw the bullets

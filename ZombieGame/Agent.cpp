@@ -71,6 +71,22 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 //circular collision
 bool Agent::collideWithAgent(Agent* agent){
 
+	// Is the Agent too far away in the X direction to check?
+	if (agent->_position.x < _position.x - AGENT_WIDTH) { 
+		return false; 
+	}
+	else if (agent->_position.x > _position.x + AGENT_WIDTH) { 
+		return false; 
+	}
+
+	// Is the Agent too far away in the Y direction to check?
+	if (agent->_position.y < _position.y - AGENT_WIDTH)      { 
+		return false; 
+	}
+	else if (agent->_position.y > _position.y + AGENT_WIDTH) { 
+		return false; 
+	}
+
 	const float MIN_DISTANCE = AGENT_RADIUS * 2.0f;
 
 	glm::vec2 centerPosA = _position + glm::vec2(AGENT_RADIUS);
@@ -100,7 +116,7 @@ bool Agent::applyDamage(float damage){
 	{
 		return true;
 	}
-	else 
+	else
 	{
 		return false;
 	}
@@ -123,8 +139,22 @@ void Agent::checkTilePosition(const std::vector<std::string>& levelData, std::ve
 }
 
 
-//AAB collision
-void Agent::collideWithTile(glm::vec2 tilePosition){
+// AABB collision (Axis Aligned Bounding Box)
+bool Agent::collideWithTile(glm::vec2 tilePosition){
+
+	// Is the tile too far away
+	if (tilePosition.x < _position.x - TILE_WIDTH) {
+		return false;
+	}
+	else if (tilePosition.x > _position.x + TILE_WIDTH) {
+		return false;
+	}
+	if (tilePosition.y < _position.y - TILE_WIDTH) {
+		return false;
+	}
+	else if (tilePosition.y > _position.y + TILE_WIDTH) {
+		return false;
+	}
 
 	const float TILE_RADIUS = (float)TILE_WIDTH / 2.0f;
 	const float MIN_DISTANCE = AGENT_RADIUS + TILE_RADIUS;

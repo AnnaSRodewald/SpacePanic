@@ -55,7 +55,7 @@ protected:
 		std::vector<glm::vec2>& collideTilePosition,
 		float x, float y);
 
-	void collideWithTile(glm::vec2 tilePosition);
+	bool collideWithTile(glm::vec2 tilePosition);
 
 	float _health;
 

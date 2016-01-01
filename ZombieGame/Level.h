@@ -6,7 +6,7 @@
 #include <GameEngine\SpriteBatch.h>
 
 
-const int TILE_WIDTH = 64;
+const float TILE_WIDTH = 64.0f;
 
 class Level
 {

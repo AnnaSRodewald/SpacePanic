@@ -1,31 +1,11 @@
-﻿Build started 01.01.2016 04:40:08.
+﻿Build started 01.01.2016 06:03:17.
      1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt InputManager.cpp Sprite.cpp SpriteBatch.cpp
-         InputManager.cpp
-         Sprite.cpp
-         SpriteBatch.cpp
-     1>SpriteBatch.cpp(30): warning C4018: '<' : signed/unsigned mismatch
-     1>SpriteBatch.cpp(48): warning C4018: '<' : signed/unsigned mismatch
-     1>SpriteBatch.cpp(79): warning C4018: '<' : signed/unsigned mismatch
-       Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\GameEngine.lib" /NOLOGO /LTCG Release\Camera2D.obj
-         Release\Errors.obj
-         Release\GameEngine.obj
-         Release\GLSLProgram.obj
-         Release\ImageLoader.obj
-         Release\InputManager.obj
-         Release\IOManager.obj
-         Release\picoPNG.obj
-         Release\ResourceManager.obj
-         Release\Sprite.obj
-         Release\SpriteBatch.obj
-         Release\TextureCache.obj
-         Release\Timing.obj
-         Release\Window.obj
-         GameEngine.vcxproj -> C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\GameEngine.lib
-     1>Done Building Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" (Build target(s)).
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt SpriteFont.cpp
+         SpriteFont.cpp
+     1>C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\deps\include\TTF/SDL_ttf.h(30): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+     1>Done Building Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:01.50
+Time Elapsed 00:00:00.16
