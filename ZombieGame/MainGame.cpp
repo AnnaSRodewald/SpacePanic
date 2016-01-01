@@ -25,8 +25,6 @@ const float ZOMBIE_SPEED = 1.3f;
 
 
 MainGame::MainGame() :
-_screenWidth(1024),
-_screenHeight(768),
 _gameState(GameState::PLAY),
 _fps(0),
 _player(nullptr),

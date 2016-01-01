@@ -73,8 +73,8 @@ private:
 
 	std::vector<Level*> _levels; ///< Vector of all levels
 
-	int _screenWidth;
-	int _screenHeight;
+	int _screenWidth = 1024;
+	int _screenHeight = 768;
 
 	GameState _gameState;
 
