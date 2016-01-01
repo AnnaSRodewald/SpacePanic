@@ -19,7 +19,7 @@ public:
 	virtual ~Agent();
 	/*explicit
 		Agent(float speed, glm::vec2 position, glm::vec2 direction)
-		: _speed(speed), _direction(direction), _position(position)
+		: m_speed(speed), m_direction(direction), m_position(position)
 		{}
 		*/
 
@@ -28,7 +28,7 @@ public:
 	virtual void update(const std::vector<std::string>& levelData,
 		std::vector<Human*>& humans, std::vector<Zombie*>& zombies, float deltaTime) = 0;
 
-	glm::vec2 getPosition() const { return _position; }
+	glm::vec2 getPosition() const { return m_position; }
 
 	bool collideWithLevel(const std::vector<std::string>& levelData);
 
@@ -38,18 +38,18 @@ public:
 	bool applyDamage(float damage);
 
 	int getID() {
-		return _id;
+		return m_id;
 	};
 
 	virtual float getHealth() {
-		return _health;
+		return m_health;
 	};
 
 
 protected:
-	float _speed;
-	glm::vec2 _position;
-	GameEngine::ColorRGBA8 _color;
+	float m_speed;
+	glm::vec2 m_position;
+	GameEngine::ColorRGBA8 m_color;
 
 	void checkTilePosition(const std::vector<std::string>& levelData,
 		std::vector<glm::vec2>& collideTilePosition,
@@ -57,11 +57,11 @@ protected:
 
 	bool collideWithTile(glm::vec2 tilePosition);
 
-	float _health;
+	float m_health;
 
 
 private:
-	int _id;
+	int m_id;
 
 
 

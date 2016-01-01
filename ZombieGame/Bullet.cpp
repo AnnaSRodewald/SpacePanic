@@ -7,21 +7,21 @@
 #include "Zombie.h"
 
 
-Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed) : _position(pos),
-_direction(dir),
-_damage(damage),
-_speed(speed),
-_lifeTime(100000) {
+Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed) : m_position(pos),
+m_direction(dir),
+m_damage(damage),
+m_speed(speed),
+m_lifeTime(100000) {
 
 }
 
 
 Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed, int lifeTime){
-	_position = pos;
-	_direction = dir;
-	_damage = damage;
-	_speed = speed;
-	_lifeTime = lifeTime;
+	m_position = pos;
+	m_direction = dir;
+	m_damage = damage;
+	m_speed = speed;
+	m_lifeTime = lifeTime;
 }
 
 
@@ -32,7 +32,7 @@ Bullet::~Bullet()
 
 void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 
-	glm::vec4 destRect = glm::vec4(_position.x - BULLET_RADIUS, _position.y - BULLET_RADIUS, BULLET_RADIUS * 2, BULLET_RADIUS * 2);
+	glm::vec4 destRect = glm::vec4(m_position.x - BULLET_RADIUS, m_position.y - BULLET_RADIUS, BULLET_RADIUS * 2, BULLET_RADIUS * 2);
 
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	static GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture("Textures/circle.png");
@@ -49,8 +49,8 @@ void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 
 
 bool Bullet::update(const std::vector<std::string>& levelData, float deltaTime){
-	_position += _direction * _speed * deltaTime;
-	_lifeTime--;
+	m_position += m_direction * m_speed * deltaTime;
+	m_lifeTime--;
 	if (collideWithWorld(levelData))
 	{
 		return true;
@@ -61,7 +61,7 @@ bool Bullet::update(const std::vector<std::string>& levelData, float deltaTime){
 bool Bullet::collideWithAgent(Agent* agent){
 	const float MIN_DISTANCE = AGENT_RADIUS + float(BULLET_RADIUS);
 
-	glm::vec2 centerPosA = _position;
+	glm::vec2 centerPosA = m_position;
 	glm::vec2 centerPosB = agent->getPosition() + glm::vec2(AGENT_RADIUS);
 
 	glm::vec2 distVec = centerPosA - centerPosB;
@@ -81,8 +81,8 @@ bool Bullet::collideWithAgent(Agent* agent){
 
 bool Bullet::collideWithWorld(const std::vector<std::string>& levelData){
 	glm::ivec2 gridPosition;
-	gridPosition.x = floor(_position.x / (float)TILE_WIDTH);
-	gridPosition.y = floor(_position.y / (float)TILE_WIDTH);
+	gridPosition.x = floor(m_position.x / (float)TILE_WIDTH);
+	gridPosition.y = floor(m_position.y / (float)TILE_WIDTH);
 
 	//If we are outside the world, just return
 	if (gridPosition.x < 0 || gridPosition.x >= levelData[0].length()

@@ -23,17 +23,17 @@ Level::Level(const std::string fileName)
 
 	//Throw away the first sting in tap
 	std::string tmp;
-	file >> tmp >> _numHumans;
+	file >> tmp >> m_numHumans;
 
 	std::getline(file, tmp); //Throw away the rest of the first line
 
 	//Read the level data
 	while (std::getline(file, tmp)){
-		_levelData.push_back(tmp);
+		m_levelData.push_back(tmp);
 	}
 
-	_spriteBatch.init();
-	_spriteBatch.begin();
+	m_spriteBatch.init();
+	m_spriteBatch.begin();
 
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	GameEngine::ColorRGBA8 whiteColor;
@@ -43,12 +43,12 @@ Level::Level(const std::string fileName)
 	whiteColor.a = 255;
 
 	// Render all the tiles
-	for (int y = 0; y < _levelData.size(); y++)
+	for (int y = 0; y < m_levelData.size(); y++)
 	{
-		for (int x = 0; x < _levelData[y].size(); x++)
+		for (int x = 0; x < m_levelData[y].size(); x++)
 		{
 			// Grab the tile
-			char tile = _levelData[y][x];
+			char tile = m_levelData[y][x];
 			
 			// Get dest rect
 			glm::vec4 destRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
@@ -58,34 +58,34 @@ Level::Level(const std::string fileName)
 			{
 			case 'B':
 			case 'R':
-				_spriteBatch.draw(destRect, 
+				m_spriteBatch.draw(destRect, 
 					uvRect, 
 					GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id, 
 					0.0f,
 					whiteColor);
 				break;
 			case 'G':
-				_spriteBatch.draw(destRect,
+				m_spriteBatch.draw(destRect,
 					uvRect,
 					GameEngine::ResourceManager::getTexture("Textures/glass.png").id,
 					0.0f,
 					whiteColor);
 				break;
 			case 'L':
-				_spriteBatch.draw(destRect,
+				m_spriteBatch.draw(destRect,
 					uvRect,
 					GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id,
 					0.0f,
 					whiteColor);
 				break;
 			case '@':
-				_levelData[y][x] = '.'; /// So we don't collide with the starting points (@) later in the game
-				_startPlayerPos.x = x * TILE_WIDTH;
-				_startPlayerPos.y = y * TILE_WIDTH;
+				m_levelData[y][x] = '.'; /// So we don't collide with the starting points (@) later in the game
+				m_startPlayerPos.x = x * TILE_WIDTH;
+				m_startPlayerPos.y = y * TILE_WIDTH;
 				break;
 			case 'Z':
-				_levelData[y][x] = '.'; /// So we don't collide with the starting points (Z) later in the game
-				_startZombiePositions.emplace_back(x * TILE_WIDTH, y * TILE_WIDTH);
+				m_levelData[y][x] = '.'; /// So we don't collide with the starting points (Z) later in the game
+				m_startZombiePositions.emplace_back(x * TILE_WIDTH, y * TILE_WIDTH);
 				break;
 			case '.':
 				break;
@@ -97,7 +97,7 @@ Level::Level(const std::string fileName)
 		}
 	
 	}
-	_spriteBatch.end();
+	m_spriteBatch.end();
 
 }
 
@@ -108,5 +108,5 @@ Level::~Level()
 
 
 void Level::draw(){
-	_spriteBatch.renderBatch();
+	m_spriteBatch.renderBatch();
 }

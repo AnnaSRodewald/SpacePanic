@@ -18,11 +18,11 @@ void Agent::draw(GameEngine::SpriteBatch& spriteBatch){
 
 	static int textureID = GameEngine::ResourceManager::getTexture("Textures/circle.png").id;
 
-	glm::vec4 destRect(_position.x, _position.y, AGENT_WIDTH, AGENT_WIDTH);
+	glm::vec4 destRect(m_position.x, m_position.y, AGENT_WIDTH, AGENT_WIDTH);
 
 	const glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
-	spriteBatch.draw(destRect, uvRect, textureID, 0.0f, _color);
+	spriteBatch.draw(destRect, uvRect, textureID, 0.0f, m_color);
 }
 
 
@@ -33,26 +33,26 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 	//First corner
 	checkTilePosition(levelData,
 		collideTilePositions,
-		_position.x,
-		_position.y);
+		m_position.x,
+		m_position.y);
 
 	//Second corner
 	checkTilePosition(levelData,
 		collideTilePositions,
-		_position.x + AGENT_WIDTH,
-		_position.y);
+		m_position.x + AGENT_WIDTH,
+		m_position.y);
 
 	//Third corner
 	checkTilePosition(levelData,
 		collideTilePositions,
-		_position.x,
-		_position.y + AGENT_WIDTH);
+		m_position.x,
+		m_position.y + AGENT_WIDTH);
 
 	//Fourth corner
 	checkTilePosition(levelData,
 		collideTilePositions,
-		_position.x + AGENT_WIDTH,
-		_position.y + AGENT_WIDTH);
+		m_position.x + AGENT_WIDTH,
+		m_position.y + AGENT_WIDTH);
 
 	if (collideTilePositions.size() == 0)
 	{
@@ -72,24 +72,24 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 bool Agent::collideWithAgent(Agent* agent){
 
 	// Is the Agent too far away in the X direction to check?
-	if (agent->_position.x < _position.x - AGENT_WIDTH) { 
+	if (agent->m_position.x < m_position.x - AGENT_WIDTH) { 
 		return false; 
 	}
-	else if (agent->_position.x > _position.x + AGENT_WIDTH) { 
+	else if (agent->m_position.x > m_position.x + AGENT_WIDTH) { 
 		return false; 
 	}
 
 	// Is the Agent too far away in the Y direction to check?
-	if (agent->_position.y < _position.y - AGENT_WIDTH)      { 
+	if (agent->m_position.y < m_position.y - AGENT_WIDTH)      { 
 		return false; 
 	}
-	else if (agent->_position.y > _position.y + AGENT_WIDTH) { 
+	else if (agent->m_position.y > m_position.y + AGENT_WIDTH) { 
 		return false; 
 	}
 
 	const float MIN_DISTANCE = AGENT_RADIUS * 2.0f;
 
-	glm::vec2 centerPosA = _position + glm::vec2(AGENT_RADIUS);
+	glm::vec2 centerPosA = m_position + glm::vec2(AGENT_RADIUS);
 	glm::vec2 centerPosB = agent->getPosition() + glm::vec2(AGENT_RADIUS);
 
 	glm::vec2 distVec = centerPosA - centerPosB;
@@ -101,8 +101,8 @@ bool Agent::collideWithAgent(Agent* agent){
 	if (collisionDepth > 0)
 	{
 		glm::vec2 collisionDepthVec = glm::normalize(distVec) * collisionDepth;
-		_position += collisionDepthVec / 2.0f;
-		agent->_position -= collisionDepthVec / 2.0f;
+		m_position += collisionDepthVec / 2.0f;
+		agent->m_position -= collisionDepthVec / 2.0f;
 		return true;
 	}
 
@@ -110,9 +110,9 @@ bool Agent::collideWithAgent(Agent* agent){
 }
 
 bool Agent::applyDamage(float damage){
-	_health -= damage;
+	m_health -= damage;
 
-	if (_health <= 0.0f)
+	if (m_health <= 0.0f)
 	{
 		return true;
 	}
@@ -143,23 +143,23 @@ void Agent::checkTilePosition(const std::vector<std::string>& levelData, std::ve
 bool Agent::collideWithTile(glm::vec2 tilePosition){
 
 	// Is the tile too far away
-	if (tilePosition.x < _position.x - TILE_WIDTH) {
+	if (tilePosition.x < m_position.x - TILE_WIDTH) {
 		return false;
 	}
-	else if (tilePosition.x > _position.x + TILE_WIDTH) {
+	else if (tilePosition.x > m_position.x + TILE_WIDTH) {
 		return false;
 	}
-	if (tilePosition.y < _position.y - TILE_WIDTH) {
+	if (tilePosition.y < m_position.y - TILE_WIDTH) {
 		return false;
 	}
-	else if (tilePosition.y > _position.y + TILE_WIDTH) {
+	else if (tilePosition.y > m_position.y + TILE_WIDTH) {
 		return false;
 	}
 
 	const float TILE_RADIUS = (float)TILE_WIDTH / 2.0f;
 	const float MIN_DISTANCE = AGENT_RADIUS + TILE_RADIUS;
 
-	glm::vec2 centerPlayerPos = _position + glm::vec2(AGENT_RADIUS);
+	glm::vec2 centerPlayerPos = m_position + glm::vec2(AGENT_RADIUS);
 	glm::vec2 distanceVec = centerPlayerPos - tilePosition;
 
 	float xDepth = MIN_DISTANCE - abs(distanceVec.x);
@@ -170,21 +170,21 @@ bool Agent::collideWithTile(glm::vec2 tilePosition){
 		if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
 			if (distanceVec.x < 0)
 			{
-				_position.x -= xDepth;
+				m_position.x -= xDepth;
 			}
 			else
 			{
-				_position.x += xDepth;
+				m_position.x += xDepth;
 			}
 		}
 		else{
 			if (distanceVec.y < 0)
 			{
-				_position.y -= yDepth;
+				m_position.y -= yDepth;
 			}
 			else
 			{
-				_position.y += yDepth;
+				m_position.y += yDepth;
 			}
 		}
 	}

@@ -12,24 +12,24 @@ namespace GameEngine{
 		}
 
 	void FpsLimiter::setMaxFPS(float maxFPS){
-		_maxFPS = maxFPS;
+		m_maxFPS = maxFPS;
 		}
 
 	void FpsLimiter::beginFrame(){
-		_startTicks = SDL_GetTicks();
+		m_startTicks = SDL_GetTicks();
 
 		}
 
 	float FpsLimiter::end(){
 		calculateFPS();
 
-		float frameTicks = SDL_GetTicks() - _startTicks;
+		float frameTicks = SDL_GetTicks() - m_startTicks;
 		//Limit the FPS to the max FPS value 
-		if (1000.0f / _maxFPS > frameTicks){
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		if (1000.0f / m_maxFPS > frameTicks){
+			SDL_Delay(1000.0f / m_maxFPS - frameTicks);
 			}
 
-		return _fps;
+		return m_fps;
 		}
 
 
@@ -43,8 +43,8 @@ namespace GameEngine{
 		float currentTicks;
 		currentTicks = SDL_GetTicks();
 
-		_frameTime = currentTicks - prevTicks;
-		frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
+		m_frameTime = currentTicks - prevTicks;
+		frameTimes[currentFrame % NUM_SAMPLES] = m_frameTime;
 
 		prevTicks = currentTicks;
 
@@ -65,9 +65,9 @@ namespace GameEngine{
 		frameTimeAverage /= count;
 
 		if (frameTimeAverage > 0){
-			_fps = 1000.0f / frameTimeAverage;
+			m_fps = 1000.0f / frameTimeAverage;
 			} else {
-				_fps =  60.0f;
+				m_fps =  60.0f;
 			}
 
 		}

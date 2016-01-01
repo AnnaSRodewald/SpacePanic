@@ -20,11 +20,11 @@ public:
 		std::vector<Human*>& humans, std::vector<Zombie*>& zombies, float deltaTime) override;
 
 private:
-	GameEngine::InputManager* _inputManager;
-	GameEngine::Camera2D* _camera;
+	GameEngine::InputManager* m_inputManager;
+	GameEngine::Camera2D* m_camera;
 
-	std::vector<Gun*> _guns;
-	int _currentGunIndex;
-	std::vector<Bullet>* _bullets;
+	std::vector<Gun*> m_guns;
+	int m_currentGunIndex;
+	std::vector<Bullet>* m_bullets;
 };
 

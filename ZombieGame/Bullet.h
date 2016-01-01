@@ -22,17 +22,17 @@ public:
 
 	bool collideWithAgent(Agent* agent);
 
-	float getDamage() const { return _damage; }
+	float getDamage() const { return m_damage; }
 
 private:
 	bool collideWithWorld(const std::vector<std::string>& levelData);
 
-	float _damage; 
-	glm::vec2 _direction;
-	glm::vec2 _position;
-	float _speed;
+	float m_damage; 
+	glm::vec2 m_direction;
+	glm::vec2 m_position;
+	float m_speed;
 
-	int _lifeTime;
+	int m_lifeTime;
 
 
 };

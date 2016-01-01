@@ -25,12 +25,12 @@ namespace GameEngine{
 			bool isKeyPressed(unsigned int keyID);
 
 			//getters
-			glm::vec2 getMouseCoords() const { return _mouseCoords; }
+			glm::vec2 getMouseCoords() const { return m_mouseCoords; }
 
 		private:
-			std::unordered_map<unsigned int, bool> _keyMap;
-			std::unordered_map<unsigned int, bool> _previousKeyMap;
-			glm::vec2 _mouseCoords;
+			std::unordered_map<unsigned int, bool> m_keyMap;
+			std::unordered_map<unsigned int, bool> m_previousKeyMap;
+			glm::vec2 m_mouseCoords;
 
 			//Returns true if the key was held down last frame
 			bool wasKeyDown(unsigned int keyID);

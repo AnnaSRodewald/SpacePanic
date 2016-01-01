@@ -7,7 +7,7 @@
 
 namespace GameEngine{
 
-	GLSLProgram::GLSLProgram(void) :  _numAttributes(0), _programID(0), _vertexShaderID(0), _fragmentShaderID(0)
+	GLSLProgram::GLSLProgram(void) :  m_numAttributes(0), m_programID(0), m_vertexShaderID(0), m_fragmentShaderID(0)
 		{
 		}
 
@@ -19,20 +19,20 @@ namespace GameEngine{
 
 	void GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragementShaderFilePath){
 		//Get a program object.
-		_programID = glCreateProgram();
+		m_programID = glCreateProgram();
 
-		_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-		if (_vertexShaderID == 0) {
+		m_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+		if (m_vertexShaderID == 0) {
 			fatalError("Vertex shader failed to be created!");
 			}
 
-		_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-		if (_fragmentShaderID == 0) {
+		m_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+		if (m_fragmentShaderID == 0) {
 			fatalError("Fragment shader failed to be created!");
 			}
 
-		compileShaders(vertexShaderFilePath, _vertexShaderID);
-		compileShaders(fragementShaderFilePath, _fragmentShaderID);
+		compileShaders(vertexShaderFilePath, m_vertexShaderID);
+		compileShaders(fragementShaderFilePath, m_fragmentShaderID);
 		}
 
 	void GLSLProgram::linkShaders(){
@@ -40,50 +40,50 @@ namespace GameEngine{
 		//Now time to link them together into a program.
 
 		//Attach our shaders to our program
-		glAttachShader(_programID, _vertexShaderID);
-		glAttachShader(_programID, _fragmentShaderID);
+		glAttachShader(m_programID, m_vertexShaderID);
+		glAttachShader(m_programID, m_fragmentShaderID);
 
 		//Link our program
-		glLinkProgram(_programID);
+		glLinkProgram(m_programID);
 
 		//Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint isLinked = 0;
-		glGetProgramiv(_programID, GL_LINK_STATUS, (int *)&isLinked);
+		glGetProgramiv(m_programID, GL_LINK_STATUS, (int *)&isLinked);
 		if(isLinked == GL_FALSE)
 			{
 			GLint maxLength = 0;
-			glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &maxLength);
+			glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
 
 			//The maxLength includes the NULL character
 			std::vector<GLchar> errorLog(maxLength);
-			glGetProgramInfoLog(_programID, maxLength, &maxLength, &errorLog[0]);
+			glGetProgramInfoLog(m_programID, maxLength, &maxLength, &errorLog[0]);
 
 			//We don't need the program anymore.
-			glDeleteProgram(_programID);
+			glDeleteProgram(m_programID);
 			//Don't leak shaders either.
-			glDeleteShader(_vertexShaderID);
-			glDeleteShader(_fragmentShaderID);
+			glDeleteShader(m_vertexShaderID);
+			glDeleteShader(m_fragmentShaderID);
 
 			std::printf("%s\n", &(errorLog[0]));
 			fatalError("Shaders failed to link!");
 			}
 
 		//Always detach shaders after a successful link.
-		glDetachShader(_programID, _vertexShaderID);
-		glDetachShader(_programID, _fragmentShaderID);
+		glDetachShader(m_programID, m_vertexShaderID);
+		glDetachShader(m_programID, m_fragmentShaderID);
 
-		glDeleteShader(_vertexShaderID);
-		glDeleteShader(_fragmentShaderID);
+		glDeleteShader(m_vertexShaderID);
+		glDeleteShader(m_fragmentShaderID);
 		}
 
 	void GLSLProgram::addAttribute(const std::string& attributeName){
 		//layout(location = 2) in vec4 a_vec; for newer models of opengl -- see https://www.opengl.org/wiki/Vertex_Shader#Inputs
 
-		glBindAttribLocation(_programID, _numAttributes++, attributeName.c_str());
+		glBindAttribLocation(m_programID, m_numAttributes++, attributeName.c_str());
 		}
 
 	GLint GLSLProgram::getUniformLocation(const std::string& uniformName){
-		GLint location = glGetUniformLocation(_programID, uniformName.c_str());
+		GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
 
 		if (location == GL_INVALID_INDEX){
 			fatalError("Uniform " + uniformName + " not found in shader!");
@@ -94,8 +94,8 @@ namespace GameEngine{
 
 
 	void GLSLProgram::use(){
-		glUseProgram(_programID);
-		for (int i = 0; i < _numAttributes; i++)
+		glUseProgram(m_programID);
+		for (int i = 0; i < m_numAttributes; i++)
 			{
 			glEnableVertexAttribArray(i);
 			}
@@ -103,7 +103,7 @@ namespace GameEngine{
 
 	void GLSLProgram::unuse(){
 		glUseProgram(0);
-		for (int i = 0; i < _numAttributes; i++)
+		for (int i = 0; i < m_numAttributes; i++)
 			{
 			glDisableVertexAttribArray(i);
 			}

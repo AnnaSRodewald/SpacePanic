@@ -25,14 +25,14 @@ namespace GameEngine{
 
 
 		private:
-			int _numAttributes;
+			int m_numAttributes;
 
 			void compileShaders(const std::string& filePath, GLuint shaderID);
 
-			GLuint _programID;
+			GLuint m_programID;
 
-			GLuint _vertexShaderID;
-			GLuint _fragmentShaderID;
+			GLuint m_vertexShaderID;
+			GLuint m_fragmentShaderID;
 
 
 

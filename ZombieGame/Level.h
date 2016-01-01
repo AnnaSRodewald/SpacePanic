@@ -18,26 +18,26 @@ public:
 	void draw();
 
 	//Getters
-	const std::vector<std::string>& getLevelData(){ return _levelData; }
+	const std::vector<std::string>& getLevelData(){ return m_levelData; }
 
-	glm::vec2 getStartPlayerPos() const { return _startPlayerPos; }
-	const std::vector<glm::vec2> getStartZombiePositions() const { return _startZombiePositions; }
+	glm::vec2 getStartPlayerPos() const { return m_startPlayerPos; }
+	const std::vector<glm::vec2> getStartZombiePositions() const { return m_startZombiePositions; }
 
-	int getNumHumans() const { return _numHumans; }
+	int getNumHumans() const { return m_numHumans; }
 
 	int getWidth() const {
-		return _levelData[0].size();
+		return m_levelData[0].size();
 	}
 	int getHeight() const {
-		return _levelData.size();
+		return m_levelData.size();
 	}
 
 private:
-	std::vector<std::string> _levelData;
-	int _numHumans;
-	GameEngine::SpriteBatch _spriteBatch;
+	std::vector<std::string> m_levelData;
+	int m_numHumans;
+	GameEngine::SpriteBatch m_spriteBatch;
 
-	glm::vec2 _startPlayerPos;
-	std::vector<glm::vec2> _startZombiePositions;
+	glm::vec2 m_startPlayerPos;
+	std::vector<glm::vec2> m_startZombiePositions;
 };
 

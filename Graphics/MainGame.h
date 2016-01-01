@@ -39,28 +39,28 @@ class MainGame
 		void processInput();
 		void drawGame();
 
-		GameEngine::Window _window;
-		int _screenWidth;
-		int _screenHeight;
+		GameEngine::Window m_window;
+		int m_screenWidth;
+		int m_screenHeight;
 
-		GameState _gameState;
+		GameState m_gameState;
 
-		GameEngine::GLSLProgram _colorProgram;
-		GameEngine::GLTexture _playerTexture;
+		GameEngine::GLSLProgram m_colorProgram;
+		GameEngine::GLTexture m_playerTexture;
 
-		GameEngine::Camera2D _camera;
+		GameEngine::Camera2D m_camera;
 
-		GameEngine::SpriteBatch _spriteBatch;
+		GameEngine::SpriteBatch m_spriteBatch;
 
-		GameEngine::InputManager _inputManager;
+		GameEngine::InputManager m_inputManager;
 
-		GameEngine::FpsLimiter _fpsLimiter;
+		GameEngine::FpsLimiter m_fpsLimiter;
 
-		std::vector<Bullet> _bullets;
+		std::vector<Bullet> m_bullets;
 
-		float _fps;
-		float _maxFPS;
+		float m_fps;
+		float m_maxFPS;
 
-		float _time;
+		float m_time;
 	};
 

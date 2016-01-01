@@ -84,14 +84,14 @@ namespace GameEngine{
 			static bool compareBackToFront(Glypth* a, Glypth* b);
 			static bool compareTexture(Glypth* a, Glypth* b);
 
-			GLuint _vbo;
-			GLuint _vao;
+			GLuint m_vbo;
+			GLuint m_vao;
 
-			GlypthSortType _sortType;
+			GlypthSortType m_sortType;
 
-			std::vector<Glypth*> _glypthPointers; ///< This is for sorting
-			std::vector<Glypth> _glypths; ///< these are the actual glypths
-			std::vector<RenderBatch> _renderBatches;
+			std::vector<Glypth*> m_glypthPointers; ///< This is for sorting
+			std::vector<Glypth> m_glypths; ///< these are the actual glypths
+			std::vector<RenderBatch> m_renderBatches;
 		};
 
 

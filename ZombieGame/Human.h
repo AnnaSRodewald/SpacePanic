@@ -17,11 +17,11 @@ public:
 		std::vector<Human*>& humans, std::vector<Zombie*>& zombies, float deltaTime) override;
 	
 	glm::vec2 getDirection(){
-		return _direction;
+		return m_direction;
 	};
 
 private:
-	glm::vec2 _direction;
-	int _frames;
+	glm::vec2 m_direction;
+	int m_frames;
 };
 

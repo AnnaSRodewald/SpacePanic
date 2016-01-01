@@ -14,7 +14,7 @@ public:
 		std::vector<Human*>& humans, std::vector<Zombie*>& zombies, float deltaTime) override;
 
 	float getHealth() override {
-		return _health;
+		return m_health;
 	};
 private:
 	Human* getNearestHuman(std::vector<Human*>& humans);

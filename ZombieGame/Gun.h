@@ -15,19 +15,19 @@ public:
 	void update(bool isMouseDown, const glm::vec2& position, const glm::vec2& direction, std::vector<Bullet>& bullets, float deltaTime);
 
 private:
-	std::string _name;
+	std::string m_name;
 
-	int _fireRate; ///< fire rate in terms of frames
+	int m_fireRate; ///< fire rate in terms of frames
 
-	int _bulletsPerShot; ///< how many bullets are fired at a time
+	int m_bulletsPerShot; ///< how many bullets are fired at a time
 
-	float _spread; ///< accuracy
+	float m_spread; ///< accuracy
 
-	float _bulletSpeed; 
+	float m_bulletSpeed; 
 
-	float _bulletDamage;
+	float m_bulletDamage;
 
-	float _frameCounter;
+	float m_frameCounter;
 
 	void fire(const glm::vec2& position, const glm::vec2& direction, std::vector<Bullet>& bullets);
 

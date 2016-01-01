@@ -57,38 +57,38 @@ private:
 	void drawHUD();
 
     /// Member Variables
-    GameEngine::Window _window; ///< The game window
+    GameEngine::Window m_window; ///< The game window
     
-    GameEngine::GLSLProgram _textureProgram; ///< The shader program
+    GameEngine::GLSLProgram m_textureProgram; ///< The shader program
 
-    GameEngine::InputManager _inputManager; ///< Handles input
+    GameEngine::InputManager m_inputManager; ///< Handles input
 
-    GameEngine::Camera2D _camera; ///< Main Camera
-	GameEngine::Camera2D _hudCamera; ///< HUD Camera
+    GameEngine::Camera2D m_camera; ///< Main Camera
+	GameEngine::Camera2D m_hudCamera; ///< HUD Camera
 
-	GameEngine::SpriteBatch _agentSpriteBatch; ///< Draws all agents
-	GameEngine::SpriteBatch _hudSpriteBatch;
+	GameEngine::SpriteBatch m_agentSpriteBatch; ///< Draws all agents
+	GameEngine::SpriteBatch m_hudSpriteBatch;
 
-	GameEngine::SpriteFont* _spriteFont;
+	GameEngine::SpriteFont* m_spriteFont;
 
-	std::vector<Level*> _levels; ///< Vector of all levels
+	std::vector<Level*> m_levels; ///< Vector of all levels
 
-	int _screenWidth = 1024;
-	int _screenHeight = 768;
+	int m_screenWidth = 1024;
+	int m_screenHeight = 768;
 
-	GameState _gameState;
+	GameState m_gameState;
 
-	float _fps;
+	float m_fps;
 
-	int _currentLevel; 
+	int m_currentLevel; 
 
-	Player* _player;
-	std::vector<Human*> _humans; ///< Vector of all humans
-	std::vector<Zombie*> _zombies; ///< Vector of all zombies
-	std::vector<Bullet> _bullets; ///< Vector of bullets
+	Player* m_player;
+	std::vector<Human*> m_humans; ///< Vector of all humans
+	std::vector<Zombie*> m_zombies; ///< Vector of all zombies
+	std::vector<Bullet> m_bullets; ///< Vector of bullets
 
-	int _numHumansKilled; ///< Humans killed by player
-	int _numZombiesKilled; ///< Zombies killed by player
+	int m_numHumansKilled; ///< Humans killed by player
+	int m_numZombiesKilled; ///< Zombies killed by player
 
 };
 
