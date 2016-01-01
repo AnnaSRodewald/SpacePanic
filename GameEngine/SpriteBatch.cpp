@@ -20,15 +20,17 @@ namespace GameEngine{
 
 	void SpriteBatch::begin(GlypthSortType sortType) /* = GlypthSortType::TEXTURE) */{
 		_sortType = sortType;
-		_renderBatches.clear();
-		for (int i = 0; i < _glypths.size(); i++)
-			{
-			delete _glypths[i];
-			}
+		_renderBatches.clear();	
 		_glypths.clear();
-
 		}
+
 	void SpriteBatch::end(){
+		//Set up all pointers for fast sorting
+		_glypthPointers.resize(_glypths.size());
+		for (int i = 0; i < _glypths.size(); i++)
+		{
+			_glypthPointers[i] = &_glypths[i];
+		}
 		sortGlypths();
 		createRenderBatches();
 
@@ -36,27 +38,7 @@ namespace GameEngine{
 
 	void SpriteBatch::draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color){
 
-		Glypth* newGlypth = new Glypth;
-		newGlypth->texture = texture;
-		newGlypth->depth = depth;
-
-		newGlypth->topLeft.color = color;
-		newGlypth->topLeft.setPosition(destRect.x, destRect.y + destRect.w);
-		newGlypth->topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
-
-		newGlypth->bottomLeft.color = color;
-		newGlypth->bottomLeft.setPosition(destRect.x, destRect.y);
-		newGlypth->bottomLeft.setUV(uvRect.x, uvRect.y);
-
-		newGlypth->topRight.color = color;
-		newGlypth->topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-		newGlypth->topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-		newGlypth->bottomRight.color = color;
-		newGlypth->bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
-		newGlypth->bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
-
-		_glypths.push_back(newGlypth);
+		_glypths.emplace_back(destRect, uvRect, texture, depth, color);
 		}
 
 	void SpriteBatch::renderBatch(){
@@ -75,9 +57,9 @@ namespace GameEngine{
 
 	void SpriteBatch::createRenderBatches(){
 		std::vector<Vertex> vertices;
-		vertices.resize(_glypths.size() * 6);
+		vertices.resize(_glypthPointers.size() * 6);
 
-		if (_glypths.empty())
+		if (_glypthPointers.empty())
 			{
 			return;
 			}
@@ -85,29 +67,29 @@ namespace GameEngine{
 		int offset = 0;
 		int cv = 0; //current vertex
 
-		_renderBatches.emplace_back(offset, 6, _glypths[0]->texture);
-		vertices[cv++]= _glypths[0]->topLeft;
-		vertices[cv++]= _glypths[0]->bottomLeft;
-		vertices[cv++]= _glypths[0]->bottomRight;
-		vertices[cv++]= _glypths[0]->bottomRight;
-		vertices[cv++]= _glypths[0]->topRight;
-		vertices[cv++]= _glypths[0]->topLeft;
+		_renderBatches.emplace_back(offset, 6, _glypthPointers[0]->texture);
+		vertices[cv++]= _glypthPointers[0]->topLeft;
+		vertices[cv++]= _glypthPointers[0]->bottomLeft;
+		vertices[cv++]= _glypthPointers[0]->bottomRight;
+		vertices[cv++]= _glypthPointers[0]->bottomRight;
+		vertices[cv++]= _glypthPointers[0]->topRight;
+		vertices[cv++]= _glypthPointers[0]->topLeft;
 		offset += 6;
 
-		for (int cg = 1; cg < _glypths.size(); cg++) //cg = current Glypth
+		for (int cg = 1; cg < _glypthPointers.size(); cg++) //cg = current Glypth
 			{
-			if (_glypths[cg]->texture != _glypths[cg - 1]->texture)
+			if (_glypthPointers[cg]->texture != _glypthPointers[cg - 1]->texture)
 				{
-				_renderBatches.emplace_back(offset, 6, _glypths[cg]->texture);
+				_renderBatches.emplace_back(offset, 6, _glypthPointers[cg]->texture);
 				} else{
 					_renderBatches.back().numVertices += 6;
 				}
-			vertices[cv++]= _glypths[cg]->topLeft;
-			vertices[cv++]= _glypths[cg]->bottomLeft;
-			vertices[cv++]= _glypths[cg]->bottomRight;
-			vertices[cv++]= _glypths[cg]->bottomRight;
-			vertices[cv++]= _glypths[cg]->topRight;
-			vertices[cv++]= _glypths[cg]->topLeft;
+			vertices[cv++]= _glypthPointers[cg]->topLeft;
+			vertices[cv++]= _glypthPointers[cg]->bottomLeft;
+			vertices[cv++]= _glypthPointers[cg]->bottomRight;
+			vertices[cv++]= _glypthPointers[cg]->bottomRight;
+			vertices[cv++]= _glypthPointers[cg]->topRight;
+			vertices[cv++]= _glypthPointers[cg]->topLeft;
 			offset += 6;
 			}
 
@@ -164,13 +146,13 @@ namespace GameEngine{
 		switch (_sortType)
 			{
 			case GameEngine::GlypthSortType::FRONT_TO_BACK:
-				std::stable_sort(_glypths.begin(), _glypths.end(), compareFrontToBack);
+				std::stable_sort(_glypthPointers.begin(), _glypthPointers.end(), compareFrontToBack);
 				break;
 			case GameEngine::GlypthSortType::BACK_TO_FRONT:
-				std::stable_sort(_glypths.begin(), _glypths.end(), compareFrontToBack);
+				std::stable_sort(_glypthPointers.begin(), _glypthPointers.end(), compareFrontToBack);
 				break;
 			case GameEngine::GlypthSortType::TEXTURE:
-				std::stable_sort(_glypths.begin(), _glypths.end(), compareTexture);
+				std::stable_sort(_glypthPointers.begin(), _glypthPointers.end(), compareTexture);
 				break;
 			default:
 				break;
