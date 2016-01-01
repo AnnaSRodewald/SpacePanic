@@ -2,18 +2,21 @@
 
 #include <GameEngine/GameEngine.h>
 #include <GameEngine\Timing.h>
+#include <GameEngine\Errors.h>
 
 #include <SDL/SDL.h>
 #include <iostream>
 
-#include "Zombie.h"
 #include <random>
 #include <ctime>
 
-#include <GameEngine\Errors.h>
+#include <algorithm>
+
+#include "Zombie.h"
+
 #include "Gun.h"
 
-#include <algorithm>
+
 
 
 const float PLAYER_SPEED = 5.0f;
@@ -66,8 +69,15 @@ void MainGame::initSystems() {
 	initShaders();
 
 	_agentSpriteBatch.init();
+	_hudSpriteBatch.init();
 
+	//Initialize sprite font
+	_spriteFont = new GameEngine::SpriteFont("Fonts/chintzy_cpu_brk/chintzy.ttf", 64);
+
+	//Set up the cameras
 	_camera.init(_screenWidth, _screenHeight);
+	_hudCamera.init(_screenWidth, _screenHeight);
+	_hudCamera.setPosition(glm::vec2(_screenWidth / 2, _screenHeight / 2));
 }
 
 
@@ -166,6 +176,8 @@ void MainGame::gameLoop() {
 		_camera.setPosition(_player->getPosition());
 
 		_camera.update();
+
+		_hudCamera.update();
 
 		drawGame();
 
@@ -411,8 +423,32 @@ void MainGame::drawGame() {
 
 	_agentSpriteBatch.renderBatch();
 
+	//Render the heads up display
+	drawHUD();
+
 	_textureProgram.unuse();
 
 	// Swap our buffer and draw everything to the screen!
 	_window.swapBuffer();
+}
+
+void MainGame::drawHUD(){
+	char buffer[256];
+
+	//Grab the hud camera matrix
+	glm::mat4 projectionMatrix = _hudCamera.getCameraMatrix();
+	GLint pUniform = _textureProgram.getUniformLocation("P");
+	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+	_hudSpriteBatch.begin();
+
+	sprintf_s(buffer, "Num Humans %d", _humans.size());
+	_spriteFont->draw(_hudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Num Zombies %d", _zombies.size());
+	_spriteFont->draw(_hudSpriteBatch, buffer, glm::vec2(0, 36), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	_hudSpriteBatch.end();
+
+	_hudSpriteBatch.renderBatch();
 }

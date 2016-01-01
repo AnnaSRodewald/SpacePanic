@@ -4,6 +4,7 @@
 #include <GameEngine/GLSLProgram.h>
 #include <GameEngine/Camera2D.h>
 #include <GameEngine/InputManager.h>
+#include <GameEngine/SpriteFont.h>
 
 #include "Level.h"
 #include "Player.h"
@@ -52,6 +53,9 @@ private:
     /// Renders the game
     void drawGame();
 
+	/// Draws the HUD
+	void drawHUD();
+
     /// Member Variables
     GameEngine::Window _window; ///< The game window
     
@@ -60,8 +64,12 @@ private:
     GameEngine::InputManager _inputManager; ///< Handles input
 
     GameEngine::Camera2D _camera; ///< Main Camera
+	GameEngine::Camera2D _hudCamera; ///< HUD Camera
 
 	GameEngine::SpriteBatch _agentSpriteBatch; ///< Draws all agents
+	GameEngine::SpriteBatch _hudSpriteBatch;
+
+	GameEngine::SpriteFont* _spriteFont;
 
 	std::vector<Level*> _levels; ///< Vector of all levels
 
@@ -81,5 +89,6 @@ private:
 
 	int _numHumansKilled; ///< Humans killed by player
 	int _numZombiesKilled; ///< Zombies killed by player
+
 };
 
