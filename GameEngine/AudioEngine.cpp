@@ -45,21 +45,41 @@ namespace GameEngine{
 
 
 	void AudioEngine::init(){
-		/// Parameter can be a bitwise combination of MIX_INIT_FAC, MIX_INIT_MOD, MIX_INIT_MP3, MIX_INIT_OGG
-		if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == -1){
-			fatalError("Mix_Init error: " + std::string(Mix_GetError()));
-		}
 
-		if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) == -1){
-			fatalError("Mix_OpenAudio error: " + std::string(Mix_GetError()));
+		if (m_isInitialized)
+		{
+			fatalError("Tried to initialize Audio Engine twice");
 		}
+		else{
+			/// Parameter can be a bitwise combination of MIX_INIT_FAC, MIX_INIT_MOD, MIX_INIT_MP3, MIX_INIT_OGG
+			if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == -1){
+				fatalError("Mix_Init error: " + std::string(Mix_GetError()));
+			}
 
-		m_isInitialized = true;
+			if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) == -1){
+				fatalError("Mix_OpenAudio error: " + std::string(Mix_GetError()));
+			}
+
+			m_isInitialized = true;
+		}
 	}
 
 	void AudioEngine::destroy(){
 		if (m_isInitialized){
 			m_isInitialized = false;
+
+			for (auto& it : m_effectMap){
+				Mix_FreeChunk(it.second);
+			}
+
+			for (auto& it : m_musicMap){
+				Mix_FreeMusic(it.second);
+			}
+
+			m_effectMap.clear();
+			m_musicMap.clear();
+
+			Mix_CloseAudio();
 			Mix_Quit();
 		}
 	}
