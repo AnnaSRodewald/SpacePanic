@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "Errors.h"
+#include "GameEngineErrors.h"
 
 namespace GameEngine{
 

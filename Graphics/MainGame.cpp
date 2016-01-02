@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include <GameEngine/Errors.h>
+#include <GameEngine/GameEngineErrors.h>
 #include <GameEngine/ResourceManager.h>
 
 

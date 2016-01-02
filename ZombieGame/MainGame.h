@@ -5,6 +5,7 @@
 #include <GameEngine/Camera2D.h>
 #include <GameEngine/InputManager.h>
 #include <GameEngine/SpriteFont.h>
+#include <GameEngine/AudioEngine.h>
 
 #include "Level.h"
 #include "Player.h"
@@ -70,6 +71,8 @@ private:
 	GameEngine::SpriteBatch m_hudSpriteBatch;
 
 	GameEngine::SpriteFont* m_spriteFont;
+
+	GameEngine::AudioEngine m_audioEngine;
 
 	std::vector<Level*> m_levels; ///< Vector of all levels
 

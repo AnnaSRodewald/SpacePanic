@@ -2,7 +2,7 @@
 
 #include <GameEngine/GameEngine.h>
 #include <GameEngine\Timing.h>
-#include <GameEngine\Errors.h>
+#include <GameEngine\GameEngineErrors.h>
 
 #include <SDL/SDL.h>
 #include <iostream>
@@ -55,11 +55,19 @@ void MainGame::run() {
 
 	initLevel();
 
+	//Start playing music
+	GameEngine::Music music = m_audioEngine.loadMusic("Sound/XYZ.ogg");
+	music.play(-1);
+
 	gameLoop();
 }
 
 void MainGame::initSystems() {
+	//Initialize the game engine
 	GameEngine::init();
+
+	//Initialize sound, must happen after GameEngine::init()
+	m_audioEngine.init();
 
 	m_window.create("Game Engine", m_screenWidth, m_screenHeight, 0);
 	glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
@@ -112,9 +120,9 @@ void MainGame::initLevel(){
 
 	//Set up the guns of the player (pistol, shot gun, machine gun)
 	const float BULLET_SPEED = 20.0f;
-	m_player->addGun(new Gun("Magnum", 10, 1, 5.0f, BULLET_SPEED, 30.0f));
-	m_player->addGun(new Gun("Shotgun", 30, 20, 20.0f, BULLET_SPEED, 4.0f));
-	m_player->addGun(new Gun("MP5", 2, 1, 12.0f, BULLET_SPEED, 20.0f));
+	m_player->addGun(new Gun("Magnum", 10, 1, 5.0f, BULLET_SPEED, 30.0f, m_audioEngine.loadSoundEffect("Sound/shots/pistol.wav")));
+	m_player->addGun(new Gun("Shotgun", 30, 20, 20.0f, BULLET_SPEED, 4.0f, m_audioEngine.loadSoundEffect("Sound/shots/shotgun.wav")));
+	m_player->addGun(new Gun("MP5", 2, 1, 12.0f, BULLET_SPEED, 20.0f, m_audioEngine.loadSoundEffect("Sound/shots/cg1.wav")));
 }
 
 void MainGame::initShaders() {

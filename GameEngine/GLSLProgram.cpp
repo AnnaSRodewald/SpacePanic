@@ -1,5 +1,5 @@
 #include "GLSLProgram.h"
-#include "Errors.h"
+#include "GameEngineErrors.h"
 
 #include <fstream>
 

@@ -7,13 +7,14 @@
 const float DEG_TO_RAD = M_PI / 180.0f;
 const float RAD_TO_DEG = 180.0f / M_PI;
 
-Gun::Gun(std::string name, int fireRate, int bulletsPerShot, float spread, float bulletSpeed, float bulletDamage) : m_name(name),
+Gun::Gun(std::string name, int fireRate, int bulletsPerShot, float spread, float bulletSpeed, float bulletDamage, GameEngine::SoundEffect fireEffect) : m_name(name),
 m_fireRate(fireRate),
 m_bulletsPerShot(bulletsPerShot),
 m_spread(spread),
 m_bulletSpeed(bulletSpeed),
 m_bulletDamage(bulletDamage),
-m_frameCounter(0)
+m_frameCounter(0),
+m_fireEffect(fireEffect)
 {
 	//Empty
 }
@@ -36,6 +37,8 @@ void Gun::update(bool isMouseDown, const glm::vec2& position, const glm::vec2& d
 void Gun::fire(const glm::vec2& position, const glm::vec2& direction, std::vector<Bullet>& bullets){
 	std::mt19937 randomEngine(time(nullptr));
 	std::uniform_real_distribution<float> randRotate(-m_spread * DEG_TO_RAD, m_spread * DEG_TO_RAD);
+
+	m_fireEffect.play();
 
 	for (int i = 0; i < m_bulletsPerShot; i++)
 	{
