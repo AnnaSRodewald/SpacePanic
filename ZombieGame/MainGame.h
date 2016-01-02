@@ -6,6 +6,8 @@
 #include <GameEngine/InputManager.h>
 #include <GameEngine/SpriteFont.h>
 #include <GameEngine/AudioEngine.h>
+#include <GameEngine/ParticleEngine2D.h>
+#include <GameEngine/ParticleBatch2D.h>
 
 #include "Level.h"
 #include "Player.h"
@@ -57,6 +59,9 @@ private:
 	/// Draws the HUD
 	void drawHUD();
 
+	//Adds blood to the particle engine
+	void addBlood(glm::vec2& position, int numParticles);
+
     /// Member Variables
     GameEngine::Window m_window; ///< The game window
     
@@ -73,6 +78,9 @@ private:
 	GameEngine::SpriteFont* m_spriteFont;
 
 	GameEngine::AudioEngine m_audioEngine;
+
+	GameEngine::ParticleEngine2D m_particleEngine;
+	GameEngine::ParticleBatch2D* m_bloodParticleBatch;
 
 	std::vector<Level*> m_levels; ///< Vector of all levels
 

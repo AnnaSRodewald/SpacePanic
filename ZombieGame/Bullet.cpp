@@ -7,7 +7,8 @@
 #include "Zombie.h"
 
 
-Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed) : m_position(pos),
+Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed) :
+m_position(pos),
 m_direction(dir),
 m_damage(damage),
 m_speed(speed),
@@ -25,8 +26,8 @@ Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float damage, float speed, int life
 }
 
 
-Bullet::~Bullet()
-{
+Bullet::~Bullet(){
+//Empty
 }
 
 
@@ -50,12 +51,8 @@ void Bullet::draw(GameEngine::SpriteBatch& spriteBatch){
 
 bool Bullet::update(const std::vector<std::string>& levelData, float deltaTime){
 	m_position += m_direction * m_speed * deltaTime;
-	m_lifeTime--;
-	if (collideWithWorld(levelData))
-	{
-		return true;
-	}
-	return false;
+	//m_lifeTime--;
+	return collideWithWorld(levelData);
 }
 
 bool Bullet::collideWithAgent(Agent* agent){
@@ -85,7 +82,7 @@ bool Bullet::collideWithWorld(const std::vector<std::string>& levelData){
 	gridPosition.y = floor(m_position.y / (float)TILE_WIDTH);
 
 	//If we are outside the world, just return
-	if (gridPosition.x < 0 || gridPosition.x >= levelData[0].length()
+	if (gridPosition.x < 0 || gridPosition.x >= levelData[0].size()
 		|| gridPosition.y < 0 || gridPosition.y >= levelData.size()){
 		return true;
 	}

@@ -3,12 +3,14 @@
 #include <GameEngine/GameEngine.h>
 #include <GameEngine\Timing.h>
 #include <GameEngine\GameEngineErrors.h>
+#include <GameEngine\ResourceManager.h>
 
 #include <SDL/SDL.h>
 #include <iostream>
 
 #include <random>
 #include <ctime>
+#include <glm\gtx\rotate_vector.hpp>
 
 #include <algorithm>
 
@@ -17,6 +19,8 @@
 #include "Gun.h"
 
 
+const float DEG_TO_RAD = M_PI / 180.0f;
+const float RAD_TO_DEG = 180.0f / M_PI;
 
 
 const float PLAYER_SPEED = 5.0f;
@@ -84,6 +88,11 @@ void MainGame::initSystems() {
 	m_camera.init(m_screenWidth, m_screenHeight);
 	m_hudCamera.init(m_screenWidth, m_screenHeight);
 	m_hudCamera.setPosition(glm::vec2(m_screenWidth / 2, m_screenHeight / 2));
+
+	//Initialize particles
+	m_bloodParticleBatch = new GameEngine::ParticleBatch2D();
+	m_bloodParticleBatch->init(1000, 0.05f, GameEngine::ResourceManager::getTexture("Textures/particle.png"));
+	m_particleEngine.addParticleBatch(m_bloodParticleBatch);
 }
 
 
@@ -175,6 +184,8 @@ void MainGame::gameLoop() {
 
 			updateBullets(deltaTime);
 
+			m_particleEngine.update(deltaTime);
+
 			totalDeltaTime -= deltaTime;
 			i++;
 		}
@@ -264,9 +275,13 @@ void MainGame::updateBullets(float deltaTime){
 	{
 		wasBulletRemoved = false;
 		//Loop through zombies
-		for (int j = 0; j < m_zombies.size(); j++)
+		for (int j = 0; j < m_zombies.size(); )
 		{
+			//Check collision
 			if (m_bullets[i].collideWithAgent(m_zombies[j])){
+				//Add blood first
+				addBlood(m_bullets[i].getPosition(), 5);
+
 				//Damage zombie and kill it if its out of health
 				if (m_zombies[j]->applyDamage(m_bullets[i].getDamage())){
 					//If the zombie died, remove it
@@ -298,9 +313,12 @@ void MainGame::updateBullets(float deltaTime){
 		//Loop through the humans
 		if (wasBulletRemoved == false)
 		{
-			for (int j = 1; j < m_humans.size(); j++)
+			for (int j = 1; j < m_humans.size(); )
 			{
 				if (m_bullets[i].collideWithAgent(m_humans[j])){
+					//Add blood first
+					addBlood(m_bullets[i].getPosition(), 5);
+
 					//Damage human and kill it if its out of health
 					if (m_humans[j]->applyDamage(m_bullets[i].getDamage())){
 						//If the human died, remove it
@@ -429,6 +447,9 @@ void MainGame::drawGame() {
 
 	m_agentSpriteBatch.renderBatch();
 
+	//Render the particles
+	m_particleEngine.draw(&m_agentSpriteBatch);
+
 	//Render the heads up display
 	drawHUD();
 
@@ -457,4 +478,22 @@ void MainGame::drawHUD(){
 	m_hudSpriteBatch.end();
 
 	m_hudSpriteBatch.renderBatch();
+}
+
+void MainGame::addBlood(glm::vec2& position, int numParticles){
+
+
+
+	static std::mt19937 randEngine(time(nullptr));
+	static std::uniform_real_distribution <float> randAngle(0.0f, 360.0f * DEG_TO_RAD);
+
+	glm::vec2 velocity(2.0f, 0.0f);
+
+	GameEngine::ColorRGBA8 color(255, 0, 0, 255);
+
+	for (int i = 0; i < numParticles; i++)
+	{
+		m_bloodParticleBatch->addParticle(position, glm::rotate(velocity, randAngle(randEngine)), color, 30.0f);
+	}
+
 }
