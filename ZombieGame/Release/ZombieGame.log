@@ -1,4 +1,4 @@
-﻿Build started 03.01.2016 00:24:51.
+﻿Build started 03.01.2016 22:15:24.
      1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt MainGame.cpp
@@ -11,26 +11,26 @@
      1>MainGame.cpp(42): warning C4018: '<' : signed/unsigned mismatch
      1>MainGame.cpp(46): warning C4018: '<' : signed/unsigned mismatch
      1>MainGame.cpp(50): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(110): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned long', possible loss of data
-     1>MainGame.cpp(124): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(161): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
-     1>MainGame.cpp(166): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
-     1>MainGame.cpp(208): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(214): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(220): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(223): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(118): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>MainGame.cpp(132): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(169): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
+     1>MainGame.cpp(174): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
+     1>MainGame.cpp(216): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(222): warning C4018: '<' : signed/unsigned mismatch
      1>MainGame.cpp(228): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(248): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(251): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(231): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(236): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(256): warning C4018: '<' : signed/unsigned mismatch
      1>MainGame.cpp(259): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(274): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(278): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(316): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(376): warning C4244: 'argument' : conversion from 'Sint32' to 'float', possible loss of data
-     1>MainGame.cpp(423): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(432): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(441): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(487): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>MainGame.cpp(267): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(282): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(286): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(324): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(384): warning C4244: 'argument' : conversion from 'Sint32' to 'float', possible loss of data
+     1>MainGame.cpp(431): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(440): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(449): warning C4018: '<' : signed/unsigned mismatch
+     1>MainGame.cpp(495): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.exe" /NOLOGO SDL2.lib SDL2main.lib SDL2_ttf.lib SDL2_mixer.lib opengl32.lib glew32.lib GameEngine.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.lib" /MACHINE:X86 /SAFESEH Release\Agent.obj
          Release\Bullet.obj
@@ -49,4 +49,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.56
+Time Elapsed 00:00:02.76

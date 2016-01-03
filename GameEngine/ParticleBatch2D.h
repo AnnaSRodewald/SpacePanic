@@ -1,26 +1,28 @@
 #pragma once
+#include <functional>
 #include <glm\glm.hpp>
 #include "Vertex.h"
 #include "SpriteBatch.h"
 #include "GLTexture.h"
+
+
 
 namespace GameEngine {
 
 	class Particle2D
 	{
 	public:
-		friend class ParticleBatch2D;
-
-		void update(float deltaTime);
-
-	private:
-		glm::vec2 m_position = glm::vec2(0.0f);
-		glm::vec2 m_velocity = glm::vec2(0.0f);
-		ColorRGBA8 m_color;
-		float m_life = 0.0f;
-		float m_width = 0.0f;
+		glm::vec2 position = glm::vec2(0.0f);
+		glm::vec2 velocity = glm::vec2(0.0f);
+		ColorRGBA8 color;
+		float life = 0.0f;
+		float width = 0.0f;
 	};
 
+	//"inline" key word important and needed for this
+	inline void defaultParticleUpdate(Particle2D& particle, float deltaTime){
+		particle.position += particle.velocity * deltaTime;
+	}
 
 	class ParticleBatch2D
 	{
@@ -28,7 +30,7 @@ namespace GameEngine {
 		ParticleBatch2D();
 		~ParticleBatch2D();
 
-		void init(int maxParticles, float decayRate, GLTexture texture);
+		void init(int maxParticles, float decayRate, GLTexture texture, std::function<void(Particle2D&, float)> updateFunc = defaultParticleUpdate);
 
 		void update(float deltaTime);
 
@@ -43,7 +45,7 @@ namespace GameEngine {
 	private:
 		int findFreeParticle();
 
-
+		std::function<void(Particle2D&, float)> m_updateFunc;
 		float m_decayRate = 0.1f;
 		Particle2D* m_particles = nullptr;
 		int m_maxParticles = 0;

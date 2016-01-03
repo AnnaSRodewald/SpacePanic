@@ -91,7 +91,15 @@ void MainGame::initSystems() {
 
 	//Initialize particles
 	m_bloodParticleBatch = new GameEngine::ParticleBatch2D();
-	m_bloodParticleBatch->init(1000, 0.05f, GameEngine::ResourceManager::getTexture("Textures/particle.png"));
+
+	m_bloodParticleBatch->init(
+		1000, 0.05f, 
+		GameEngine::ResourceManager::getTexture("Textures/particle.png"), 
+		[](GameEngine::Particle2D& particle, float deltaTime) {
+		particle.position += particle.velocity * deltaTime;
+		particle.color.a = (GLubyte)(particle.life * 255.0f); 
+	}); // using a Lambda to create a function to give as a function pointer
+
 	m_particleEngine.addParticleBatch(m_bloodParticleBatch);
 }
 
@@ -275,7 +283,7 @@ void MainGame::updateBullets(float deltaTime){
 	{
 		wasBulletRemoved = false;
 		//Loop through zombies
-		for (int j = 0; j < m_zombies.size(); )
+		for (int j = 0; j < m_zombies.size();)
 		{
 			//Check collision
 			if (m_bullets[i].collideWithAgent(m_zombies[j])){
@@ -313,7 +321,7 @@ void MainGame::updateBullets(float deltaTime){
 		//Loop through the humans
 		if (wasBulletRemoved == false)
 		{
-			for (int j = 1; j < m_humans.size(); )
+			for (int j = 1; j < m_humans.size();)
 			{
 				if (m_bullets[i].collideWithAgent(m_humans[j])){
 					//Add blood first

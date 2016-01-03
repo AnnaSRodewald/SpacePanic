@@ -1,8 +1,10 @@
-﻿Build started 02.01.2016 23:59:02.
+﻿Build started 03.01.2016 22:06:23.
      1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ParticleBatch2D.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ParticleBatch2D.cpp ParticleEngine2D.cpp
          ParticleBatch2D.cpp
+         ParticleEngine2D.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\ParticleEngine2D.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\GameEngine.lib" /NOLOGO /LTCG Release\AudioEngine.obj
          Release\Camera2D.obj
@@ -27,4 +29,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.07
+Time Elapsed 00:00:01.30
