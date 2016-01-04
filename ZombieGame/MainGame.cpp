@@ -153,21 +153,22 @@ void MainGame::initShaders() {
 
 void MainGame::gameLoop() {
 
+	//helpful constants
 	const float DESIRED_FPS = 60.0f;
 	const int MAX_PHYSICS_STEPS = 6;
-
-	GameEngine::FpsLimiter fpsLimiter;
-	fpsLimiter.setMaxFPS(600000.0f);
-
-	const float CAMERA_SCALE = 1.0f / 4.0f;
-	m_camera.setScale(CAMERA_SCALE);
-
 	const float MS_PER_SECOND = 1000;
 	const float DESIRED_FRAMETIME = MS_PER_SECOND / DESIRED_FPS;
 	const float MAX_DELTA_TIME = 1.0f;
 
-	float previousTicks = SDL_GetTicks();
+	//Cap the FPS
+	GameEngine::FpsLimiter fpsLimiter;
+	fpsLimiter.setMaxFPS(600000.0f);
 
+	//Zoom out the camera by 3x
+	const float CAMERA_SCALE = 1.0f / 3.0f;
+	m_camera.setScale(CAMERA_SCALE);
+
+	float previousTicks = SDL_GetTicks();
 
 	while (m_gameState == GameState::PLAY)
 	{

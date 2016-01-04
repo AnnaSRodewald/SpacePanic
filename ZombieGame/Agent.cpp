@@ -16,13 +16,11 @@ Agent::~Agent(){
 
 void Agent::draw(GameEngine::SpriteBatch& spriteBatch){
 
-	static int textureID = GameEngine::ResourceManager::getTexture("Textures/circle.png").id;
-
 	glm::vec4 destRect(m_position.x, m_position.y, AGENT_WIDTH, AGENT_WIDTH);
 
 	const glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
-	spriteBatch.draw(destRect, uvRect, textureID, 0.0f, m_color);
+	spriteBatch.draw(destRect, uvRect, m_textureID, 0.0f, m_color, m_direction);
 }
 
 

@@ -4,6 +4,7 @@
 #include <random>
 #include <ctime>
 #include <glm\gtx\rotate_vector.hpp>
+#include <GameEngine\ResourceManager.h>
 
 const float DEG_TO_RAD = M_PI / 180.0f;
 const float RAD_TO_DEG = 180.0f / M_PI;
@@ -29,9 +30,9 @@ void Human::init(float speed, glm::vec2 position){
 	static std::mt19937 randomEngine(time(nullptr));
 	static std::uniform_real_distribution<float> randDir(-1.0f, 1.0f);
 
-	m_color.r = 200;
-	m_color.g = 0;
-	m_color.b = 200;
+	m_color.r = 255;
+	m_color.g = 255;
+	m_color.b = 255;
 	m_color.a = 255;
 
 	m_speed = speed;
@@ -45,6 +46,8 @@ void Human::init(float speed, glm::vec2 position){
 	}
 
 	m_direction = glm::normalize(m_direction);
+
+	m_textureID = GameEngine::ResourceManager::getTexture("Textures/human.png").id;
 }
 
 
@@ -53,6 +56,7 @@ void Human::update(const std::vector<std::string>& levelData,
 
 	static std::mt19937 randomEngine(time(nullptr));
 	static std::uniform_real_distribution<float> randRotate(-40.0f * DEG_TO_RAD, 40.0f * DEG_TO_RAD);
+
 	m_position += m_direction * m_speed * deltaTime; 
 
 	//Randomly change direction every 20 frames

@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <GameEngine\ResourceManager.h>
 
 //currently no gun (-1)
 Player::Player() : m_currentGunIndex(-1)
@@ -23,12 +24,14 @@ void Player::init(float speed, glm::vec2 position, GameEngine::InputManager* inp
 	m_camera = camera;
 	m_bullets = bullets;
 
-	m_color.r = 0;
-	m_color.g = 0;
-	m_color.b = 185;
+	m_color.r = 255;
+	m_color.g = 255;
+	m_color.b = 255;
 	m_color.a = 255;
 
 	m_health = 150;
+
+	m_textureID = GameEngine::ResourceManager::getTexture("Textures/player.png").id;
 
 }
 
@@ -63,7 +66,7 @@ void Player::update(const std::vector<std::string>& levelData,
 		m_position.x += m_speed * deltaTime;
 	}
 
-	if (m_inputManager->isKeyDown(SDLK_1) && m_guns.size()>=0)
+	if (m_inputManager->isKeyDown(SDLK_1) && m_guns.size() >= 0)
 	{
 		m_currentGunIndex = 0;
 	}
@@ -76,16 +79,18 @@ void Player::update(const std::vector<std::string>& levelData,
 		m_currentGunIndex = 2;
 	}
 
+	glm::vec2 mouseCoords = m_inputManager->getMouseCoords();
+	mouseCoords = m_camera->convertScreenToWorld(mouseCoords);
+
+	glm::vec2 centerPlayerPosition = m_position + glm::vec2(AGENT_RADIUS);
+
+	//Mouse direction
+	m_direction = glm::normalize(mouseCoords - centerPlayerPosition);
+
+
 	if (m_currentGunIndex != -1)
 	{
-		glm::vec2 mouseCoords = m_inputManager->getMouseCoords();
-		mouseCoords = m_camera->convertScreenToWorld(mouseCoords);
-
-		glm::vec2 centerPlayerPosition = m_position + glm::vec2(AGENT_RADIUS);
-
-		glm::vec2 mouseDirection = glm::normalize(mouseCoords - centerPlayerPosition);
-
-		m_guns[m_currentGunIndex]->update(m_inputManager->isKeyDown(SDL_BUTTON_LEFT), centerPlayerPosition, mouseDirection, *m_bullets, deltaTime);
+		m_guns[m_currentGunIndex]->update(m_inputManager->isKeyDown(SDL_BUTTON_LEFT), centerPlayerPosition, m_direction, *m_bullets, deltaTime);
 	}
 
 	collideWithLevel(levelData);

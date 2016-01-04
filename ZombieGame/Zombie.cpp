@@ -2,6 +2,8 @@
 
 #include "Human.h"
 
+#include <GameEngine\ResourceManager.h>
+
 Zombie::Zombie()
 {
 	m_health = 150;
@@ -14,9 +16,10 @@ Zombie::~Zombie()
 }
 
 void Zombie::init(float speed, glm::vec2 position){
-	m_color = GameEngine::ColorRGBA8(0, 160, 0, 255);
+	m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
 	m_speed = speed;
 	m_position = position;
+	m_textureID = GameEngine::ResourceManager::getTexture("Textures/zombie.png").id;
 
 }
 
@@ -26,8 +29,8 @@ void Zombie::update(const std::vector<std::string>& levelData,
 	Human* closestHuman = getNearestHuman(humans);
 
 	if (closestHuman != nullptr){
-		glm::vec2 direction = glm::normalize(closestHuman->getPosition() - m_position);
-		m_position += direction * m_speed * deltaTime;
+		m_direction = glm::normalize(closestHuman->getPosition() - m_position);
+		m_position += m_direction * m_speed * deltaTime;
 	}
 
 	collideWithLevel(levelData);

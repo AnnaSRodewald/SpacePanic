@@ -47,9 +47,6 @@ public:
 
 
 protected:
-	float m_speed;
-	glm::vec2 m_position;
-	GameEngine::ColorRGBA8 m_color;
 
 	void checkTilePosition(const std::vector<std::string>& levelData,
 		std::vector<glm::vec2>& collideTilePosition,
@@ -57,7 +54,15 @@ protected:
 
 	bool collideWithTile(glm::vec2 tilePosition);
 
+	glm::vec2 m_position;
+	glm::vec2 m_direction = glm::vec2(1.0f, 0.0f);
+
+	GameEngine::ColorRGBA8 m_color;
+
+	float m_speed;
 	float m_health;
+
+	GLuint m_textureID;
 
 
 private:
