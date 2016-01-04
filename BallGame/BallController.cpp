@@ -102,13 +102,15 @@ void BallController::checkCollision(Ball& b1, Ball& b2) {
         }
 
         // Calculate deflection. http://stackoverflow.com/a/345863
-        float aci = glm::dot(b1.velocity, distDir) / b2.mass;
-        float bci = glm::dot(b2.velocity, distDir) / b1.mass;
+		//fixed through comment by Yvo Keuter
+		float aci = glm::dot(b1.velocity, distDir);
+		float bci = glm::dot(b2.velocity, distDir);
 
-        float massRatio = b1.mass / b2.mass;
+		float acf = (aci * (b1.mass - b2.mass) + 2 * b2.mass * bci) / (b1.mass + b2.mass);
+		float bcf = (bci * (b2.mass - b1.mass) + 2 * b1.mass * aci) / (b1.mass + b2.mass);
 
-        b1.velocity += (bci - aci) * distDir * (1.0f / massRatio);
-        b2.velocity += (aci - bci) * distDir * massRatio;
+		b1.velocity += (acf - aci) * distDir;
+		b2.velocity += (bcf - bci) * distDir;
     }
 }
 
