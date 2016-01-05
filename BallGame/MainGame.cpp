@@ -16,6 +16,10 @@ const float MS_PER_SECOND = 1000; // Number of milliseconds in a second
 const float DESIRED_FRAMETIME = MS_PER_SECOND / DESIRED_FPS; // The desired frame time per frame
 const float MAX_DELTA_TIME = 1.0f; // Maximum size of deltaTime
 
+MainGame::~MainGame(){
+	//Empty
+}
+
 void MainGame::run() {
     init();
     initBalls();
@@ -103,12 +107,16 @@ struct BallSpawn {
 #include <iostream>
 void MainGame::initBalls() {
 
+	//Initialize the grid
+	m_grid = std::make_unique<Grid>(m_screenWidth, m_screenHeight, CELL_SIZE);
+
+
 #define ADD_BALL(p, ...) \
     totalProbability += p; \
     possibleBalls.emplace_back(__VA_ARGS__);
 
     // Number of balls to spawn
-    const int NUM_BALLS = 100;
+    const int NUM_BALLS = 40000;
 
     // Random engine stuff
     std::mt19937 randomEngine((unsigned int)time(nullptr));
@@ -121,12 +129,12 @@ void MainGame::initBalls() {
     float totalProbability = 0.0f;
 
     // Adds the balls using a macro
-    ADD_BALL(20.0f, GameEngine::ColorRGBA8(255, 255, 255, 255),
-             20.0f, 1.0f, 0.1f, 7.0f, totalProbability);
+    ADD_BALL(1.0f, GameEngine::ColorRGBA8(255, 255, 255, 255),
+             1.0f, 1.0f, 0.1f, 7.0f, totalProbability);
     ADD_BALL(10.0f, GameEngine::ColorRGBA8(0, 0, 255, 255),
-             30.0f, 2.0f, 0.1f, 3.0f, totalProbability);
+             2.0f, 2.0f, 0.1f, 3.0f, totalProbability);
 	ADD_BALL(1.0f, GameEngine::ColorRGBA8(255, 0, 0, 255),
-		50.0f, 4.0f, 0.0f, 0.0f, totalProbability);
+		3.0f, 4.0f, 0.0f, 0.0f, totalProbability);
 
     // Random probability for ball spawn
     std::uniform_real_distribution<float> spawn(0.0f, totalProbability);
@@ -141,9 +149,9 @@ void MainGame::initBalls() {
         // Get the ball spawn roll
         float spawnVal = spawn(randomEngine);
         // Figure out which ball we picked
-        for (size_t i = 0; i < possibleBalls.size(); i++) {
-            if (spawnVal <= possibleBalls[i].probability) {
-                ballToSpawn = &possibleBalls[i];
+        for (size_t j = 0; j < possibleBalls.size(); j++) {
+            if (spawnVal <= possibleBalls[j].probability) {
+                ballToSpawn = &possibleBalls[j];
                 break;
             }
         }
@@ -163,11 +171,14 @@ void MainGame::initBalls() {
         m_balls.emplace_back(ballToSpawn->radius, ballToSpawn->mass, pos, direction * ballToSpawn->randSpeed(randomEngine),
                              GameEngine::ResourceManager::getTexture("Textures/circle.png").id,
                              ballToSpawn->color);
+
+		//Add the ball to the grid. IF YOU CALL EMPLACE BACK AFTER INIT BALLS, m_grid will have DANGLING POINTERS
+		m_grid->addBall(&m_balls.back());
     }
 }
 
 void MainGame::update(float deltaTime) {
-    m_ballController.updateBalls(m_balls, deltaTime, m_screenWidth, m_screenHeight);
+    m_ballController.updateBalls(m_balls, m_grid.get(), deltaTime, m_screenWidth, m_screenHeight);
 }
 
 void MainGame::draw() {

@@ -1,20 +1,49 @@
-﻿Build started 01.01.2016 05:36:05.
+﻿Build started 05.01.2016 02:37:02.
      1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Camera2D.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AudioEngine.cpp Camera2D.cpp GamEngineErrors.cpp GLSLProgram.cpp ImageLoader.cpp InputManager.cpp ParticleBatch2D.cpp ParticleEngine2D.cpp ResourceManager.cpp Sprite.cpp SpriteBatch.cpp SpriteFont.cpp TextureCache.cpp Timing.cpp Window.cpp
+         Window.cpp
+         Timing.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\timing.cpp(26): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\timing.cpp(29): warning C4244: 'argument' : conversion from 'float' to 'Uint32', possible loss of data
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\timing.cpp(41): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\timing.cpp(44): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
+         TextureCache.cpp
+         SpriteFont.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\spritefont.cpp(101): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\spritefont.cpp(111): warning C4244: '*=' : conversion from 'float' to 'unsigned char', possible loss of data
+         SpriteBatch.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\spritebatch.cpp(94): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\spritebatch.cpp(132): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\spritebatch.cpp(163): warning C4018: '<' : signed/unsigned mismatch
+         Sprite.cpp
+         ResourceManager.cpp
+         ParticleEngine2D.cpp
+     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\particleengine2d.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+         ParticleBatch2D.cpp
+         InputManager.cpp
+         ImageLoader.cpp
+         GLSLProgram.cpp
+         GamEngineErrors.cpp
          Camera2D.cpp
+         AudioEngine.cpp
+         Generating Code...
        Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib" /NOLOGO Debug\Camera2D.obj
-         Debug\Errors.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib" /NOLOGO Debug\AudioEngine.obj
+         Debug\Camera2D.obj
+         Debug\GamEngineErrors.obj
          Debug\GameEngine.obj
          Debug\GLSLProgram.obj
          Debug\ImageLoader.obj
          Debug\InputManager.obj
          Debug\IOManager.obj
+         Debug\ParticleBatch2D.obj
+         Debug\ParticleEngine2D.obj
          Debug\picoPNG.obj
          Debug\ResourceManager.obj
          Debug\Sprite.obj
          Debug\SpriteBatch.obj
+         Debug\SpriteFont.obj
          Debug\TextureCache.obj
          Debug\Timing.obj
          Debug\Window.obj
@@ -23,4 +52,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.50
+Time Elapsed 00:00:05.82
