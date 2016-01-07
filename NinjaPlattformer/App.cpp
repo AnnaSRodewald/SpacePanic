@@ -9,6 +9,8 @@ App::App()
 
 App::~App()
 {
+	m_screenList->destroy();
+	m_currentScreen = nullptr;
 }
 
 

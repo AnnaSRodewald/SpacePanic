@@ -44,7 +44,9 @@ namespace GameEngine {
 
 	void IMainGame::exitGame(){
 		onExit();
-		m_currentScreen->onExit();
+		if (m_currentScreen != nullptr){
+			m_currentScreen->onExit();
+		}
 		if (m_screenList)
 		{
 			m_screenList->destroy();

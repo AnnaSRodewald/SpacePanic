@@ -1,11 +1,8 @@
-﻿Build started 07.01.2016 04:25:19.
+﻿Build started 07.01.2016 04:33:38.
      1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt IMainGame.cpp ScreenList.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt IMainGame.cpp
          IMainGame.cpp
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         ScreenList.cpp
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib" /NOLOGO Debug\AudioEngine.obj
          Debug\Camera2D.obj
@@ -32,4 +29,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.90
+Time Elapsed 00:00:00.87
