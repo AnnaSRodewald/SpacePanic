@@ -9,7 +9,7 @@
 #include <GameEngine/SpriteFont.h>
 #include <memory>
 
-#include "BallController.h"
+#include "ChangeColorBallController.h"
 #include "BallRenderer.h"
 #include "Grid.h"
 
@@ -41,7 +41,7 @@ private:
 	int m_currentRenderer = 0;
 	std::vector<BallRenderer*> m_ballRenderers;
 
-    BallController m_ballController; ///< Controls balls
+    ChangeColorBallController m_ballController; ///< Controls balls
 
     GameEngine::Window m_window; ///< The main window
     GameEngine::SpriteBatch m_spriteBatch; ///< Renders all the balls

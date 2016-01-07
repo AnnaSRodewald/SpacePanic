@@ -14,6 +14,7 @@ struct Cell
 class Grid
 {
 	friend class BallController;
+	friend class ChangeColorBallController;
 public:
 	Grid(int width, int height, int cellSize);
 	~Grid();
