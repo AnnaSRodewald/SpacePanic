@@ -150,7 +150,7 @@ namespace GameEngine {
 	}
 
 	bool IMainGame::initSystems(){
-		m_window.create("Default2", 1024, 768, 0);
+		m_window.create("Default2", 1920, 1080, 0);
 
 		return true;
 	}

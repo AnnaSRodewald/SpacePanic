@@ -1,10 +1,18 @@
 #pragma once
+#include <Box2D\Box2D.h>
 #include <GameEngine\IGameScreen.h>
+#include <GameEngine\SpriteBatch.h>
+#include <GameEngine\GLSLProgram.h>
+#include <GameEngine\Camera2D.h>
+#include <GameEngine\GLTexture.h>
+#include <GameEngine\Window.h>
+
+#include "Box.h"
 
 class GameplayScreen : public GameEngine::IGameScreen
 {
 public:
-	GameplayScreen();
+	GameplayScreen(GameEngine::Window* window);
 	~GameplayScreen();
 
 	virtual int getNextScreenIndex() const override;
@@ -21,6 +29,19 @@ public:
 
 private:
 	void checkInput();
+	void initShaders();
+
+	GameEngine::SpriteBatch m_spriteBatch;
+	GameEngine::GLSLProgram m_textureProgram;
+	GameEngine::Camera2D m_camera;
+	GameEngine::GLTexture m_texture;
+	GameEngine::Window* m_window;
+
+	std::unique_ptr<b2World> m_world;
+
+	std::vector<Box> m_boxes;
+
+
 	
 };
 
