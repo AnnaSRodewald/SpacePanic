@@ -1,4 +1,4 @@
-﻿Build started 07.01.2016 03:58:52.
+﻿Build started 07.01.2016 04:08:52.
      1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\NinjaPlattformer\NinjaPattformer.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (NinjaPattformer.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>Link:
@@ -12,4 +12,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.72
+Time Elapsed 00:00:00.78

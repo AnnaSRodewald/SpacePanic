@@ -20,6 +20,7 @@ public:
 	virtual void draw() override;
 
 private:
+	void checkInput();
 	
 };
 

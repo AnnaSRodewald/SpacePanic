@@ -22,16 +22,15 @@ namespace GameEngine{
 		virtual void addScreens() = 0;
 		virtual void onExit() = 0;
 
+		void onSDLEvent(SDL_Event& event);
+
 		const float getFPS() const {
 			return m_fps;
 		}
 
-
 	protected:
 		virtual void update();
 		virtual void draw();
-
-		void onSDLEvent(SDL_Event& event);
 
 		bool init();
 		bool initSystems();

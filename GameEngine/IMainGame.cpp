@@ -18,7 +18,7 @@ namespace GameEngine {
 
 
 	void IMainGame::run(){
-		if (init()){
+		if (init() == false){
 			return;
 		}
 
@@ -38,6 +38,7 @@ namespace GameEngine {
 			draw();
 
 			m_fps = limiter.end();
+			m_window.swapBuffer();
 		}
 	}
 
@@ -52,6 +53,28 @@ namespace GameEngine {
 		m_isRunning = false;
 	}
 
+	void IMainGame::onSDLEvent(SDL_Event& evnt){
+		switch (evnt.type) {
+		case SDL_QUIT:
+			m_isRunning = false;
+			break;
+		case SDL_MOUSEMOTION:
+			m_inputManager.setMouseCoords((float)evnt.motion.x, (float)evnt.motion.y);
+			break;
+		case SDL_KEYDOWN:
+			m_inputManager.pressKey(evnt.key.keysym.sym);
+			break;
+		case SDL_KEYUP:
+			m_inputManager.releaseKey(evnt.key.keysym.sym);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			m_inputManager.pressKey(evnt.button.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			m_inputManager.releaseKey(evnt.button.button);
+			break;
+		}
+	}
 
 	void IMainGame::update(){
 		if (m_currentScreen) // != nullptr
@@ -104,28 +127,6 @@ namespace GameEngine {
 		}
 	}
 
-	void IMainGame::onSDLEvent(SDL_Event& evnt){
-		switch (evnt.type) {
-		case SDL_QUIT:
-			m_isRunning = false;
-			break;
-		case SDL_MOUSEMOTION:
-			m_inputManager.setMouseCoords((float)evnt.motion.x, (float)evnt.motion.y);
-			break;
-		case SDL_KEYDOWN:
-			m_inputManager.pressKey(evnt.key.keysym.sym);
-			break;
-		case SDL_KEYUP:
-			m_inputManager.releaseKey(evnt.key.keysym.sym);
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			m_inputManager.pressKey(evnt.button.button);
-			break;
-		case SDL_MOUSEBUTTONUP:
-			m_inputManager.releaseKey(evnt.button.button);
-			break;
-		}
-	}
 
 	bool IMainGame::init(){
 		GameEngine::init();
@@ -147,7 +148,7 @@ namespace GameEngine {
 	}
 
 	bool IMainGame::initSystems(){
-		m_window.create("Default", 1920, 1080, 0);
+		m_window.create("Default2", 1024, 768, 0);
 
 		return true;
 	}
