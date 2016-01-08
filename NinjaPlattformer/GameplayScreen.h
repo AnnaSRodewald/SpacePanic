@@ -8,6 +8,7 @@
 #include <GameEngine\Window.h>
 
 #include "Box.h"
+#include "Player.h"
 
 class GameplayScreen : public GameEngine::IGameScreen
 {
@@ -36,6 +37,8 @@ private:
 	GameEngine::Camera2D m_camera;
 	GameEngine::GLTexture m_texture;
 	GameEngine::Window* m_window;
+
+	Player m_player;
 
 	std::unique_ptr<b2World> m_world;
 

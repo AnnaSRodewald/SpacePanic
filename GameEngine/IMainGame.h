@@ -28,6 +28,8 @@ namespace GameEngine{
 			return m_fps;
 		}
 
+		InputManager inputManager;
+
 	protected:
 		virtual void update();
 		virtual void draw();
@@ -41,8 +43,6 @@ namespace GameEngine{
 		bool m_isRunning = false;
 		float m_fps = 0.0f;
 		Window m_window;
-		InputManager m_inputManager;
-
 	
 	};
 
