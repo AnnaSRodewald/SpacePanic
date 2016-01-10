@@ -1,5 +1,6 @@
 #include "GLSLProgram.h"
 #include "GameEngineErrors.h"
+#include "IOManager.h"
 
 #include <fstream>
 
@@ -16,23 +17,36 @@ namespace GameEngine{
 		{
 		}
 
+	void GLSLProgram::compileShadersFromSource(const char* vertexSource, const char* fragmentSource){
 
-	void GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragementShaderFilePath){
 		//Get a program object.
 		m_programID = glCreateProgram();
 
 		m_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 		if (m_vertexShaderID == 0) {
 			fatalError("Vertex shader failed to be created!");
-			}
+		}
 
 		m_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 		if (m_fragmentShaderID == 0) {
 			fatalError("Fragment shader failed to be created!");
-			}
+		}
 
-		compileShaders(vertexShaderFilePath, m_vertexShaderID);
-		compileShaders(fragementShaderFilePath, m_fragmentShaderID);
+		compileShaders(vertexSource, "Vertex Shader", m_vertexShaderID);
+		compileShaders(fragmentSource, "Fragment Shader", m_fragmentShaderID);
+
+	}
+
+
+	void GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragementShaderFilePath){
+
+		std::string vertSource;
+		std::string fragSource;
+
+		IOManager::readFileToBuffer(vertexShaderFilePath, vertSource);
+		IOManager::readFileToBuffer(fragementShaderFilePath, fragSource);
+
+		compileShadersFromSource(vertSource.c_str(), fragSource.c_str());
 		}
 
 	void GLSLProgram::linkShaders(){
@@ -109,27 +123,17 @@ namespace GameEngine{
 			}
 		}
 
+	void GLSLProgram::dispose(){
+		if (m_programID)
+		{
+			glDeleteProgram(m_programID);
+		}
+	}
 
-	void GLSLProgram::compileShaders(const std::string& filePath, GLuint shaderID){
 
-		std::fstream shaderFile(filePath);
-		if(shaderFile.fail()){
-			perror(filePath.c_str());
-			fatalError("Failed to open " + filePath);
-			}
+	void GLSLProgram::compileShaders(const char* source, const std::string& name, GLuint shaderID){
 
-		std::string fileContents = "";
-		std::string line;
-
-		while (std::getline(shaderFile, line))
-			{
-			fileContents += line + "\n";
-			}
-
-		shaderFile.close();
-
-		const char* contentsPtr = fileContents.c_str();
-		glShaderSource(shaderID, 1, &contentsPtr, nullptr);
+		glShaderSource(shaderID, 1, &source, nullptr);
 
 		glCompileShader(shaderID);
 
@@ -151,7 +155,7 @@ namespace GameEngine{
 			glDeleteShader(shaderID); // Don't leak the shader.
 
 			std::printf("%s\n", &(errorLog[0]));
-			fatalError("Shader " + filePath +" failed to compile!");
+			fatalError("Shader " + name +" failed to compile!");
 			}
 
 		}

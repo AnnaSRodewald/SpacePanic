@@ -5,6 +5,7 @@
 #include <GameEngine\ResourceManager.h>
 #include <random>
 
+#define DEBUG_RENDER
 
 GameplayScreen::GameplayScreen(GameEngine::Window* window) : m_window(window)
 {
@@ -36,6 +37,9 @@ void GameplayScreen::destroy() {
 void GameplayScreen::onEntry() {
 	b2Vec2 gravity(0.0f, -30.0);
 	m_world = std::make_unique<b2World>(gravity);
+
+	//Init debug renderer
+	m_debugRenderer.init();
 
 	//Make the ground
 	b2BodyDef groundBodyDef;
@@ -85,7 +89,7 @@ void GameplayScreen::onEntry() {
 
 	//Init camera
 	m_camera.init(m_window->getScreenWidth(), m_window->getScreenHeight());
-	m_camera.setScale(32.0f);
+	m_camera.setScale(24.0f);
 
 	//Init player
 	m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(1.0f, 2.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(255, 255, 255, 255));
@@ -93,7 +97,7 @@ void GameplayScreen::onEntry() {
 }
 
 void GameplayScreen::onExit() {
-
+	m_debugRenderer.dispose();
 }
 
 
@@ -138,6 +142,36 @@ void GameplayScreen::draw() {
 	m_spriteBatch.renderBatch();
 
 	m_textureProgram.unuse();
+
+	//Debug rendering
+	if (m_renderDebug)
+	{
+		glm::vec4 destRect;
+		for (auto& box : m_boxes)
+		{
+
+			destRect.x = box.getBody()->GetPosition().x - box.getDimensions().x / 2.0f;
+			destRect.y = box.getBody()->GetPosition().y - box.getDimensions().y / 2.0f;
+			destRect.z = box.getDimensions().x;
+			destRect.w = box.getDimensions().y;
+
+			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), box.getBody()->GetAngle());
+
+			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
+			*/
+		}
+
+		//Render player
+		auto box = m_player.getBox();
+		destRect.x = box.getBody()->GetPosition().x - box.getDimensions().x / 2.0f;
+		destRect.y = box.getBody()->GetPosition().y - box.getDimensions().y / 2.0f;
+		destRect.z = box.getDimensions().x;
+		destRect.w = box.getDimensions().y;
+		m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), box.getBody()->GetAngle());
+
+		m_debugRenderer.end();
+		m_debugRenderer.render(projectionMatrix, 2.0f);
+	}
 }
 
 

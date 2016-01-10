@@ -11,6 +11,8 @@ namespace GameEngine{
 			GLSLProgram(void);
 			~GLSLProgram(void);
 
+			void compileShadersFromSource(const char* vertexSource, const char* fragmentSource);
+
 			void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragementShaderFilePath);
 
 			void linkShaders();
@@ -23,11 +25,15 @@ namespace GameEngine{
 
 			void unuse();
 
+			void dispose();
+
 
 		private:
 			int m_numAttributes;
 
-			void compileShaders(const std::string& filePath, GLuint shaderID);
+			void compileShaders(const char* source, const std::string& name, GLuint shaderID);
+
+			/*void compileShaders(const std::string& filePath, GLuint shaderID);*/
 
 			GLuint m_programID;
 

@@ -6,6 +6,7 @@
 #include <GameEngine\Camera2D.h>
 #include <GameEngine\GLTexture.h>
 #include <GameEngine\Window.h>
+#include <GameEngine\DebugRenderer.h>
 
 #include "Box.h"
 #include "Player.h"
@@ -37,6 +38,9 @@ private:
 	GameEngine::Camera2D m_camera;
 	GameEngine::GLTexture m_texture;
 	GameEngine::Window* m_window;
+	GameEngine::DebugRenderer m_debugRenderer;
+
+	bool m_renderDebug = true;
 
 	Player m_player;
 

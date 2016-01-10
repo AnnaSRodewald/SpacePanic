@@ -33,12 +33,16 @@ namespace GameEngine {
 
 			inputManager.update();
 
+			//Call the custom update and draw method
 			update();
 
-			draw();
+			if (m_isRunning)
+			{
+				draw();
 
-			m_fps = limiter.end();
-			m_window.swapBuffer();
+				m_fps = limiter.end();
+				m_window.swapBuffer();
+			}
 		}
 	}
 
@@ -150,7 +154,7 @@ namespace GameEngine {
 	}
 
 	bool IMainGame::initSystems(){
-		m_window.create("Default2", 1920, 1080, 0);
+		m_window.create("Default2", 1280, 720, 0);
 
 		return true;
 	}
