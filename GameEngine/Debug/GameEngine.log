@@ -1,33 +1,9 @@
-﻿Build started 10.01.2016 17:50:39.
-     1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt IMainGame.cpp
-         IMainGame.cpp
-       Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib" /NOLOGO Debug\AudioEngine.obj
-         Debug\Camera2D.obj
-         Debug\DebugRenderer.obj
-         Debug\GameEngineErrors.obj
-         Debug\GameEngine.obj
-         Debug\GLSLProgram.obj
-         Debug\ImageLoader.obj
-         Debug\IMainGame.obj
-         Debug\InputManager.obj
-         Debug\IOManager.obj
-         Debug\ParticleBatch2D.obj
-         Debug\ParticleEngine2D.obj
-         Debug\picoPNG.obj
-         Debug\ResourceManager.obj
-         Debug\ScreenList.obj
-         Debug\Sprite.obj
-         Debug\SpriteBatch.obj
-         Debug\SpriteFont.obj
-         Debug\TextureCache.obj
-         Debug\Timing.obj
-         Debug\Window.obj
-         GameEngine.vcxproj -> C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib
-     1>Done Building Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" (Build target(s)).
+﻿Build started 17.01.2016 17:20:06.
+     1>Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
+     1>Lib:
+         GameEngine.vcxproj -> C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\GameEngine.lib
+     1>Done Building Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.86
+Time Elapsed 00:00:00.05

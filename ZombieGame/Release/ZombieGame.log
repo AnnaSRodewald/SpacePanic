@@ -1,79 +1,9 @@
-﻿Build started 04.01.2016 02:06:19.
-     1>Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Agent.cpp Bullet.cpp Gun.cpp Human.cpp Level.cpp MainGame.cpp Player.cpp Zombie.cpp main.cpp
-         Agent.cpp
-     1>Agent.cpp(61): warning C4018: '<' : signed/unsigned mismatch
-     1>Agent.cpp(134): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-         Bullet.cpp
-     1>Bullet.cpp(81): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>Bullet.cpp(82): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>Bullet.cpp(86): warning C4018: '>=' : signed/unsigned mismatch
-         Gun.cpp
-     1>Gun.cpp(7): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>Gun.cpp(8): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>Gun.cpp(38): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-         Human.cpp
-     1>Human.cpp(9): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>Human.cpp(10): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>Human.cpp(30): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>Human.cpp(57): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-         Level.cpp
-     1>Level.cpp(46): warning C4018: '<' : signed/unsigned mismatch
-     1>Level.cpp(48): warning C4018: '<' : signed/unsigned mismatch
-         MainGame.cpp
-     1>C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine/ParticleEngine2D.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\GLTexture.h(6): warning C4099: 'GameEngine::GLTexture' : type name first seen using 'class' now seen using 'struct'
-                 C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine/SpriteFont.h(36) : see declaration of 'GameEngine::GLTexture'
-     1>MainGame.cpp(22): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>MainGame.cpp(23): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>MainGame.cpp(42): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(46): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(50): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(118): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned long', possible loss of data
-     1>MainGame.cpp(132): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(171): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
-     1>MainGame.cpp(175): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
-     1>MainGame.cpp(217): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(223): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(229): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(232): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(237): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(257): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(260): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(268): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(283): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(287): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(325): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(385): warning C4244: 'argument' : conversion from 'Sint32' to 'float', possible loss of data
-     1>MainGame.cpp(432): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(441): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(450): warning C4018: '<' : signed/unsigned mismatch
-     1>MainGame.cpp(496): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-         Player.cpp
-     1>Player.cpp(13): warning C4018: '<' : signed/unsigned mismatch
-         Zombie.cpp
-     1>Zombie.cpp(44): warning C4018: '<' : signed/unsigned mismatch
-         main.cpp
-     1>C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine/ParticleEngine2D.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\gameengine\GLTexture.h(6): warning C4099: 'GameEngine::GLTexture' : type name first seen using 'class' now seen using 'struct'
-                 C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine/SpriteFont.h(36) : see declaration of 'GameEngine::GLTexture'
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.exe" /NOLOGO SDL2.lib SDL2main.lib SDL2_ttf.lib SDL2_mixer.lib opengl32.lib glew32.lib GameEngine.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.lib" /MACHINE:X86 /SAFESEH Release\Agent.obj
-         Release\Bullet.obj
-         Release\Gun.obj
-         Release\Human.obj
-         Release\Level.obj
-         Release\main.obj
-         Release\MainGame.obj
-         Release\Player.obj
-         Release\Zombie.obj
-         Generating code
-     1>c:\users\d059264\google drive\master\projektarbeit\spacepanic\spacepanic\zombiegame\agent.cpp(189): warning C4715: 'Agent::collideWithTile' : not all control paths return a value
-         Finished generating code
-         ZombieGame.vcxproj -> C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.exe
-     1>Done Building Project "C:\Users\D059264\Google Drive\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" (Build target(s)).
+﻿Build started 17.01.2016 20:54:41.
+     1>Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         ZombieGame.vcxproj -> C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Release\ZombieGame.exe
+     1>Done Building Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\ZombieGame\ZombieGame.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:07.15
+Time Elapsed 00:00:00.06

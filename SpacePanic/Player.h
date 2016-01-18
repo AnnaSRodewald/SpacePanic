@@ -1,0 +1,27 @@
+#pragma once
+
+#include "Box.h"
+#include <GameEngine\SpriteBatch.h>
+#include <GameEngine\GLTexture.h>
+#include <GameEngine\InputManager.h>
+
+#include "Agent.h"
+#include "Monster.h"
+
+class Player :
+	public Agent
+{
+public:
+	Player();
+	~Player();
+
+	void init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed);
+
+	virtual void update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
+
+	void draw(GameEngine::SpriteBatch& spriteBatch);
+
+private:
+	GameEngine::InputManager* m_inputManager;
+};
+
