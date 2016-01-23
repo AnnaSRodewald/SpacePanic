@@ -12,6 +12,9 @@ public:
 
 	virtual void update(const std::vector<std::string>& levelData,
 		std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
+	virtual void update(std::vector<Box>& levelBoxes, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
+
+	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 
 	float getHealth() override {
 		return m_health;

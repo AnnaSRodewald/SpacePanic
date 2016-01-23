@@ -25,9 +25,9 @@ void Monster::init(float speed, glm::vec2 position, glm::vec2 dimensions){
 }
 
 void Monster::update(const std::vector<std::string>& levelData,
-	std::vector<Player*>& Players, std::vector<Monster*>& zombies, float deltaTime){
+	std::vector<Player*>& players, std::vector<Monster*>& zombies, float deltaTime){
 
-	Player* closestPlayer = getNearestPlayer(Players);
+	Player* closestPlayer = getNearestPlayer(players);
 
 	if (closestPlayer != nullptr){
 		m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
@@ -36,6 +36,28 @@ void Monster::update(const std::vector<std::string>& levelData,
 
 	collideWithLevel(levelData);
 
+}
+
+void Monster::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
+	Player* closestPlayer = getNearestPlayer(players);
+
+	if (closestPlayer != nullptr){
+		m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
+		m_collisionBox.m_position += m_direction * m_speed * deltaTime;
+	}
+
+	collideWithLevel(levelBoxes);
+}
+
+void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
+	Player* closestPlayer = getNearestPlayer(players);
+
+	if (closestPlayer != nullptr){
+		m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
+		m_collisionBox.m_position += m_direction * m_speed * deltaTime;
+	}
+
+	collideWithLevel(level.getLevelBoxes());
 }
 
 Player* Monster::getNearestPlayer(std::vector<Player*>& Players){

@@ -25,6 +25,65 @@ void Agent::draw(GameEngine::SpriteBatch& spriteBatch){
 	spriteBatch.draw(destRect, uvRect, m_collisionBox.getTextureID(), 0.0f, m_collisionBox.m_color, m_direction);
 }
 
+bool Agent::collideWithLevel(std::vector<Box>& levelBoxes){
+
+	bool collided = false;
+
+
+	for (auto& box : levelBoxes){
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth)){
+
+			glm::vec2& position = m_collisionBox.m_position;
+
+			const float agent_width = m_collisionBox.m_dimensions.x;
+			//const float agent_height = m_collisionBox.m_dimensions.y;
+
+			float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+			float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
+
+			if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
+				if ((position.x - penetrationDepth.x) < 0)
+				{
+					position.x -= xDepth;
+				}
+				else
+				{
+					position.x += xDepth;
+				}
+			}
+			else{
+				if ((position.y - penetrationDepth.y) < 0)
+				{
+					position.y -= yDepth;
+				}
+				else
+				{
+					position.y += yDepth;
+				}
+			}
+
+			collided = true;
+		}
+
+	}
+
+	return collided;
+
+}
+
+bool Agent::collideWithLadder(std::vector<Box>& ladderBoxes){
+
+	bool collided = false;
+
+	for (auto& box : ladderBoxes){
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth)){
+			collided = true;
+		}
+	}
+	return collided;
+}
 
 bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 	std::vector<glm::vec2> collideTilePositions;
@@ -67,7 +126,7 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 	//Do the collision
 	for (int i = 0; i < collideTilePositions.size(); i++)
 	{
-		collideWithTile(collideTilePositions[i], glm::vec2(TILE_WIDTH, TILE_WIDTH));		
+		collideWithTile(collideTilePositions[i], glm::vec2(TILE_WIDTH, TILE_WIDTH));
 	}
 
 	return true;
@@ -75,6 +134,12 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 
 
 bool Agent::collideWithAgent(Agent* agent, glm::vec4& penetrationDepth){
+
+	return collideWithBox(&agent->m_collisionBox, penetrationDepth);
+}
+
+
+bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth){
 	glm::vec2 position = m_collisionBox.getPosition();
 	const float agent_width = m_collisionBox.m_dimensions.x;
 	const float agent_height = m_collisionBox.m_dimensions.y;
@@ -95,27 +160,32 @@ bool Agent::collideWithAgent(Agent* agent, glm::vec4& penetrationDepth){
 	//	return false;
 	//}
 
+	float myLeft = position.x;
+	float myTop = position.y + agent_height;
+	float myRight = position.x + agent_width;
+	float myBottom = position.y;
+
 	//Box to collide with
-	Box& otherBox = agent->m_collisionBox;
-	float right = (otherBox.m_position.x + otherBox.m_dimensions.x);
-	float left = otherBox.m_position.x;
-	float bottom = otherBox.m_position.y;
-	float top = otherBox.m_position.y + otherBox.m_dimensions.y;
+	float right = otherBox->m_position.x + otherBox->m_dimensions.x;
+	float left = otherBox->m_position.x;
+	float bottom = otherBox->m_position.y;
+	float top = otherBox->m_position.y + otherBox->m_dimensions.y;
 
 	//Check collision
-	if (position.x <  right && position.x + agent_width > left &&
-		position.y + agent_height > bottom && position.y < top)
+	if (myLeft <  right && myRight > left &&
+		myTop > bottom && myBottom < top)
 	{
 		//collided - now calculate penetration depth
-		penetrationDepth.x = std::max(position.x, left);
-		penetrationDepth.y = std::max(position.y, bottom);
-		penetrationDepth.z = std::min(position.x + agent_width, right);
-		penetrationDepth.w = std::min(position.y + agent_height, top);
+		penetrationDepth.x = std::max(myLeft, left);
+		penetrationDepth.y = std::max(myBottom, bottom);
+		penetrationDepth.z = std::min(myRight, right);
+		penetrationDepth.w = std::min(myTop, top);
 		return true;
 	}
 
 	return false;
 }
+
 
 bool Agent::applyDamage(float damage){
 	m_health -= damage;
@@ -143,7 +213,7 @@ void Agent::checkTilePosition(const std::vector<std::string>& levelData, std::ve
 
 	if (levelData[cornerPos.y][cornerPos.x] != '.'){
 		collideTilePositions.push_back(cornerPos * (float)TILE_WIDTH + glm::vec2((float)TILE_WIDTH / 2.0f));
-		std::cout << "collide " << x << " and "<< y << std::endl;
+		std::cout << "collide " << x << " and " << y << std::endl;
 	}
 }
 

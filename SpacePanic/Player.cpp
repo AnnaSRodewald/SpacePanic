@@ -54,6 +54,55 @@ void Player::update(const std::vector<std::string>& levelData, std::vector<Playe
 	collideWithLevel(levelData);
 }
 
+void Player::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
+
+	if (m_inputManager->isKeyDown(SDLK_w))
+	{
+		m_collisionBox.m_position.y += m_speed * deltaTime;
+	}
+	else if (m_inputManager->isKeyDown(SDLK_s))
+	{
+		m_collisionBox.m_position.y -= m_speed * deltaTime;
+	}
+
+	if (m_inputManager->isKeyDown(SDLK_a))
+	{
+		m_collisionBox.m_position.x -= m_speed * deltaTime;
+	}
+	else if (m_inputManager->isKeyDown(SDLK_d))
+	{
+		m_collisionBox.m_position.x += m_speed * deltaTime;
+	}
+
+
+	collideWithLevel(levelBoxes);
+}
+
+
+void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
+
+	if (m_inputManager->isKeyDown(SDLK_w) && collideWithLadder(level.getLadderBoxes()))
+	{
+		m_collisionBox.m_position.y += m_speed * deltaTime;
+	}
+	else if (m_inputManager->isKeyDown(SDLK_s) && collideWithLadder(level.getLadderBoxes()))
+	{
+		m_collisionBox.m_position.y -= m_speed * deltaTime;
+	}
+
+	if (m_inputManager->isKeyDown(SDLK_a))
+	{
+		m_collisionBox.m_position.x -= m_speed * deltaTime;
+	}
+	else if (m_inputManager->isKeyDown(SDLK_d))
+	{
+		m_collisionBox.m_position.x += m_speed * deltaTime;
+	}
+
+
+	collideWithLevel(level.getLevelBoxes());
+}
+
 void Player::draw(GameEngine::SpriteBatch& spriteBatch){
 	m_collisionBox.draw(spriteBatch);
 }

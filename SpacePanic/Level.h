@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <GameEngine\SpriteBatch.h>
+#include "Box.h"
 
 
 const float TILE_WIDTH = 64.0f;
@@ -32,10 +33,15 @@ public:
 		return m_levelData.size();
 	}
 
+	std::vector<Box>& getLevelBoxes() { return m_boxes; }
+	std::vector<Box>& getLadderBoxes() { return m_ladderBoxes; }
+
 private:
 	std::vector<std::string> m_levelData;
 	int m_numPlayer;
 	GameEngine::SpriteBatch m_spriteBatch;
+	std::vector<Box> m_boxes;
+	std::vector<Box> m_ladderBoxes;
 
 	glm::vec2 m_startPlayerPos;
 	std::vector<glm::vec2> m_startMonsterPositions;

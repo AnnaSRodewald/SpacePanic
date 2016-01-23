@@ -12,6 +12,7 @@ const float AGENT_RADIUS = AGENT_WIDTH / 2.0f;
 
 class Monster;
 class Player;
+class Level;
 
 class Agent
 {
@@ -30,9 +31,15 @@ public:
 	virtual void update(const std::vector<std::string>& levelData,
 		std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) = 0;
 
+	virtual void update(std::vector<Box>& levelBoxes, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) = 0;
+
+	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) = 0;
+
 	glm::vec2 getPosition() const { return m_collisionBox.getPosition(); }
 
 	bool collideWithLevel(const std::vector<std::string>& levelData);
+	bool collideWithLevel(std::vector<Box>& levelBoxes);
+	bool collideWithLadder(std::vector<Box>& ladderBoxes);
 
 	bool collideWithAgent(Agent* agent, glm::vec4& penetrationDepth = glm::vec4());
 
@@ -58,6 +65,8 @@ protected:
 	bool collideWithTile(glm::vec2 tilePosition);
 
 	bool collideWithTile(glm::vec2 tilePosition, glm::vec2 tileDimensions);
+
+	bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
 
 	glm::vec2 m_direction = glm::vec2(1.0f, 0.0f);
 

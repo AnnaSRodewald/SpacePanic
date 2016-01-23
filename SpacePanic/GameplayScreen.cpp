@@ -124,8 +124,9 @@ void GameplayScreen::update() {
 
 void GameplayScreen::updateAgents(float deltaTime){
 	//update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime
-	m_levels[m_currentLevel]->getLevelData();
-	m_player.update(m_levels[m_currentLevel]->getLevelData(), m_players, m_monsters, deltaTime);
+	//m_levels[m_currentLevel]->getLevelData();
+	//m_player.update(m_levels[m_currentLevel]->getLevelData(), m_players, m_monsters, deltaTime);
+	m_player.update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
 
 }
 
@@ -202,6 +203,21 @@ void GameplayScreen::draw() {
 			*/
 		}
 
+		std::vector<Box> levelBoxes = m_levels[m_currentLevel]->getLevelBoxes();
+
+		for (auto& box : levelBoxes)
+		{
+			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
+			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.z = box.getDimensions().x;
+			destRect.w = box.getDimensions().y;
+
+			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
+
+			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
+			*/
+		}
+
 		//Render player
 		auto box = m_player.getBox();
 		destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
@@ -236,13 +252,13 @@ void GameplayScreen::initShaders() {
 
 void GameplayScreen::initLevel(){
 	// Level 1
-	m_levels.push_back(new Level("Levels/level2.txt"));
+	m_levels.push_back(new Level("Levels/level3.txt"));
 	m_currentLevel = 0;
 
 	//Init player
 	//"Assets/blue_ninja.png"
 	//"Textures/player.png"
-	m_player.init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(100.0f, 120.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
+	m_player.init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(60.0f, 80.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
 
 	std::mt19937 randomEngine;
 	randomEngine.seed(time(nullptr));

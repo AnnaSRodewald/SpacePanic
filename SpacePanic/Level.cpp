@@ -8,6 +8,8 @@
 
 
 
+
+
 Level::Level(const std::string fileName)
 {
 
@@ -52,31 +54,50 @@ Level::Level(const std::string fileName)
 
 			// Get dest rect
 			glm::vec4 destRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+			Box newBox;
 
 			// Process the tile
 			switch (tile)
 			{
 			case 'B':
 			case 'R':
-				m_spriteBatch.draw(destRect,
+					newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), whiteColor, uvRect);
+					m_boxes.push_back(newBox);
+
+					//Draw the box
+					newBox.draw(m_spriteBatch);				
+
+				/*m_spriteBatch.draw(destRect,
 					uvRect,
 					GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id,
 					0.0f,
-					whiteColor);
+					whiteColor);*/
 				break;
 			case 'G':
-				m_spriteBatch.draw(destRect,
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/glass.png"), whiteColor, uvRect);
+				m_boxes.push_back(newBox);
+
+				//Draw the box
+				newBox.draw(m_spriteBatch);
+
+			/*	m_spriteBatch.draw(destRect,
 					uvRect,
 					GameEngine::ResourceManager::getTexture("Textures/glass.png").id,
 					0.0f,
-					whiteColor);
+					whiteColor);*/
 				break;
 			case 'L':
-				m_spriteBatch.draw(destRect,
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/light_bricks.png"), whiteColor, uvRect);
+				m_ladderBoxes.push_back(newBox);
+
+				//Draw the box
+				newBox.draw(m_spriteBatch);
+
+				/*m_spriteBatch.draw(destRect,
 					uvRect,
 					GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id,
 					0.0f,
-					whiteColor);
+					whiteColor);*/
 				break;
 			case '@':
 				m_levelData[y][x] = '.'; /// So we don't collide with the starting points (@) later in the game

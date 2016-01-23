@@ -7,6 +7,7 @@
 
 #include "Agent.h"
 #include "Monster.h"
+#include "Level.h"
 
 class Player :
 	public Agent
@@ -18,6 +19,9 @@ public:
 	void init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed);
 
 	virtual void update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
+
+	virtual void update(std::vector<Box>& levelBoxes, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
+	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
