@@ -81,11 +81,13 @@ void Player::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players,
 
 void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 
-	if (m_inputManager->isKeyDown(SDLK_w) && collideWithLadder(level.getLadderBoxes()))
+	bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
+
+	if (m_inputManager->isKeyDown(SDLK_w) && collidedWithLadder)
 	{
 		m_collisionBox.m_position.y += m_speed * deltaTime;
 	}
-	else if (m_inputManager->isKeyDown(SDLK_s) && collideWithLadder(level.getLadderBoxes()))
+	else if (m_inputManager->isKeyDown(SDLK_s) && collidedWithLadder)
 	{
 		m_collisionBox.m_position.y -= m_speed * deltaTime;
 	}
@@ -99,6 +101,10 @@ void Player::update(Level& level, std::vector<Player*>& players, std::vector<Mon
 		m_collisionBox.m_position.x += m_speed * deltaTime;
 	}
 
+	if (collidedWithLadde == false)
+	{
+		//Apply Physics for player here
+	}
 
 	collideWithLevel(level.getLevelBoxes());
 }
