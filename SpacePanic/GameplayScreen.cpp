@@ -87,7 +87,7 @@ void GameplayScreen::onEntry() {
 
 	//Init camera
 	m_camera.init(m_window->getScreenWidth(), m_window->getScreenHeight());
-	//m_camera.setScale(24.0f);
+	m_camera.setScale(0.5f);
 
 	//Init level
 	initLevel();
@@ -168,7 +168,7 @@ void GameplayScreen::draw() {
 		}
 	}
 
-	//Draw the zombies
+	//Draw the monsters
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
 		if (m_camera.isBoxInView(m_monsters[i]->getPosition(), agentDims))
@@ -258,7 +258,7 @@ void GameplayScreen::initLevel(){
 	//Init player
 	//"Assets/blue_ninja.png"
 	//"Textures/player.png"
-	m_player.init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(60.0f, 80.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
+	m_player.init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(55.0f, 128.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
 
 	std::mt19937 randomEngine;
 	randomEngine.seed(time(nullptr));
@@ -268,7 +268,14 @@ void GameplayScreen::initLevel(){
 	//Add player
 	m_players.push_back(&m_player);
 
-	m_boxes.push_back(m_player.getBox());
+	for (auto& monsterPosition : m_levels[m_currentLevel]->getStartMonsterPositions()){
+		Monster monster;
+		monster.init(1.0f, monsterPosition, glm::vec2(60.0f, 128.0f));
+		m_monsters.push_back(&monster);
+		//m_boxes.push_back(monster.getBox());
+	}
+
+	//m_boxes.push_back(m_player.getBox());
 
 	//Add all the monsters
 	const std::vector<glm::vec2> monsterPositions = m_levels[m_currentLevel]->getStartMonsterPositions();

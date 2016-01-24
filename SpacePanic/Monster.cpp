@@ -16,12 +16,8 @@ Monster::~Monster()
 }
 
 void Monster::init(float speed, glm::vec2 position, glm::vec2 dimensions){
-	m_collisionBox.m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
 	m_speed = speed;
-	m_collisionBox.m_position = position;
-	m_collisionBox.m_dimensions = dimensions;
-	m_collisionBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/zombie.png").id;
-
+	m_collisionBox.init(position, dimensions, &GameEngine::ResourceManager::getTexture("Textures/zombie.png"), GameEngine::ColorRGBA8(255, 255, 255, 255));
 }
 
 void Monster::update(const std::vector<std::string>& levelData,
@@ -76,6 +72,10 @@ Player* Monster::getNearestPlayer(std::vector<Player*>& Players){
 	}
 
 	return closestPlayer;
+}
+
+void Monster::draw(GameEngine::SpriteBatch& spriteBatch){
+	m_collisionBox.draw(spriteBatch);
 }
 
 

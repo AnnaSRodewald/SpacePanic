@@ -104,7 +104,7 @@ Level::Level(const std::string fileName)
 				m_startPlayerPos.x = x * TILE_WIDTH;
 				m_startPlayerPos.y = y * TILE_WIDTH;
 				break;
-			case 'Z':
+			case 'M':
 				m_levelData[y][x] = '.'; /// So we don't collide with the starting points (Z) later in the game
 				m_startMonsterPositions.emplace_back(x * TILE_WIDTH, y * TILE_WIDTH);
 				break;

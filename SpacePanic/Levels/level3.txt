@@ -1,11 +1,14 @@
 Humans: 0
-RRRRRRRRRRRRRRRRRRRRRRRRRR
-R.....@............L....RG
-R..................L....RG
-RRRRRRRRRRRRRRRRRRRLRRRRRG
-R.....L............L....RG
-R.....L.................RG
-RRRRRRLRRRRRRRRRRRRRRRRRRG
-R.....L............L....RG
-R..................L....RG
-RRRRRRRRRRRRRRRRRRRRRRRRRR
+RRRRRRRRRRRRRRRRRRRRRRRRRRRR
+RL.....@....L........L....RG
+RL..........L........L....RG
+RLRRRRRRRRRRLRRRRRRRRLRRRRRG
+RLM...L.....L.L......L...LRG
+R.....L.......L..........LRG
+RRRRRRLRRRRRRRLRRRRRRRRRRLRG
+RL....L...L...L.....L...MLRG
+RL........L.........L.....RG
+RLRRRRRRRRLRRRRRRRRRLRRRRRRG
+RL.M......L.........L.....RG
+R.........................RG
+RRRRRRRRRRRRRRRRRRRRRRRRRRRG
