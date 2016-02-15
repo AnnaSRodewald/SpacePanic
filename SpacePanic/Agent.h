@@ -68,8 +68,9 @@ protected:
 
 	bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
 
-	glm::vec2 m_direction = glm::vec2(1.0f, 0.0f);
+	bool onLadder = false;
 
+	glm::vec2 m_direction = glm::vec2(1.0f, 0.0f);
 
 	float m_speed;
 	float m_health;

@@ -10,14 +10,14 @@ Player::Player()
 
 Player::~Player()
 {
-	
+
 }
 
 
 void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed){
 	m_speed = speed;
 	m_inputManager = inputManager;
-//	m_camera = camera;dww
+	//	m_camera = camera;dww
 
 
 	m_health = 150;
@@ -83,30 +83,48 @@ void Player::update(Level& level, std::vector<Player*>& players, std::vector<Mon
 
 	bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
 
-	if (m_inputManager->isKeyDown(SDLK_w) && collidedWithLadder)
-	{
-		m_collisionBox.m_position.y += m_speed * deltaTime;
-	}
-	else if (m_inputManager->isKeyDown(SDLK_s) && collidedWithLadder)
-	{
-		m_collisionBox.m_position.y -= m_speed * deltaTime;
+	if (collidedWithLadder) {
+
+		if (m_inputManager->isKeyDown(SDLK_w) || m_inputManager->isKeyDown(SDLK_s)){
+			if (m_inputManager->isKeyDown(SDLK_w))
+			{
+				m_collisionBox.m_position.y += m_speed * deltaTime;
+
+			}
+			else if (m_inputManager->isKeyDown(SDLK_s))
+			{
+				m_collisionBox.m_position.y -= m_speed * deltaTime;
+			}
+
+			if (collideWithLevel(level.getLevelBoxes()) == false)
+			{
+				onLadder = true;
+			}
+			else
+			{
+				onLadder = false;
+			}
+		}
 	}
 
-	if (m_inputManager->isKeyDown(SDLK_a))
-	{
-		m_collisionBox.m_position.x -= m_speed * deltaTime;
-	}
-	else if (m_inputManager->isKeyDown(SDLK_d))
-	{
-		m_collisionBox.m_position.x += m_speed * deltaTime;
+	if (onLadder == false) {
+		if (m_inputManager->isKeyDown(SDLK_a))
+		{
+			m_collisionBox.m_position.x -= m_speed * deltaTime;
+		}
+		else if (m_inputManager->isKeyDown(SDLK_d))
+		{
+			m_collisionBox.m_position.x += m_speed * deltaTime;
+		}
 	}
 
-	if (collidedWithLadde == false)
+
+	if (collidedWithLadder == false)
 	{
 		//Apply Physics for player here
+		collideWithLevel(level.getLevelBoxes());
 	}
 
-	collideWithLevel(level.getLevelBoxes());
 }
 
 void Player::draw(GameEngine::SpriteBatch& spriteBatch){
