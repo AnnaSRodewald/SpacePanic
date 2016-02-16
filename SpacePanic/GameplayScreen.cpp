@@ -9,7 +9,7 @@
 #define DEBUG_RENDER
 
 const float PLAYER_SPEED = 5.0f;
-const float MONSTER_SPEED = 1.3f;
+const float MONSTER_SPEED = 2.5f;
 
 GameplayScreen::GameplayScreen(GameEngine::Window* window) : m_window(window)
 {
@@ -18,7 +18,7 @@ GameplayScreen::GameplayScreen(GameEngine::Window* window) : m_window(window)
 
 GameplayScreen::~GameplayScreen()
 {
-	
+
 }
 
 
@@ -127,6 +127,12 @@ void GameplayScreen::updateAgents(float deltaTime){
 	//m_levels[m_currentLevel]->getLevelData();
 	//m_player.update(m_levels[m_currentLevel]->getLevelData(), m_players, m_monsters, deltaTime);
 	m_player.update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+
+	for (auto monster : m_monsters)
+	{
+		monster->getPosition();
+		monster->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+	}
 
 }
 
@@ -269,20 +275,20 @@ void GameplayScreen::initLevel(){
 	m_players.push_back(&m_player);
 
 	for (auto& monsterPosition : m_levels[m_currentLevel]->getStartMonsterPositions()){
-		Monster monster;
-		monster.init(1.0f, monsterPosition, glm::vec2(60.0f, 128.0f));
-		m_monsters.push_back(&monster);
-		//m_boxes.push_back(monster.getBox());
+		m_monsters.push_back(new Monster);
+		m_monsters.back()->init(MONSTER_SPEED, monsterPosition, glm::vec2(60.0f, 128.0f));
+		//m_monsters.push_back(&monster);
+		////m_boxes.push_back(monster.getBox());
 	}
 
 	//m_boxes.push_back(m_player.getBox());
 
-	//Add all the monsters
-	const std::vector<glm::vec2> monsterPositions = m_levels[m_currentLevel]->getStartMonsterPositions();
-	for (int i = 0; i < monsterPositions.size(); i++)
-	{
-		m_monsters.push_back(new Monster);
-		m_monsters.back()->init(MONSTER_SPEED, monsterPositions[i], glm::vec2(AGENT_WIDTH, AGENT_WIDTH));
-	}
+	////Add all the monsters
+	//const std::vector<glm::vec2> monsterPositions = m_levels[m_currentLevel]->getStartMonsterPositions();
+	//for (int i = 0; i < monsterPositions.size(); i++)
+	//{
+	//	m_monsters.push_back(new Monster);
+	//	m_monsters.back()->init(MONSTER_SPEED, monsterPositions[i], glm::vec2(AGENT_WIDTH, AGENT_WIDTH));
+	//}
 
 }

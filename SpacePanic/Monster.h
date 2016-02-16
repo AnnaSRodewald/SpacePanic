@@ -23,5 +23,9 @@ public:
 	};
 private:
 	Player* getNearestPlayer(std::vector<Player*>& Player);
+
+	int m_directionSteps = -1;
+	bool m_sawPlayer = false;
+	bool m_wasOnLadder = false;
 };
 

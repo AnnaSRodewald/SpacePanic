@@ -79,11 +79,39 @@ bool Agent::collideWithLadder(std::vector<Box>& ladderBoxes){
 	for (auto& box : ladderBoxes){
 		glm::vec4 penetrationDepth;
 		if (collideWithBox(&box, penetrationDepth)){
-			collided = true;
+			float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+			//if (xDepth <= 4)
+			//{
+				collided = true;
+			//}
 		}
 	}
 	return collided;
 }
+
+Box* Agent::collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes){
+
+	for (auto& box : ladderBoxes){
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth)){
+			
+			return &box;
+		}
+	}
+	return nullptr;
+}
+
+glm::vec4 Agent::collideWithLadderAndGetCollisionDepth(std::vector<Box>& ladderBoxes){
+
+	for (auto& box : ladderBoxes){
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth)){
+			return penetrationDepth;
+		}
+	}
+	return glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
 
 bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 	std::vector<glm::vec2> collideTilePositions;
@@ -326,7 +354,10 @@ bool Agent::collideWithTile(glm::vec2 tilePosition){
 				position.y += yDepth;
 			}
 		}
+		return true;
 	}
+
+	return false;
 }
 
 

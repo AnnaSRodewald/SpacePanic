@@ -68,7 +68,10 @@ protected:
 
 	bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
 
-	bool onLadder = false;
+	Box* Agent::collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes);
+	glm::vec4 Agent::collideWithLadderAndGetCollisionDepth(std::vector<Box>& ladderBoxes);
+
+	bool m_onLadder = false;
 
 	glm::vec2 m_direction = glm::vec2(1.0f, 0.0f);
 

@@ -98,16 +98,16 @@ void Player::update(Level& level, std::vector<Player*>& players, std::vector<Mon
 
 			if (collideWithLevel(level.getLevelBoxes()) == false)
 			{
-				onLadder = true;
+				m_onLadder = true;
 			}
 			else
 			{
-				onLadder = false;
+				m_onLadder = false;
 			}
 		}
 	}
 
-	if (onLadder == false) {
+	if (m_onLadder == false) {
 		if (m_inputManager->isKeyDown(SDLK_a))
 		{
 			m_collisionBox.m_position.x -= m_speed * deltaTime;
