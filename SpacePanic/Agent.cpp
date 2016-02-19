@@ -162,7 +162,6 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData){
 
 
 bool Agent::collideWithAgent(Agent* agent, glm::vec4& penetrationDepth){
-
 	return collideWithBox(&agent->m_collisionBox, penetrationDepth);
 }
 

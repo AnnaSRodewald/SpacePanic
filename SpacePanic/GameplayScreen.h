@@ -40,6 +40,8 @@ private:
 	///Updates all agents
 	void updateAgents(float deltaTime);
 
+	void handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm::vec4 penetrationDepth);
+
 	GameEngine::SpriteBatch m_spriteBatch;
 	GameEngine::GLSLProgram m_textureProgram;
 	GameEngine::Camera2D m_camera;

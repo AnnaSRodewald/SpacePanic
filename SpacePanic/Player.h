@@ -25,7 +25,12 @@ public:
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
+
 private:
+
+	void updateMovements(Level& level, std::vector<Player*>& players, float deltaTime);
+	void updateActions(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime);
+
 	GameEngine::InputManager* m_inputManager;
 };
 

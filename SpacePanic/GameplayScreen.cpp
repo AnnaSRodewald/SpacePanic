@@ -5,6 +5,7 @@
 #include <GameEngine\ResourceManager.h>
 #include <random>
 #include <ctime>
+#include <GameEngine\GameEngineErrors.h>
 
 #define DEBUG_RENDER
 
@@ -126,15 +127,75 @@ void GameplayScreen::updateAgents(float deltaTime){
 	//update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime
 	//m_levels[m_currentLevel]->getLevelData();
 	//m_player.update(m_levels[m_currentLevel]->getLevelData(), m_players, m_monsters, deltaTime);
-	m_player.update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
-
-	for (auto monster : m_monsters)
+	
+	for (auto player : m_players)
 	{
-		monster->getPosition();
-		monster->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+		player->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+	}
+
+	for (size_t i = 0; i < m_monsters.size(); i++)
+	{
+		m_monsters[i]->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+		for (auto player : m_players)
+		{
+			if (m_monsters[i]->collideWithAgent(player)){
+				std::printf("");
+				GameEngine::fatalError("YOU LOSE");
+			}
+		}
+		for (size_t a = i+1; a < m_monsters.size(); a++)
+		{
+			glm::vec4 penetrationDepth;
+			if (m_monsters[i]->collideWithAgent(m_monsters[a], penetrationDepth))
+			{
+				handleMonsterCollisionBehaviour(m_monsters[i], m_monsters[a], penetrationDepth);
+			}
+		}
 	}
 
 }
+
+void GameplayScreen::handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm::vec4 penetrationDepth){
+
+	float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+	float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
+
+	glm::vec2 newPosition = a->getPosition();
+	glm::vec2 newPosition2 = b->getPosition();
+
+	if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
+		if ((newPosition.x - penetrationDepth.x) < 0)
+		{
+			newPosition.x -= xDepth/2;
+			newPosition2.x += xDepth / 2;
+		}
+		else
+		{
+			newPosition.x += xDepth/2;
+			newPosition2.x -= xDepth / 2;
+		}
+	}
+	else{
+		if ((newPosition.y - penetrationDepth.y) < 0)
+		{
+			newPosition.y -= yDepth/2;
+			newPosition2.y += yDepth / 2;
+		}
+		else
+		{
+			newPosition.y += yDepth/2;
+			newPosition2.y -= yDepth / 2;
+		}
+	}
+
+	a->setPosition(newPosition);
+	b->setPosition(newPosition2);
+
+	a->setDirection(glm::vec2(a->getDirection().x*(-1), a->getDirection().y*(-1)));
+	b->setDirection(glm::vec2(b->getDirection().x*(-1), b->getDirection().y*(-1)));
+
+}
+
 
 void GameplayScreen::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -50,8 +50,8 @@ void Monster::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players
 void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 	Player* closestPlayer = getNearestPlayer(players);
 
-	if (closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y //&& abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 50
-		) || m_sawPlayer == true)){
+	if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y //&& abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 50
+		) || m_sawPlayer == true) && m_onLadder == false)){
 		m_directionSteps = 10; //
 		m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
 		m_collisionBox.m_position += m_direction * m_speed * deltaTime;
@@ -61,7 +61,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 		static std::mt19937 randomEngine(time(nullptr));
 
-		static std::uniform_int_distribution<int> randMov(0, 3);
+		static std::uniform_int_distribution<int> randMov(0, 2);
 
 		static std::uniform_int_distribution<int> randDir(-1, 1);
 
@@ -81,7 +81,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 				m_direction.x = 0;
 				m_direction.y = randDir(randomEngine);*/
 			}
-			else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 1 && m_wasOnLadder == false)
+			else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 2 && m_wasOnLadder == false)
 			{
 				m_directionSteps = randSteps(randomEngine);
 				m_direction.x = 0;
@@ -125,9 +125,13 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 					m_wasOnLadder = false;
 				}
 				m_onLadder = false;
-				m_direction.y = m_direction.y * (-1.0);
-				m_direction.x = m_direction.x * (-1.0);
-
+			//	m_direction.y = m_direction.y * (-1.0);
+				m_direction.y = 0;
+				m_direction.x = randDir(randomEngine);
+				if (m_direction.x == 0)
+				{
+					m_direction.x = 1;
+				}
 			}
 
 
@@ -188,6 +192,12 @@ Player* Monster::getNearestPlayer(std::vector<Player*>& players){
 
 	return closestPlayer;
 }
+
+void Monster::setDirection(glm::vec2 newDirection){
+	m_direction = newDirection;
+	m_directionSteps = 1;
+}
+
 
 void Monster::draw(GameEngine::SpriteBatch& spriteBatch){
 	m_collisionBox.draw(spriteBatch);

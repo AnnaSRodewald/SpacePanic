@@ -36,6 +36,7 @@ public:
 	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) = 0;
 
 	glm::vec2 getPosition() const { return m_collisionBox.getPosition(); }
+	void setPosition(glm::vec2 newPosition) { m_collisionBox.m_position = newPosition; }
 
 	bool collideWithLevel(const std::vector<std::string>& levelData);
 	bool collideWithLevel(std::vector<Box>& levelBoxes);
@@ -56,6 +57,8 @@ public:
 
 	const Box& getBox() const { return m_collisionBox; }
 
+	glm::vec2 getDirection() const { return m_direction; }
+
 protected:
 
 	void checkTilePosition(const std::vector<std::string>& levelData,
@@ -66,10 +69,10 @@ protected:
 
 	bool collideWithTile(glm::vec2 tilePosition, glm::vec2 tileDimensions);
 
-	bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
+	bool collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
 
-	Box* Agent::collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes);
-	glm::vec4 Agent::collideWithLadderAndGetCollisionDepth(std::vector<Box>& ladderBoxes);
+	Box* collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes);
+	glm::vec4 collideWithLadderAndGetCollisionDepth(std::vector<Box>& ladderBoxes);
 
 	bool m_onLadder = false;
 

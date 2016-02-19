@@ -81,6 +81,12 @@ void Player::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players,
 
 void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 
+	updateMovements(level, players, deltaTime);
+
+
+}
+
+void Player::updateMovements(Level& level, std::vector<Player*>& players, float deltaTime) {
 	bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
 
 	if (collidedWithLadder) {
@@ -124,7 +130,6 @@ void Player::update(Level& level, std::vector<Player*>& players, std::vector<Mon
 		//Apply Physics for player here
 		collideWithLevel(level.getLevelBoxes());
 	}
-
 }
 
 void Player::draw(GameEngine::SpriteBatch& spriteBatch){

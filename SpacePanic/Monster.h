@@ -16,11 +16,14 @@ public:
 
 	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 
+	void setDirection(glm::vec2 newDirection);
+
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
 	float getHealth() override {
 		return m_health;
 	};
+
 private:
 	Player* getNearestPlayer(std::vector<Player*>& Player);
 
