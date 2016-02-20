@@ -115,9 +115,15 @@ void GameplayScreen::onExit() {
 
 
 void GameplayScreen::update() {
-	m_camera.setPosition(m_player.getPosition());
+	if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f)){
+		m_camera.setPosition(m_levels[m_currentLevel]->getCameraPosition());
+	}
+	else {
+		m_camera.setPosition(m_player.getPosition());
+	}
 	m_camera.update();
 	checkInput();
+	processInput();
 
 	updateAgents(1.0f);
 
@@ -127,7 +133,7 @@ void GameplayScreen::updateAgents(float deltaTime){
 	//update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime
 	//m_levels[m_currentLevel]->getLevelData();
 	//m_player.update(m_levels[m_currentLevel]->getLevelData(), m_players, m_monsters, deltaTime);
-	
+
 	for (auto player : m_players)
 	{
 		player->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
@@ -143,7 +149,7 @@ void GameplayScreen::updateAgents(float deltaTime){
 				GameEngine::fatalError("YOU LOSE");
 			}
 		}
-		for (size_t a = i+1; a < m_monsters.size(); a++)
+		for (size_t a = i + 1; a < m_monsters.size(); a++)
 		{
 			glm::vec4 penetrationDepth;
 			if (m_monsters[i]->collideWithAgent(m_monsters[a], penetrationDepth))
@@ -166,24 +172,24 @@ void GameplayScreen::handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm
 	if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
 		if ((newPosition.x - penetrationDepth.x) < 0)
 		{
-			newPosition.x -= xDepth/2;
+			newPosition.x -= xDepth / 2;
 			newPosition2.x += xDepth / 2;
 		}
 		else
 		{
-			newPosition.x += xDepth/2;
+			newPosition.x += xDepth / 2;
 			newPosition2.x -= xDepth / 2;
 		}
 	}
 	else{
 		if ((newPosition.y - penetrationDepth.y) < 0)
 		{
-			newPosition.y -= yDepth/2;
+			newPosition.y -= yDepth / 2;
 			newPosition2.y += yDepth / 2;
 		}
 		else
 		{
-			newPosition.y += yDepth/2;
+			newPosition.y += yDepth / 2;
 			newPosition2.y -= yDepth / 2;
 		}
 	}
@@ -315,11 +321,22 @@ void GameplayScreen::initShaders() {
 	m_textureProgram.addAttribute("vertexColor");
 	m_textureProgram.addAttribute("vertexUV");
 	m_textureProgram.linkShaders();
+
 }
+
+void GameplayScreen::processInput(){
+
+	GameEngine::InputManager& inputManager = m_game->inputManager;
+
+	if (inputManager.isKeyPressed(SDLK_ESCAPE)) {
+		m_currentState = GameEngine::ScreenState::EXIT_APPLICATION;
+	}
+}
+
 
 void GameplayScreen::initLevel(){
 	// Level 1
-	m_levels.push_back(new Level("Levels/level3.txt"));
+	m_levels.push_back(new Level("Levels/level4.txt"));
 	m_currentLevel = 0;
 
 	//Init player

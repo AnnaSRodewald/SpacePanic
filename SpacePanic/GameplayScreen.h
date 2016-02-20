@@ -33,6 +33,7 @@ public:
 private:
 	void checkInput();
 	void initShaders();
+	void processInput();
 
 	/// Initializes the level and sets up everything
 	void initLevel();

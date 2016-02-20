@@ -36,6 +36,8 @@ public:
 	std::vector<Box>& getLevelBoxes() { return m_boxes; }
 	std::vector<Box>& getLadderBoxes() { return m_ladderBoxes; }
 
+	glm::vec2 getCameraPosition() const { return m_cameraPosition; }
+
 private:
 	std::vector<std::string> m_levelData;
 	int m_numPlayer;
@@ -45,5 +47,6 @@ private:
 
 	glm::vec2 m_startPlayerPos;
 	std::vector<glm::vec2> m_startMonsterPositions;
+	glm::vec2 m_cameraPosition = glm::vec2(0.0f, 0.0f);
 };
 

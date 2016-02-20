@@ -124,12 +124,9 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 		}
 	}
 
-
-	if (collidedWithLadder == false)
-	{
 		//Apply Physics for player here
+
 		collideWithLevel(level.getLevelBoxes());
-	}
 }
 
 void Player::draw(GameEngine::SpriteBatch& spriteBatch){

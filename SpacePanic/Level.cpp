@@ -110,6 +110,11 @@ Level::Level(const std::string fileName)
 				break;
 			case '.':
 				break;
+			case 'C':
+				m_levelData[y][x] = '.';
+				m_cameraPosition.x = x * TILE_WIDTH;
+				m_cameraPosition.y = y * TILE_WIDTH;
+				break;
 			default:
 				std::printf("Unexpected symbol %c at (%d, %e)", tile, x, y);
 				break;
