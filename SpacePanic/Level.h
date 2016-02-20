@@ -16,6 +16,8 @@ public:
 	Level(const std::string fileName);
 	~Level();
 
+	void update();
+
 	void draw();
 
 	//Getters
@@ -35,6 +37,8 @@ public:
 
 	std::vector<Box>& getLevelBoxes() { return m_boxes; }
 	std::vector<Box>& getLadderBoxes() { return m_ladderBoxes; }
+	std::vector<Box>& getHalfHoleBoxes() { return m_halfHoleBoxes; }
+	std::vector<Box>& getHoleBoxes() { return m_holeBoxes; }
 
 	glm::vec2 getCameraPosition() const { return m_cameraPosition; }
 
@@ -44,6 +48,8 @@ private:
 	GameEngine::SpriteBatch m_spriteBatch;
 	std::vector<Box> m_boxes;
 	std::vector<Box> m_ladderBoxes;
+	std::vector<Box> m_halfHoleBoxes;
+	std::vector<Box> m_holeBoxes;
 
 	glm::vec2 m_startPlayerPos;
 	std::vector<glm::vec2> m_startMonsterPositions;

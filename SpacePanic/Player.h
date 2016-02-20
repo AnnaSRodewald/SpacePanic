@@ -30,6 +30,9 @@ private:
 
 	void updateMovements(Level& level, std::vector<Player*>& players, float deltaTime);
 	void updateActions(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime);
+	bool tryDigging(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, Box& groundBox);
+	void playDiggingSound();
+
 
 	GameEngine::InputManager* m_inputManager;
 };

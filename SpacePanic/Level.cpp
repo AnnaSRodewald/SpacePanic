@@ -133,6 +133,21 @@ Level::~Level()
 }
 
 
+void Level::update(){
+	for (auto box : m_boxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	for (auto box : m_halfHoleBoxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	for (auto box : m_holeBoxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+}
+
 void Level::draw(){
 	m_spriteBatch.renderBatch();
 }

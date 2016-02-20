@@ -126,6 +126,7 @@ void GameplayScreen::update() {
 	processInput();
 
 	updateAgents(1.0f);
+	updateLevel(*m_levels[m_currentLevel]);
 
 }
 
@@ -202,6 +203,10 @@ void GameplayScreen::handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm
 
 }
 
+
+void GameplayScreen::updateLevel(Level& level){
+	level.update();
+}
 
 void GameplayScreen::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -286,6 +291,36 @@ void GameplayScreen::draw() {
 			destRect.w = box.getDimensions().y;
 
 			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
+
+			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
+			*/
+		}
+
+		std::vector<Box> holeBoxes = m_levels[m_currentLevel]->getHoleBoxes();
+
+		for (auto& box : holeBoxes)
+		{
+			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
+			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.z = box.getDimensions().x;
+			destRect.w = box.getDimensions().y;
+
+			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(0, 255, 255, 255), 0.0f);
+
+			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
+			*/
+		}
+
+		std::vector<Box> halfHoleBoxes = m_levels[m_currentLevel]->getHalfHoleBoxes();
+
+		for (auto& box : halfHoleBoxes)
+		{
+			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
+			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.z = box.getDimensions().x;
+			destRect.w = box.getDimensions().y;
+
+			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 0, 255, 255), 0.0f);
 
 			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
 			*/

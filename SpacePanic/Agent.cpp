@@ -89,6 +89,18 @@ bool Agent::collideWithLadder(std::vector<Box>& ladderBoxes){
 	return collided;
 }
 
+bool Agent::collideBoxWithBoxes(Box& box, std::vector<Box>& otherBoxes){
+		bool collided = false;
+
+		for (auto& otherBox : otherBoxes){
+			if (collideBoxWithBox(box, otherBox)){
+				collided = true;
+			}
+		}
+		return collided;
+	
+}
+
 Box* Agent::collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes){
 
 	for (auto& box : ladderBoxes){
@@ -211,6 +223,24 @@ bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth){
 	}
 
 	return false;
+}
+
+bool Agent::collideBoxWithBox(Box& box, Box& otherBox){
+
+	float myLeft = box.m_position.x;
+	float myTop = box.m_position.y + box.m_dimensions.y;
+	float myRight = box.m_position.x + box.m_dimensions.x;
+	float myBottom = box.m_position.y;
+
+	//Box to collide with
+	float right = otherBox.m_position.x + otherBox.m_dimensions.x;
+	float left = otherBox.m_position.x;
+	float bottom = otherBox.m_position.y;
+	float top = otherBox.m_position.y + otherBox.m_dimensions.y;
+
+	//Check collision
+	return myLeft <  right && myRight > left &&
+		myTop > bottom && myBottom < top;
 }
 
 
