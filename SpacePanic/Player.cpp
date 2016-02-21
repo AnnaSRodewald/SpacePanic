@@ -90,6 +90,64 @@ void Player::update(Level& level, std::vector<Player*>& players, std::vector<Mon
 
 }
 
+
+
+
+bool Player::collideWithHalfHole(std::vector<Box>& levelBoxes){
+
+	for (auto box : levelBoxes)
+	{
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth) == true)
+		{
+			handleCollisionWithUnmoveableObject(penetrationDepth);
+			return true;
+		}
+		Box boxAboveGround = Box();
+		boxAboveGround.m_dimensions = box.m_dimensions;
+		boxAboveGround.m_position = glm::vec2(box.m_position.x, box.m_position.y + TILE_WIDTH);
+		if (collideWithBox(&boxAboveGround, penetrationDepth) == true)
+		{
+			handleCollisionWithUnmoveableObject(penetrationDepth);
+			return true;
+		}
+
+
+	}
+	return false;
+}
+
+bool Player::collideWithHole(std::vector<Box>& levelBoxes){
+	//may fall?
+	for (auto box : levelBoxes)
+	{
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth) == true)
+		{
+			handleCollisionWithUnmoveableObject(penetrationDepth);
+			return true;
+		}
+		Box boxAboveGround = Box();
+		boxAboveGround.m_dimensions = box.m_dimensions;
+		boxAboveGround.m_position = glm::vec2(box.m_position.x, box.m_position.y + TILE_WIDTH);
+		if (collideWithBox(&boxAboveGround, penetrationDepth) == true)
+		{
+			handleCollisionWithUnmoveableObject(penetrationDepth);
+			return true;
+		}
+
+
+	}
+	return false;
+}
+
+
+
+void Player::draw(GameEngine::SpriteBatch& spriteBatch){
+	m_collisionBox.draw(spriteBatch);
+}
+
+
 void Player::updateMovements(Level& level, std::vector<Player*>& players, float deltaTime) {
 	bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
 
@@ -107,7 +165,8 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 				m_direction = glm::vec2(0.0f, -1.0f);
 			}
 
-			if (collideWithLevel(level.getLevelBoxes()) == false)
+			if (collideWithLevel(level.getLevelBoxes()) == false && collideWithHalfHole(level.getHalfHoleBoxes()) == false &&
+			collideWithHole(level.getHoleBoxes()) == false)
 			{
 				m_onLadder = true;
 			}
@@ -134,6 +193,8 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 	//Apply Physics for player here
 
 	collideWithLevel(level.getLevelBoxes());
+	collideWithHalfHole(level.getHalfHoleBoxes());
+	collideWithHole(level.getHoleBoxes());
 }
 
 void Player::updateActions(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) {
@@ -159,7 +220,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 		groundBox.m_position.x = m_collisionBox.m_position.x - TILE_WIDTH;
 		groundBox.m_position.y = m_collisionBox.m_position.y - TILE_WIDTH;
 	}
-	else {
+	else { //rechts
 		groundBox.m_position.x = m_collisionBox.m_position.x + TILE_WIDTH;
 		groundBox.m_position.y = m_collisionBox.m_position.y - TILE_WIDTH;
 	}
@@ -174,6 +235,27 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 	if (collideBoxWithBoxes(boxAboveGround, ladderBoxes) == false){
 
+		for (size_t i = 0; i < holeBoxes.size();){
+			if (foundGroundBox == false && collideBoxWithBox(groundBox, holeBoxes[i])){
+				//Dig it up again
+				foundGroundBox = true;
+				groundBox = holeBoxes[i];
+
+				holeBoxes[i] = holeBoxes.back();
+				holeBoxes.pop_back();
+
+				groundBox.m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
+				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
+				groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
+
+				levelBoxes.push_back(groundBox);
+				break;
+			}
+			else{
+				i++;
+			}
+		}
+
 		for (size_t i = 0; i < halfHoleBoxes.size();)
 		{
 			if (foundGroundBox == false && collideBoxWithBox(groundBox, halfHoleBoxes[i]))
@@ -186,6 +268,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 				groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 255);
 				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/glass.png").id;
+				groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/glass.png");
 
 				//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
 				holeBoxes.push_back(groundBox);
@@ -238,8 +321,4 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 void Player::playDiggingSound(){
 	std::printf("DIG");
-}
-
-void Player::draw(GameEngine::SpriteBatch& spriteBatch){
-	m_collisionBox.draw(spriteBatch);
 }

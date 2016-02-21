@@ -34,34 +34,35 @@ bool Agent::collideWithLevel(std::vector<Box>& levelBoxes){
 		glm::vec4 penetrationDepth;
 		if (collideWithBox(&box, penetrationDepth)){
 
-			glm::vec2& position = m_collisionBox.m_position;
+			//glm::vec2& position = m_collisionBox.m_position;
 
-			const float agent_width = m_collisionBox.m_dimensions.x;
-			//const float agent_height = m_collisionBox.m_dimensions.y;
+			//const float agent_width = m_collisionBox.m_dimensions.x;
+			////const float agent_height = m_collisionBox.m_dimensions.y;
 
-			float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
-			float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
+			//float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+			//float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
 
-			if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
-				if ((position.x - penetrationDepth.x) < 0)
-				{
-					position.x -= xDepth;
-				}
-				else
-				{
-					position.x += xDepth;
-				}
-			}
-			else{
-				if ((position.y - penetrationDepth.y) < 0)
-				{
-					position.y -= yDepth;
-				}
-				else
-				{
-					position.y += yDepth;
-				}
-			}
+			//if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
+			//	if ((position.x - penetrationDepth.x) < 0)
+			//	{
+			//		position.x -= xDepth;
+			//	}
+			//	else
+			//	{
+			//		position.x += xDepth;
+			//	}
+			//}
+			//else{
+			//	if ((position.y - penetrationDepth.y) < 0)
+			//	{
+			//		position.y -= yDepth;
+			//	}
+			//	else
+			//	{
+			//		position.y += yDepth;
+			//	}
+			//}
+			handleCollisionWithUnmoveableObject(penetrationDepth);
 
 			collided = true;
 		}
@@ -71,6 +72,7 @@ bool Agent::collideWithLevel(std::vector<Box>& levelBoxes){
 	return collided;
 
 }
+
 
 bool Agent::collideWithLadder(std::vector<Box>& ladderBoxes){
 
@@ -389,5 +391,33 @@ bool Agent::collideWithTile(glm::vec2 tilePosition){
 	return false;
 }
 
+void Agent::handleCollisionWithUnmoveableObject(glm::vec4 penetrationDepth){
+	glm::vec2& position = m_collisionBox.m_position;
 
+	const float agent_width = m_collisionBox.m_dimensions.x;
+	//const float agent_height = m_collisionBox.m_dimensions.y;
 
+	float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+	float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
+
+	if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
+		if ((position.x - penetrationDepth.x) < 0)
+		{
+			position.x -= xDepth;
+		}
+		else
+		{
+			position.x += xDepth;
+		}
+	}
+	else{
+		if ((position.y - penetrationDepth.y) < 0)
+		{
+			position.y -= yDepth;
+		}
+		else
+		{
+			position.y += yDepth;
+		}
+	}
+}

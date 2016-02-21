@@ -16,6 +16,9 @@ public:
 
 	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 
+	virtual bool collideWithHalfHole(std::vector<Box>& levelBoxes) override;
+	virtual bool collideWithHole(std::vector<Box>& levelBoxes) override;
+
 	void setDirection(glm::vec2 newDirection);
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
@@ -30,5 +33,7 @@ private:
 	int m_directionSteps = -1;
 	bool m_sawPlayer = false;
 	bool m_wasOnLadder = false;
+	bool m_inHole = false;
+	bool m_inHalfHole = false;
 };
 

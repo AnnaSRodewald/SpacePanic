@@ -134,7 +134,12 @@ Level::~Level()
 
 
 void Level::update(){
+	m_spriteBatch.begin();
 	for (auto box : m_boxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	for (auto box : m_ladderBoxes)
 	{
 		box.draw(m_spriteBatch);
 	}
@@ -146,6 +151,7 @@ void Level::update(){
 	{
 		box.draw(m_spriteBatch);
 	}
+	m_spriteBatch.end();
 }
 
 void Level::draw(){

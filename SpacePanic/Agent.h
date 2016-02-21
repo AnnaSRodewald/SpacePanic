@@ -35,6 +35,9 @@ public:
 
 	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) = 0;
 
+	virtual bool collideWithHalfHole(std::vector<Box>& levelBoxes) = 0;
+	virtual bool collideWithHole(std::vector<Box>& levelBoxes) = 0;
+
 	glm::vec2 getPosition() const { return m_collisionBox.getPosition(); }
 	void setPosition(glm::vec2 newPosition) { m_collisionBox.m_position = newPosition; }
 
@@ -76,6 +79,8 @@ protected:
 
 	Box* collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes);
 	glm::vec4 collideWithLadderAndGetCollisionDepth(std::vector<Box>& ladderBoxes);
+
+	void handleCollisionWithUnmoveableObject(glm::vec4 penetrationDepth);
 
 	bool m_onLadder = false;
 

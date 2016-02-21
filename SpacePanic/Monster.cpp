@@ -50,11 +50,27 @@ void Monster::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players
 void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 	Player* closestPlayer = getNearestPlayer(players);
 
+	float speed = 1;
+
+	if (m_inHalfHole)
+	{
+		speed = m_speed / 2;
+	}
+	else if (m_inHole)
+	{
+		speed = m_speed / 4;
+	}
+	else{
+		speed = m_speed;
+	}
+
+
+
 	if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y //&& abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 50
 		) || m_sawPlayer == true) && m_onLadder == false)){
 		m_directionSteps = 10; //
 		m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
-		m_collisionBox.m_position += m_direction * m_speed * deltaTime;
+		m_collisionBox.m_position += m_direction * speed * deltaTime;
 	}
 	else {
 		//otherwise move in random directions
@@ -108,7 +124,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 			//	m_direction = glm::normalize(m_direction);
 
-			m_collisionBox.m_position += m_direction *  m_speed * deltaTime;
+			m_collisionBox.m_position += m_direction *  speed * deltaTime;
 
 			bool collision = collideWithLevel(level.getLevelBoxes());
 			if (collision == false && m_direction.y != 0)
@@ -151,7 +167,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 			//	m_direction = glm::normalize(m_direction);
 
-			m_collisionBox.m_position += m_direction *  m_speed * deltaTime;
+			m_collisionBox.m_position += m_direction *  speed * deltaTime;
 
 			//Apply Physics for player here
 			if (collideWithLevel(level.getLevelBoxes())){
@@ -165,10 +181,67 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 		}
 
+		collideWithHalfHole(level.getHalfHoleBoxes());
+		collideWithHole(level.getHoleBoxes());
+
 		m_directionSteps--;
 
 	}
 }
+
+bool Monster::collideWithHalfHole(std::vector<Box>& levelBoxes){
+
+	for (auto box : levelBoxes)
+	{
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth) == true)
+		{
+			handleCollisionWithUnmoveableObject(penetrationDepth);
+			m_inHalfHole = false;
+			return true;
+		}
+		Box boxAboveGround = Box();
+		boxAboveGround.m_dimensions = box.m_dimensions;
+		boxAboveGround.m_position = glm::vec2(box.m_position.x, box.m_position.y + TILE_WIDTH);
+		if (collideWithBox(&boxAboveGround, penetrationDepth) == true)
+		{
+			m_inHalfHole = true;
+			return true;
+		}
+
+
+	}
+
+	m_inHalfHole = false;
+	return false;
+}
+
+bool Monster::collideWithHole(std::vector<Box>& levelBoxes){
+	for (auto box : levelBoxes)
+	{
+		glm::vec4 penetrationDepth;
+		if (collideWithBox(&box, penetrationDepth) == true)
+		{
+			handleCollisionWithUnmoveableObject(penetrationDepth);
+			m_inHole = false;
+			return true;
+		}
+		Box boxAboveGround = Box();
+		boxAboveGround.m_dimensions = box.m_dimensions;
+		boxAboveGround.m_position = glm::vec2(box.m_position.x, box.m_position.y + TILE_WIDTH);
+		if (collideWithBox(&boxAboveGround, penetrationDepth) == true)
+		{
+			m_inHole = true;
+			return true;
+		}
+
+
+	}
+
+	m_inHole = false;
+	return false;
+}
+
 
 Player* Monster::getNearestPlayer(std::vector<Player*>& players){
 	Player* closestPlayer = nullptr;

@@ -23,6 +23,9 @@ public:
 	virtual void update(std::vector<Box>& levelBoxes, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 	virtual void update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 
+	virtual bool collideWithHalfHole(std::vector<Box>& levelBoxes) override;
+	virtual bool collideWithHole(std::vector<Box>& levelBoxes) override;
+
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
 
