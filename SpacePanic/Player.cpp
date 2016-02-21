@@ -237,7 +237,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 		for (size_t i = 0; i < holeBoxes.size();){
 			if (foundGroundBox == false && collideBoxWithBox(groundBox, holeBoxes[i])){
-				//Dig it up again
+				//Dig the hole over again
 				foundGroundBox = true;
 				groundBox = holeBoxes[i];
 

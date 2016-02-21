@@ -66,7 +66,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 
 
-	if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y //&& abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 50
+	if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y && abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 500
 		) || m_sawPlayer == true) && m_onLadder == false)){
 		m_directionSteps = 10; //
 		m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
@@ -181,12 +181,10 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 		}
 
-		collideWithHalfHole(level.getHalfHoleBoxes());
-		collideWithHole(level.getHoleBoxes());
-
 		m_directionSteps--;
-
 	}
+	collideWithHalfHole(level.getHalfHoleBoxes());
+	collideWithHole(level.getHoleBoxes());
 }
 
 bool Monster::collideWithHalfHole(std::vector<Box>& levelBoxes){
