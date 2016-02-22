@@ -249,6 +249,16 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
 				levelBoxes.push_back(groundBox);
+
+				//If monster is in hole --> kill it!
+				for (auto monster : monsters)
+				{
+					if (monster->isInHole() && isSameBox(monster->getHole(), &groundBox)){
+						//now kill the monster
+						monster->kill(this);
+					}
+				}
+
 				break;
 			}
 			else{

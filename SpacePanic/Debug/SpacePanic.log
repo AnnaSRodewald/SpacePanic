@@ -1,15 +1,16 @@
-﻿Build started 21.02.2016 02:06:26.
+﻿Build started 22.02.2016 08:47:52.
      1>Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\SpacePanic\SpacePanic.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Monster.cpp
          Monster.cpp
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(57): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
      1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(78): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
      1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(104): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(115): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(146): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(161): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(175): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(248): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(260): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\SpacePanic.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib SDL2_ttf.lib SDL2_mixer.lib opengl32.lib glew32.lib GameEngine.lib Box2D.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\SpacePanic.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\SpacePanic.lib" /MACHINE:X86 Debug\Agent.obj
          Debug\App.obj
@@ -24,4 +25,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.99
+Time Elapsed 00:00:01.00

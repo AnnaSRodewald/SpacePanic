@@ -82,6 +82,8 @@ protected:
 
 	void handleCollisionWithUnmoveableObject(glm::vec4 penetrationDepth);
 
+	bool isSameBox(Box* box, Box* otherBox);
+
 	bool m_onLadder = false;
 
 	glm::vec2 m_direction = glm::vec2(1.0f, 0.0f);

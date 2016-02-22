@@ -23,9 +23,20 @@ public:
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
+	void kill(Player* killedBy);
+
 	float getHealth() override {
 		return m_health;
 	};
+
+	bool isInHole() const {
+		return (m_holeBox != nullptr);
+	}
+
+	Box* getHole() const {
+		return m_holeBox;
+	}
+
 
 private:
 	Player* getNearestPlayer(std::vector<Player*>& Player);
@@ -35,5 +46,9 @@ private:
 	bool m_wasOnLadder = false;
 	bool m_inHole = false;
 	bool m_inHalfHole = false;
+	int m_inHoleCounter = 0;
+	Box* m_holeBox = nullptr;
+	bool m_died = false;
+	Player* m_killedBy = nullptr;
 };
 
