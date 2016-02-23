@@ -13,6 +13,16 @@
 #include "Box.h"
 #include "Player.h"
 
+enum class LevelState
+{
+	INIT,
+	INPROGRESS,
+	COMPLETED,
+	GAMEOVER
+
+};
+
+
 class GameplayScreen : public GameEngine::IGameScreen
 {
 public:
@@ -52,6 +62,8 @@ private:
 	/// Draws the HUD
 	void drawHUD();
 
+	LevelState m_currentLevelState = LevelState::INIT;
+
 	GameEngine::SpriteBatch m_spriteBatch;
 	GameEngine::SpriteBatch m_hudSpriteBatch;
 	GameEngine::SpriteFont* m_spriteFont;
@@ -65,7 +77,7 @@ private:
 
 	bool m_renderDebug = true;
 
-	Player m_player;
+//	Player m_player;
 
 	std::vector<Player*> m_players; ///< Vector of players alive
 	std::vector<Player*> m_deadPlayers; ///< Vector of players dead

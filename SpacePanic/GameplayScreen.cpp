@@ -68,6 +68,8 @@ void GameplayScreen::onEntry() {
 	//Init level
 	initLevel();
 
+	m_currentLevelState = LevelState::INPROGRESS;
+
 }
 
 void GameplayScreen::onExit() {
@@ -91,27 +93,31 @@ void GameplayScreen::onExit() {
 
 void GameplayScreen::update() {
 
-	if (!checkWinCondition())
+	m_camera.update();
+	m_hudCamera.update();
+	checkInput();
+	processInput();
+
+	if (!checkWinCondition() && m_currentLevelState != LevelState::GAMEOVER && m_currentLevelState != LevelState::COMPLETED)
 	{ //The player hasn't won yet..
 		if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f))
 		{
 			m_camera.setPosition(m_levels[m_currentLevel]->getCameraPosition());
 		}
-		else
+		else if (m_players.size() > 0)
 		{
-			m_camera.setPosition(m_player.getPosition());
+			m_camera.setPosition(m_players[0]->getPosition());
 		}
-		m_camera.update();
-		m_hudCamera.update();
-		checkInput();
-		processInput();
+		else{
+			m_camera.setPosition(glm::vec2(m_window->getScreenWidth() / 2, m_window->getScreenHeight() / 2));
+		}
 
 		updateAgents(1.0f);
 		updateLevel(*m_levels[m_currentLevel]);
 	}
-	else
+	else if (checkWinCondition())
 	{ //The player won!
-
+		m_currentLevelState = LevelState::COMPLETED;
 	}
 }
 
@@ -162,7 +168,8 @@ void GameplayScreen::draw() {
 		}
 	}
 
-	m_player.draw(m_spriteBatch);
+
+	//m_player.draw(m_spriteBatch);
 
 	m_spriteBatch.end();
 
@@ -236,13 +243,16 @@ void GameplayScreen::draw() {
 			*/
 		}
 
-		//Render player
-		auto box = m_player.getBox();
-		destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-		destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
-		destRect.z = box.getDimensions().x;
-		destRect.w = box.getDimensions().y;
-		m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
+		for (auto player : m_players)
+		{
+			//Render player
+			auto box = player->getBox();
+			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
+			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.z = box.getDimensions().x;
+			destRect.w = box.getDimensions().y;
+			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
+		}
 
 		m_debugRenderer.end();
 		m_debugRenderer.render(projectionMatrix, 2.0f);
@@ -266,6 +276,30 @@ void GameplayScreen::processInput(){
 	if (inputManager.isKeyPressed(SDLK_ESCAPE)) {
 		m_currentState = GameEngine::ScreenState::EXIT_APPLICATION;
 	}
+
+	if (inputManager.isKeyPressed(SDLK_SPACE) && m_currentLevelState == LevelState::GAMEOVER) {
+		//Reload current level
+
+		m_currentLevelState = LevelState::INIT;
+
+		for (int i = 0; i < m_monsters.size(); i++)
+		{
+			//Delete all monsters
+			delete m_monsters[i];
+			m_monsters[i] = m_monsters.back();
+			m_monsters.pop_back();
+		}
+				for (int i = 0; i < m_players.size(); i++)
+		{
+			delete m_players[i];
+			m_players[i] = m_players.back();
+			m_players.pop_back();
+		}
+
+		initLevel();
+
+		m_currentLevelState = LevelState::INPROGRESS;
+	}
 }
 
 void GameplayScreen::initShaders() {
@@ -286,15 +320,17 @@ void GameplayScreen::initLevel(){
 	//Init player
 	//"Assets/blue_ninja.png"
 	//"Textures/player.png"
-	m_player.init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(55.0f, 128.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
+
+	//Add player
+	m_players.push_back(new Player);
+	m_players.back()->init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(55.0f, 128.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
+
 
 	std::mt19937 randomEngine;
 	randomEngine.seed(time(nullptr));
 	std::uniform_int_distribution<int> randX(2, m_levels[m_currentLevel]->getWidth() - 2);
 	std::uniform_int_distribution<int> randY(2, m_levels[m_currentLevel]->getHeight() - 2);
 
-	//Add player
-	m_players.push_back(&m_player);
 	//m_boxes.push_back(m_player.getBox());
 
 	//Add all the monsters
@@ -339,8 +375,9 @@ void GameplayScreen::updateAgents(float deltaTime){
 			for (auto player : m_players)
 			{
 				if (m_monsters[i]->collideWithAgent(player, penetrationDepth) && abs(penetrationDepth.z - penetrationDepth.x) >= 30){
-					std::printf("");
-					GameEngine::fatalError("YOU LOSE");
+					std::printf("YOU LOSE");
+					//GameEngine::fatalError("YOU LOSE");
+					m_currentLevelState = LevelState::GAMEOVER;
 					//TODO: change into game over screen
 				}
 			}
@@ -436,17 +473,39 @@ void GameplayScreen::drawHUD(){
 
 	m_hudSpriteBatch.begin();
 
-	sprintf_s(buffer, "Num Humans %d", m_players.size());
-	m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+	
 
-	sprintf_s(buffer, "Num Zombies %d", m_monsters.size());
-	m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 36), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
-
-	if (m_players.size() > 0)
+	if (m_currentLevelState == LevelState::COMPLETED)
 	{
-		sprintf_s(buffer, "Score P1 %d", m_players[0]->getPoints());
-		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 72), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+		sprintf_s(buffer, "YOU WIN!");
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 4, m_window->getScreenHeight()/2), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
+		sprintf_s(buffer, "Score: %d", m_players[0]->getPoints());
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 8, m_window->getScreenHeight() / 3), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	}
+	else if (m_currentLevelState == LevelState::GAMEOVER)
+	{
+		sprintf_s(buffer, "YOU LOSE!");
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 4, m_window->getScreenHeight() / 2), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+		sprintf_s(buffer, "Try again by pressing SPACE");
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 3), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	}
+	else {
+		sprintf_s(buffer, "Num Humans %d", m_players.size());
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+		sprintf_s(buffer, "Num Zombies %d", m_monsters.size());
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 36), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+		if (m_players.size() > 0)
+		{
+			sprintf_s(buffer, "Score P1 %d", m_players[0]->getPoints());
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 72), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+		}
 	}
 
 	m_hudSpriteBatch.end();
