@@ -82,7 +82,9 @@ void Player::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players,
 }
 
 
-void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
+void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters,  float deltaTime){
+
+	m_consecutiveMonsterKills = 0;
 
 	updateMovements(level, players, deltaTime);
 	updateActions(level, players, monsters, deltaTime);
@@ -241,6 +243,15 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				foundGroundBox = true;
 				groundBox = holeBoxes[i];
 
+				//If monster is in hole --> kill it!
+				for (auto monster : monsters)
+				{
+					if (monster->isInHole() && monster->getHolteCounter() > 0 && isSameBox(&monster->getHole(), &groundBox)){
+						//now kill the monster
+						monster->kill(this);
+					}
+				}
+
 				holeBoxes[i] = holeBoxes.back();
 				holeBoxes.pop_back();
 
@@ -249,15 +260,6 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
 				levelBoxes.push_back(groundBox);
-
-				//If monster is in hole --> kill it!
-				for (auto monster : monsters)
-				{
-					if (monster->isInHole() && isSameBox(monster->getHole(), &groundBox)){
-						//now kill the monster
-						monster->kill(this);
-					}
-				}
 
 				break;
 			}

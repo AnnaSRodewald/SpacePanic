@@ -240,7 +240,7 @@ bool Monster::collideWithHole(std::vector<Box>& levelBoxes){
 		{
 			if (abs(penetrationDepth.z - penetrationDepth.x) >= m_collisionBox.m_dimensions.x && m_inHoleCounter == 0){
 				m_inHoleCounter = 100;
-				m_holeBox = &box;
+				m_holeBox = box;
 			}
 			m_inHole = true;
 			return true;

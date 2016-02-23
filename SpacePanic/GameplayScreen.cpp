@@ -42,46 +42,18 @@ void GameplayScreen::destroy() {
 
 void GameplayScreen::onEntry() {
 
-
 	//Init debug renderer
 	m_debugRenderer.init();
-
-
-	//Make a punch of boxes
-	std::mt19937 randGenerator;
-	std::uniform_real_distribution<float> xPos(-10.0f, 10.0f);
-	std::uniform_real_distribution<float> yPos(-10.0f, 15.0f);
-
-	std::uniform_real_distribution<float> size(0.5f, 2.5f);
-
-	std::uniform_int_distribution<int> color(0, 255);
 
 	//Load the texture
 	m_texture = GameEngine::ResourceManager::getTexture("Assets/bricks_top.png");
 
-	const int NUM_BOXES = 50;
-
-	//for (size_t i = 0; i < NUM_BOXES; i++)
-	//{
-	//	GameEngine::ColorRGBA8 randColor;
-	//	randColor.r = color(randGenerator);
-	//	randColor.g = color(randGenerator);
-	//	randColor.b = color(randGenerator);
-	//	randColor.a = 255;
-
-	//	//float s = size(randGenerator);
-
-	//	Box newBox;
-
-	//	newBox.init(glm::vec2(xPos(randGenerator), yPos(randGenerator)), glm::vec2(size(randGenerator), size(randGenerator)), m_texture, randColor);
-	//	m_boxes.push_back(newBox);
-	//}
-
-
-
-
 	//Initialize the spriteBatch
 	m_spriteBatch.init();
+	m_hudSpriteBatch.init();
+
+	//Initialize sprite font
+	m_spriteFont = new GameEngine::SpriteFont("Fonts/chintzy_cpu_brk/chintzy.ttf", 64);
 
 	//Shader init
 	initShaders();
@@ -89,6 +61,9 @@ void GameplayScreen::onEntry() {
 	//Init camera
 	m_camera.init(m_window->getScreenWidth(), m_window->getScreenHeight());
 	m_camera.setScale(0.5f);
+	m_hudCamera.init(m_window->getScreenWidth(), m_window->getScreenHeight());
+	m_hudCamera.setPosition(glm::vec2(m_window->getScreenWidth() / 2, m_window->getScreenHeight() / 2));
+
 
 	//Init level
 	initLevel();
@@ -115,97 +90,29 @@ void GameplayScreen::onExit() {
 
 
 void GameplayScreen::update() {
-	if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f)){
-		m_camera.setPosition(m_levels[m_currentLevel]->getCameraPosition());
-	}
-	else {
-		m_camera.setPosition(m_player.getPosition());
-	}
-	m_camera.update();
-	checkInput();
-	processInput();
 
-	updateAgents(1.0f);
-	updateLevel(*m_levels[m_currentLevel]);
-
-}
-
-void GameplayScreen::updateAgents(float deltaTime){
-	//update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime
-	//m_levels[m_currentLevel]->getLevelData();
-	//m_player.update(m_levels[m_currentLevel]->getLevelData(), m_players, m_monsters, deltaTime);
-
-	for (auto player : m_players)
-	{
-		player->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
-	}
-
-	for (size_t i = 0; i < m_monsters.size(); i++)
-	{
-		m_monsters[i]->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
-		for (auto player : m_players)
+	if (!checkWinCondition())
+	{ //The player hasn't won yet..
+		if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f))
 		{
-			if (m_monsters[i]->collideWithAgent(player)){
-				std::printf("");
-				GameEngine::fatalError("YOU LOSE");
-			}
-		}
-		for (size_t a = i + 1; a < m_monsters.size(); a++)
-		{
-			glm::vec4 penetrationDepth;
-			if (m_monsters[i]->collideWithAgent(m_monsters[a], penetrationDepth))
-			{
-				handleMonsterCollisionBehaviour(m_monsters[i], m_monsters[a], penetrationDepth);
-			}
-		}
-	}
-
-}
-
-void GameplayScreen::handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm::vec4 penetrationDepth){
-
-	float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
-	float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
-
-	glm::vec2 newPosition = a->getPosition();
-	glm::vec2 newPosition2 = b->getPosition();
-
-	if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
-		if ((newPosition.x - penetrationDepth.x) < 0)
-		{
-			newPosition.x -= xDepth / 2;
-			newPosition2.x += xDepth / 2;
+			m_camera.setPosition(m_levels[m_currentLevel]->getCameraPosition());
 		}
 		else
 		{
-			newPosition.x += xDepth / 2;
-			newPosition2.x -= xDepth / 2;
+			m_camera.setPosition(m_player.getPosition());
 		}
+		m_camera.update();
+		m_hudCamera.update();
+		checkInput();
+		processInput();
+
+		updateAgents(1.0f);
+		updateLevel(*m_levels[m_currentLevel]);
 	}
-	else{
-		if ((newPosition.y - penetrationDepth.y) < 0)
-		{
-			newPosition.y -= yDepth / 2;
-			newPosition2.y += yDepth / 2;
-		}
-		else
-		{
-			newPosition.y += yDepth / 2;
-			newPosition2.y -= yDepth / 2;
-		}
+	else
+	{ //The player won!
+
 	}
-
-	a->setPosition(newPosition);
-	b->setPosition(newPosition2);
-
-	a->setDirection(glm::vec2(a->getDirection().x*(-1), a->getDirection().y*(-1)));
-	b->setDirection(glm::vec2(b->getDirection().x*(-1), b->getDirection().y*(-1)));
-
-}
-
-
-void GameplayScreen::updateLevel(Level& level){
-	level.update();
 }
 
 void GameplayScreen::draw() {
@@ -260,6 +167,9 @@ void GameplayScreen::draw() {
 	m_spriteBatch.end();
 
 	m_spriteBatch.renderBatch();
+
+	//Render the heads up display
+	drawHUD();
 
 	m_textureProgram.unuse();
 
@@ -349,16 +259,6 @@ void GameplayScreen::checkInput(){
 
 }
 
-void GameplayScreen::initShaders() {
-	// Compile our color shader
-	m_textureProgram.compileShaders("Shaders/textureShading.vert", "Shaders/textureShading.frag");
-	m_textureProgram.addAttribute("vertexPosition");
-	m_textureProgram.addAttribute("vertexColor");
-	m_textureProgram.addAttribute("vertexUV");
-	m_textureProgram.linkShaders();
-
-}
-
 void GameplayScreen::processInput(){
 
 	GameEngine::InputManager& inputManager = m_game->inputManager;
@@ -368,6 +268,15 @@ void GameplayScreen::processInput(){
 	}
 }
 
+void GameplayScreen::initShaders() {
+	// Compile our color shader
+	m_textureProgram.compileShaders("Shaders/textureShading.vert", "Shaders/textureShading.frag");
+	m_textureProgram.addAttribute("vertexPosition");
+	m_textureProgram.addAttribute("vertexColor");
+	m_textureProgram.addAttribute("vertexUV");
+	m_textureProgram.linkShaders();
+
+}
 
 void GameplayScreen::initLevel(){
 	// Level 1
@@ -386,7 +295,9 @@ void GameplayScreen::initLevel(){
 
 	//Add player
 	m_players.push_back(&m_player);
+	//m_boxes.push_back(m_player.getBox());
 
+	//Add all the monsters
 	for (auto& monsterPosition : m_levels[m_currentLevel]->getStartMonsterPositions()){
 		m_monsters.push_back(new Monster);
 		m_monsters.back()->init(MONSTER_SPEED, monsterPosition, glm::vec2(60.0f, 128.0f));
@@ -394,14 +305,151 @@ void GameplayScreen::initLevel(){
 		////m_boxes.push_back(monster.getBox());
 	}
 
-	//m_boxes.push_back(m_player.getBox());
+}
 
-	////Add all the monsters
-	//const std::vector<glm::vec2> monsterPositions = m_levels[m_currentLevel]->getStartMonsterPositions();
-	//for (int i = 0; i < monsterPositions.size(); i++)
-	//{
-	//	m_monsters.push_back(new Monster);
-	//	m_monsters.back()->init(MONSTER_SPEED, monsterPositions[i], glm::vec2(AGENT_WIDTH, AGENT_WIDTH));
-	//}
+bool GameplayScreen::checkWinCondition(){
 
+	if (m_monsters.size() == 0 && m_players.size() > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void GameplayScreen::updateAgents(float deltaTime){
+
+	int killPoints = 0;
+	Player* latestPlayerToKillMonster = nullptr; // TODO: change into vector
+	glm::vec4 penetrationDepth;
+
+	//Update the players
+	for (auto player : m_players)
+	{
+		player->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+	}
+
+	//Update the monsters
+	for (size_t i = 0; i < m_monsters.size(); i++)
+	{
+		if (m_monsters[i]->isAlive())
+		{ //The Monster is alive and kicking
+			m_monsters[i]->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+
+			for (auto player : m_players)
+			{
+				if (m_monsters[i]->collideWithAgent(player, penetrationDepth) && abs(penetrationDepth.z - penetrationDepth.x) >= 30){
+					std::printf("");
+					GameEngine::fatalError("YOU LOSE");
+					//TODO: change into game over screen
+				}
+			}
+
+			for (size_t a = i + 1; a < m_monsters.size(); a++)
+			{
+				if (m_monsters[i]->collideWithAgent(m_monsters[a], penetrationDepth))
+				{
+					handleMonsterCollisionBehaviour(m_monsters[i], m_monsters[a], penetrationDepth);
+				}
+			}
+		}
+		else{ //Monster was killed by a player
+			//Add points to the player who killed the monster
+			killPoints += 500;
+
+			if (latestPlayerToKillMonster == nullptr){
+				latestPlayerToKillMonster = m_monsters[i]->getKiller();
+			}
+			else if (latestPlayerToKillMonster != m_monsters[i]->getKiller()) {
+				//BONUS points if two player killed 2 monster at the same time ~ highly unlikely at the moment
+				killPoints = killPoints * 2;
+				latestPlayerToKillMonster->addPoints(killPoints);
+				latestPlayerToKillMonster = m_monsters[i]->getKiller();
+			}
+			latestPlayerToKillMonster->addConsecutiveMonsterKills();
+			latestPlayerToKillMonster->addPoints(killPoints);
+
+			killPoints = 0;
+
+			//Delete the monster from the vector
+			delete m_monsters[i];
+			m_monsters[i] = m_monsters.back();
+			m_monsters.pop_back();
+		}
+	}
+
+}
+
+void GameplayScreen::updateLevel(Level& level){
+	level.update();
+}
+
+
+void GameplayScreen::handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm::vec4 penetrationDepth){
+
+	float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+	float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
+
+	glm::vec2 newPosition = a->getPosition();
+	glm::vec2 newPosition2 = b->getPosition();
+
+	if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f)){
+		if ((newPosition.x - penetrationDepth.x) < 0)
+		{
+			newPosition.x -= xDepth / 2;
+			newPosition2.x += xDepth / 2;
+		}
+		else
+		{
+			newPosition.x += xDepth / 2;
+			newPosition2.x -= xDepth / 2;
+		}
+	}
+	else{
+		if ((newPosition.y - penetrationDepth.y) < 0)
+		{
+			newPosition.y -= yDepth / 2;
+			newPosition2.y += yDepth / 2;
+		}
+		else
+		{
+			newPosition.y += yDepth / 2;
+			newPosition2.y -= yDepth / 2;
+		}
+	}
+
+	a->setPosition(newPosition);
+	b->setPosition(newPosition2);
+
+	a->setDirection(glm::vec2(a->getDirection().x*(-1), a->getDirection().y*(-1)));
+	b->setDirection(glm::vec2(b->getDirection().x*(-1), b->getDirection().y*(-1)));
+
+}
+
+void GameplayScreen::drawHUD(){
+	char buffer[256];
+
+	//Grab the hud camera matrix
+	glm::mat4 projectionMatrix = m_hudCamera.getCameraMatrix();
+	GLint pUniform = m_textureProgram.getUniformLocation("P");
+	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+	m_hudSpriteBatch.begin();
+
+	sprintf_s(buffer, "Num Humans %d", m_players.size());
+	m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Num Zombies %d", m_monsters.size());
+	m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 36), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	if (m_players.size() > 0)
+	{
+		sprintf_s(buffer, "Score P1 %d", m_players[0]->getPoints());
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 72), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	}
+
+	m_hudSpriteBatch.end();
+
+	m_hudSpriteBatch.renderBatch();
 }

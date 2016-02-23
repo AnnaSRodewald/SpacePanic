@@ -28,6 +28,16 @@ public:
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
+	void addPoints(int points){
+		m_gamePoints += points * m_consecutiveMonsterKills;
+	}
+
+	int getPoints() const {
+		return m_gamePoints;
+	}
+
+	void addConsecutiveMonsterKills() { m_consecutiveMonsterKills = m_consecutiveMonsterKills + 1; }
+	int getConsecutiveMonsterKills() const { return m_consecutiveMonsterKills; }
 
 private:
 
@@ -38,5 +48,9 @@ private:
 
 
 	GameEngine::InputManager* m_inputManager;
+
+	int m_gamePoints = 0;
+
+	int m_consecutiveMonsterKills = 0; //consecutive Monster Kills for one round
 };
 

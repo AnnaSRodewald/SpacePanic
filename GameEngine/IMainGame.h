@@ -3,6 +3,7 @@
 #include "GameEngine.h"
 #include "Window.h"
 #include "InputManager.h"
+#include "AudioEngine.h"
 
 namespace GameEngine{
 
@@ -37,12 +38,13 @@ namespace GameEngine{
 		bool init();
 		bool initSystems();
 
-
 		std::unique_ptr<ScreenList> m_screenList = nullptr;
 		IGameScreen* m_currentScreen = nullptr;
 		bool m_isRunning = false;
 		float m_fps = 0.0f;
 		Window m_window;
+
+		GameEngine::AudioEngine m_audioEngine;
 	
 	};
 

@@ -137,6 +137,9 @@ namespace GameEngine {
 	bool IMainGame::init(){
 		GameEngine::init();
 
+		//Initialize sound, must happen after GameEngine::init()
+		m_audioEngine.init();
+
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 		if (initSystems() == false){

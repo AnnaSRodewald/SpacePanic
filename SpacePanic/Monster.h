@@ -30,12 +30,20 @@ public:
 	};
 
 	bool isInHole() const {
-		return (m_holeBox != nullptr);
+		return m_inHole;
 	}
 
-	Box* getHole() const {
+	Box& getHole() const {
 		return m_holeBox;
 	}
+
+	bool isAlive(){
+		return !m_died;
+	}
+
+	Player* getKiller() const { return m_killedBy; }
+
+	int getHolteCounter() const { return m_inHoleCounter; }
 
 
 private:
@@ -47,8 +55,9 @@ private:
 	bool m_inHole = false;
 	bool m_inHalfHole = false;
 	int m_inHoleCounter = 0;
-	Box* m_holeBox = nullptr;
+	Box& m_holeBox = Box();
+	//m_holeBox.init(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), GameEngine::ColorRGBA8(255, 255, 255, 255));
 	bool m_died = false;
-	Player* m_killedBy = nullptr;
+	Player* m_killedBy;
 };
 
