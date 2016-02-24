@@ -1,5 +1,4 @@
 #include "Level.h"
-
 #include <GameEngine\GameEngineErrors.h>
 #include <fstream>
 #include <iostream>
@@ -7,13 +6,8 @@
 #include <GameEngine\ResourceManager.h>
 
 
-
-
-
 Level::Level(const std::string fileName)
 {
-
-
 	std::fstream file;
 	file.open(fileName);
 
@@ -33,6 +27,50 @@ Level::Level(const std::string fileName)
 	while (std::getline(file, tmp)){
 		m_levelData.push_back(tmp);
 	}
+
+	progressLevelData();
+
+}
+
+Level::~Level()
+{
+}
+
+void Level::reload(){
+	m_boxes.clear();
+	m_holeBoxes.clear();
+	m_halfHoleBoxes.clear();
+	m_ladderBoxes.clear();
+
+	progressLevelData();
+}
+
+void Level::update(){
+	m_spriteBatch.begin();
+	for (auto box : m_boxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	for (auto box : m_ladderBoxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	for (auto box : m_halfHoleBoxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	for (auto box : m_holeBoxes)
+	{
+		box.draw(m_spriteBatch);
+	}
+	m_spriteBatch.end();
+}
+
+void Level::draw(){
+	m_spriteBatch.renderBatch();
+}
+
+void Level::progressLevelData(){
 
 	m_spriteBatch.init();
 	m_spriteBatch.begin();
@@ -61,17 +99,17 @@ Level::Level(const std::string fileName)
 			{
 			case 'B':
 			case 'R':
-					newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), whiteColor, uvRect);
-					m_boxes.push_back(newBox);
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), whiteColor, uvRect);
+				m_boxes.push_back(newBox);
 
-					//Draw the box
-					newBox.draw(m_spriteBatch);				
+				//Draw the box
+				newBox.draw(m_spriteBatch);
 
 				/*m_spriteBatch.draw(destRect,
-					uvRect,
-					GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id,
-					0.0f,
-					whiteColor);*/
+				uvRect,
+				GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id,
+				0.0f,
+				whiteColor);*/
 				break;
 			case 'G':
 				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/glass.png"), whiteColor, uvRect);
@@ -80,11 +118,11 @@ Level::Level(const std::string fileName)
 				//Draw the box
 				newBox.draw(m_spriteBatch);
 
-			/*	m_spriteBatch.draw(destRect,
-					uvRect,
-					GameEngine::ResourceManager::getTexture("Textures/glass.png").id,
-					0.0f,
-					whiteColor);*/
+				/*	m_spriteBatch.draw(destRect,
+				uvRect,
+				GameEngine::ResourceManager::getTexture("Textures/glass.png").id,
+				0.0f,
+				whiteColor);*/
 				break;
 			case 'L':
 				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/light_bricks.png"), whiteColor, uvRect);
@@ -94,10 +132,10 @@ Level::Level(const std::string fileName)
 				newBox.draw(m_spriteBatch);
 
 				/*m_spriteBatch.draw(destRect,
-					uvRect,
-					GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id,
-					0.0f,
-					whiteColor);*/
+				uvRect,
+				GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id,
+				0.0f,
+				whiteColor);*/
 				break;
 			case '@':
 				m_levelData[y][x] = '.'; /// So we don't collide with the starting points (@) later in the game
@@ -125,35 +163,4 @@ Level::Level(const std::string fileName)
 	}
 	m_spriteBatch.end();
 
-}
-
-
-Level::~Level()
-{
-}
-
-
-void Level::update(){
-	m_spriteBatch.begin();
-	for (auto box : m_boxes)
-	{
-		box.draw(m_spriteBatch);
-	}
-	for (auto box : m_ladderBoxes)
-	{
-		box.draw(m_spriteBatch);
-	}
-	for (auto box : m_halfHoleBoxes)
-	{
-		box.draw(m_spriteBatch);
-	}
-	for (auto box : m_holeBoxes)
-	{
-		box.draw(m_spriteBatch);
-	}
-	m_spriteBatch.end();
-}
-
-void Level::draw(){
-	m_spriteBatch.renderBatch();
 }

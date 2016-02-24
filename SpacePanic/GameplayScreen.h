@@ -47,8 +47,11 @@ private:
 
 	void initShaders();
 
+	/// Initializes levels
+	void initLevels();
+
 	/// Initializes the level and sets up everything
-	void initLevel();
+	void initLevel(Level* level);
 
 	bool checkWinCondition();
 
@@ -83,7 +86,7 @@ private:
 	std::vector<Player*> m_deadPlayers; ///< Vector of players dead
 	std::vector<Monster*> m_monsters; ///< Vector of all monsters alive
 
-	std::vector<Box> m_boxes;
+	//std::vector<Box> m_boxes;
 
 	std::vector<Level*> m_levels; ///< Vector of all levels
 

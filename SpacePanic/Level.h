@@ -16,6 +16,8 @@ public:
 	Level(const std::string fileName);
 	~Level();
 
+	void reload();
+
 	void update();
 
 	void draw();
@@ -43,6 +45,9 @@ public:
 	glm::vec2 getCameraPosition() const { return m_cameraPosition; }
 
 private:
+
+	void progressLevelData();
+
 	std::vector<std::string> m_levelData;
 	int m_numPlayer;
 	GameEngine::SpriteBatch m_spriteBatch;

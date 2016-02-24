@@ -66,7 +66,7 @@ void GameplayScreen::onEntry() {
 
 
 	//Init level
-	initLevel();
+	initLevels();
 
 	m_currentLevelState = LevelState::INPROGRESS;
 
@@ -184,19 +184,19 @@ void GameplayScreen::draw() {
 	if (m_renderDebug)
 	{
 		glm::vec4 destRect;
-		for (auto& box : m_boxes)
-		{
+		//for (auto& box : m_boxes)
+		//{
 
-			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
-			destRect.z = box.getDimensions().x;
-			destRect.w = box.getDimensions().y;
+		//	destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
+		//	destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+		//	destRect.z = box.getDimensions().x;
+		//	destRect.w = box.getDimensions().y;
 
-			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
+		//	m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
 
-			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
-			*/
-		}
+		//	/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
+		//	*/
+		//}
 
 		std::vector<Box> levelBoxes = m_levels[m_currentLevel]->getLevelBoxes();
 
@@ -282,21 +282,23 @@ void GameplayScreen::processInput(){
 
 		m_currentLevelState = LevelState::INIT;
 
-		for (int i = 0; i < m_monsters.size(); i++)
+		for (size_t i = 0; i < m_monsters.size(); i++)
 		{
 			//Delete all monsters
 			delete m_monsters[i];
 			m_monsters[i] = m_monsters.back();
 			m_monsters.pop_back();
 		}
-				for (int i = 0; i < m_players.size(); i++)
+		for (size_t i = 0; i < m_players.size(); i++)
 		{
 			delete m_players[i];
 			m_players[i] = m_players.back();
 			m_players.pop_back();
 		}
 
-		initLevel();
+		m_levels[m_currentLevel]->reload();
+
+		initLevel(m_levels[m_currentLevel]);
 
 		m_currentLevelState = LevelState::INPROGRESS;
 	}
@@ -309,32 +311,33 @@ void GameplayScreen::initShaders() {
 	m_textureProgram.addAttribute("vertexColor");
 	m_textureProgram.addAttribute("vertexUV");
 	m_textureProgram.linkShaders();
-
 }
 
-void GameplayScreen::initLevel(){
+void GameplayScreen::initLevels(){
 	// Level 1
 	m_levels.push_back(new Level("Levels/level4.txt"));
+	initLevel(m_levels.back());
 	m_currentLevel = 0;
+}
 
+void GameplayScreen::initLevel(Level* level){
+	//Add player
+	m_players.push_back(new Player);
 	//Init player
 	//"Assets/blue_ninja.png"
 	//"Textures/player.png"
-
-	//Add player
-	m_players.push_back(new Player);
-	m_players.back()->init(&m_game->inputManager, m_levels[m_currentLevel]->getStartPlayerPos(), glm::vec2(55.0f, 128.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
+	m_players.back()->init(&m_game->inputManager, level->getStartPlayerPos(), glm::vec2(55.0f, 128.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
 
 
 	std::mt19937 randomEngine;
 	randomEngine.seed(time(nullptr));
-	std::uniform_int_distribution<int> randX(2, m_levels[m_currentLevel]->getWidth() - 2);
-	std::uniform_int_distribution<int> randY(2, m_levels[m_currentLevel]->getHeight() - 2);
+	std::uniform_int_distribution<int> randX(2, level->getWidth() - 2);
+	std::uniform_int_distribution<int> randY(2, level->getHeight() - 2);
 
 	//m_boxes.push_back(m_player.getBox());
 
 	//Add all the monsters
-	for (auto& monsterPosition : m_levels[m_currentLevel]->getStartMonsterPositions()){
+	for (auto& monsterPosition : level->getStartMonsterPositions()){
 		m_monsters.push_back(new Monster);
 		m_monsters.back()->init(MONSTER_SPEED, monsterPosition, glm::vec2(60.0f, 128.0f));
 		//m_monsters.push_back(&monster);
@@ -473,12 +476,12 @@ void GameplayScreen::drawHUD(){
 
 	m_hudSpriteBatch.begin();
 
-	
+
 
 	if (m_currentLevelState == LevelState::COMPLETED)
 	{
 		sprintf_s(buffer, "YOU WIN!");
-		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 4, m_window->getScreenHeight()/2), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 4, m_window->getScreenHeight() / 2), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
 		sprintf_s(buffer, "Score: %d", m_players[0]->getPoints());
 		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 8, m_window->getScreenHeight() / 3), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
