@@ -74,7 +74,7 @@ protected:
 
 	bool collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
 
-	bool collideBoxWithBox(Box& box, Box& otherBox);
+	bool collideBoxWithBox(const Box& box, const Box& otherBox);
 	bool collideBoxWithBoxes(Box& box, std::vector<Box>& boxes);
 
 	Box* collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes);

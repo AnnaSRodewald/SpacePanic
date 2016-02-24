@@ -227,7 +227,7 @@ bool Agent::collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth){
 	return false;
 }
 
-bool Agent::collideBoxWithBox(Box& box, Box& otherBox){
+bool Agent::collideBoxWithBox(const Box& box, const Box& otherBox){
 
 	float myLeft = box.m_position.x;
 	float myTop = box.m_position.y + box.m_dimensions.y;

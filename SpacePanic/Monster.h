@@ -32,6 +32,9 @@ public:
 	bool isInHole() const {
 		return m_inHole;
 	}
+	bool isInHalfHole() const {
+		return m_inHalfHole;
+	}
 
 	Box& getHole() const {
 		return m_holeBox;

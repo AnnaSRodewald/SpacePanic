@@ -47,8 +47,8 @@ private:
 
 	void initShaders();
 
-	/// Initializes levels
-	void initLevels();
+	/// Load the levels
+	void loadLevels();
 
 	/// Initializes the level and sets up everything
 	void initLevel(Level* level);

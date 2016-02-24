@@ -82,7 +82,7 @@ void Player::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players,
 }
 
 
-void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters,  float deltaTime){
+void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 
 	m_consecutiveMonsterKills = 0;
 
@@ -168,7 +168,7 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 			}
 
 			if (collideWithLevel(level.getLevelBoxes()) == false && collideWithHalfHole(level.getHalfHoleBoxes()) == false &&
-			collideWithHole(level.getHoleBoxes()) == false)
+				collideWithHole(level.getHoleBoxes()) == false)
 			{
 				m_onLadder = true;
 			}
@@ -243,6 +243,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				foundGroundBox = true;
 				groundBox = holeBoxes[i];
 
+				bool monsterIsInHole = false;
 				//If monster is in hole --> kill it!
 				for (auto monster : monsters)
 				{
@@ -250,16 +251,23 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 						//now kill the monster
 						monster->kill(this);
 					}
+					else if (monster->isInHole() && isSameBox(&monster->getHole(), &groundBox))
+					{
+						monsterIsInHole = true;
+					}
 				}
 
-				holeBoxes[i] = holeBoxes.back();
-				holeBoxes.pop_back();
+				if (monsterIsInHole == false)
+				{
+					holeBoxes[i] = holeBoxes.back();
+					holeBoxes.pop_back();
 
-				groundBox.m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
-				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
-				groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
+					groundBox.m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
+					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
+					groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
-				levelBoxes.push_back(groundBox);
+					levelBoxes.push_back(groundBox);
+				}
 
 				break;
 			}
@@ -272,18 +280,30 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 		{
 			if (foundGroundBox == false && collideBoxWithBox(groundBox, halfHoleBoxes[i]))
 			{
+				bool monsterIsInHole = false;
+				for (auto monster : monsters)
+				{
+					if (monster->isInHalfHole() && collideBoxWithBox(boxAboveGround, monster->getBox())){
+							monsterIsInHole = true;
+						}
+				}
+
 				foundGroundBox = true;
 				groundBox = halfHoleBoxes[i];
 
-				halfHoleBoxes[i] = halfHoleBoxes.back();
-				halfHoleBoxes.pop_back();
+				if (monsterIsInHole == false)
+				{
+					halfHoleBoxes[i] = halfHoleBoxes.back();
+					halfHoleBoxes.pop_back();
 
-				groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 255);
-				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/glass.png").id;
-				groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/glass.png");
+					groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 255);
+					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/glass.png").id;
+					groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/glass.png");
 
-				//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
-				holeBoxes.push_back(groundBox);
+					//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
+					holeBoxes.push_back(groundBox);
+				}
+
 				break;
 			}
 			else{

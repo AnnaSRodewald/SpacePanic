@@ -65,8 +65,8 @@ void GameplayScreen::onEntry() {
 	m_hudCamera.setPosition(glm::vec2(m_window->getScreenWidth() / 2, m_window->getScreenHeight() / 2));
 
 
-	//Init level
-	initLevels();
+	//Load the levels and init the first one level
+	loadLevels();
 
 	m_currentLevelState = LevelState::INPROGRESS;
 
@@ -277,7 +277,7 @@ void GameplayScreen::processInput(){
 		m_currentState = GameEngine::ScreenState::EXIT_APPLICATION;
 	}
 
-	if (inputManager.isKeyPressed(SDLK_SPACE) && m_currentLevelState == LevelState::GAMEOVER) {
+	if (m_currentLevelState == LevelState::GAMEOVER && inputManager.isKeyPressed(SDLK_SPACE)) {
 		//Reload current level
 
 		m_currentLevelState = LevelState::INIT;
@@ -289,6 +289,13 @@ void GameplayScreen::processInput(){
 			m_monsters[i] = m_monsters.back();
 			m_monsters.pop_back();
 		}
+		if (m_monsters.size() != 0)
+		{
+			delete m_monsters[0];
+			m_monsters[0] = m_monsters.back();
+			m_monsters.pop_back();
+		}
+
 		for (size_t i = 0; i < m_players.size(); i++)
 		{
 			delete m_players[i];
@@ -298,6 +305,22 @@ void GameplayScreen::processInput(){
 
 		m_levels[m_currentLevel]->reload();
 
+		initLevel(m_levels[m_currentLevel]);
+
+		m_currentLevelState = LevelState::INPROGRESS;
+	}
+	if (m_currentLevelState == LevelState::COMPLETED && inputManager.isKeyPressed(SDLK_SPACE) && m_currentLevel < m_levels.size() - 1) {
+		//Init the next level
+		m_currentLevelState = LevelState::INIT;
+
+		for (size_t i = 0; i < m_players.size(); i++)
+		{
+			delete m_players[i];
+			m_players[i] = m_players.back();
+			m_players.pop_back();
+		}
+
+		m_currentLevel++;
 		initLevel(m_levels[m_currentLevel]);
 
 		m_currentLevelState = LevelState::INPROGRESS;
@@ -313,11 +336,13 @@ void GameplayScreen::initShaders() {
 	m_textureProgram.linkShaders();
 }
 
-void GameplayScreen::initLevels(){
+void GameplayScreen::loadLevels(){
 	// Level 1
 	m_levels.push_back(new Level("Levels/level4.txt"));
 	initLevel(m_levels.back());
 	m_currentLevel = 0;
+
+	m_levels.push_back(new Level("Levels/level5.txt"));
 }
 
 void GameplayScreen::initLevel(Level* level){
@@ -379,9 +404,13 @@ void GameplayScreen::updateAgents(float deltaTime){
 			{
 				if (m_monsters[i]->collideWithAgent(player, penetrationDepth) && abs(penetrationDepth.z - penetrationDepth.x) >= 30){
 					std::printf("YOU LOSE");
-					//GameEngine::fatalError("YOU LOSE");
-					m_currentLevelState = LevelState::GAMEOVER;
-					//TODO: change into game over screen
+
+					if (m_players.size()<=1)
+					{
+						//change into game over state
+						m_currentLevelState = LevelState::GAMEOVER;
+						break;
+					}
 				}
 			}
 
@@ -476,8 +505,6 @@ void GameplayScreen::drawHUD(){
 
 	m_hudSpriteBatch.begin();
 
-
-
 	if (m_currentLevelState == LevelState::COMPLETED)
 	{
 		sprintf_s(buffer, "YOU WIN!");
@@ -485,6 +512,12 @@ void GameplayScreen::drawHUD(){
 
 		sprintf_s(buffer, "Score: %d", m_players[0]->getPoints());
 		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 8, m_window->getScreenHeight() / 3), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+		if (m_currentLevel < m_levels.size() - 1)
+		{
+			sprintf_s(buffer, "Enter the next level by pressing SPACE");
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 4), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+		}
 
 	}
 	else if (m_currentLevelState == LevelState::GAMEOVER)
