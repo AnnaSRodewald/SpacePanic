@@ -84,7 +84,7 @@ bool Agent::collideWithLadder(std::vector<Box>& ladderBoxes){
 			float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
 			//if (xDepth <= 4)
 			//{
-				collided = true;
+			collided = true;
 			//}
 		}
 	}
@@ -92,15 +92,15 @@ bool Agent::collideWithLadder(std::vector<Box>& ladderBoxes){
 }
 
 bool Agent::collideBoxWithBoxes(Box& box, std::vector<Box>& otherBoxes){
-		bool collided = false;
+	bool collided = false;
 
-		for (auto& otherBox : otherBoxes){
-			if (collideBoxWithBox(box, otherBox)){
-				collided = true;
-			}
+	for (auto& otherBox : otherBoxes){
+		if (collideBoxWithBox(box, otherBox)){
+			collided = true;
 		}
-		return collided;
-	
+	}
+	return collided;
+
 }
 
 Box* Agent::collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes){
@@ -108,7 +108,7 @@ Box* Agent::collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes){
 	for (auto& box : ladderBoxes){
 		glm::vec4 penetrationDepth;
 		if (collideWithBox(&box, penetrationDepth)){
-			
+
 			return &box;
 		}
 	}
@@ -245,6 +245,31 @@ bool Agent::collideBoxWithBox(const Box& box, const Box& otherBox){
 		myTop > bottom && myBottom < top;
 }
 
+bool Agent::collideBoxWithBox(const Box& box, const Box& otherBox, glm::vec4& penetrationDepth){
+	float myLeft = box.m_position.x;
+	float myTop = box.m_position.y + box.m_dimensions.y;
+	float myRight = box.m_position.x + box.m_dimensions.x;
+	float myBottom = box.m_position.y;
+
+	//Box to collide with
+	float right = otherBox.m_position.x + otherBox.m_dimensions.x;
+	float left = otherBox.m_position.x;
+	float bottom = otherBox.m_position.y;
+	float top = otherBox.m_position.y + otherBox.m_dimensions.y;
+
+	//Check collision
+	if (myLeft <  right && myRight > left &&
+		myTop > bottom && myBottom < top){
+		//collided - now calculate penetration depth
+		penetrationDepth.x = std::max(myLeft, left);
+		penetrationDepth.y = std::max(myBottom, bottom);
+		penetrationDepth.z = std::min(myRight, right);
+		penetrationDepth.w = std::min(myTop, top);
+		return true;
+	}
+
+	return false;
+}
 
 bool Agent::applyDamage(float damage){
 	m_health -= damage;
@@ -424,4 +449,74 @@ void Agent::handleCollisionWithUnmoveableObject(glm::vec4 penetrationDepth){
 
 bool Agent::isSameBox(Box* box, Box* otherBox){
 	return box->getPosition().x == otherBox->getPosition().x && box->getPosition().y == otherBox->getPosition().y && box->getDimensions().x == otherBox->getDimensions().x && box->getDimensions().y == otherBox->getDimensions().y;
+}
+
+bool Agent::isInAir(std::vector<Box>& levelBoxes){
+	Box& groundBoxLeft = Box();
+	Box& groundBoxRight = Box();
+
+	groundBoxLeft.m_position.x = m_collisionBox.m_position.x - TILE_WIDTH;
+	groundBoxLeft.m_position.y = m_collisionBox.m_position.y - TILE_WIDTH;
+
+	groundBoxRight.m_position.x = m_collisionBox.m_position.x + TILE_WIDTH;
+	groundBoxRight.m_position.y = m_collisionBox.m_position.y - TILE_WIDTH;
+
+	groundBoxLeft.m_dimensions = glm::vec2(TILE_WIDTH, TILE_WIDTH);
+	groundBoxRight.m_dimensions = glm::vec2(TILE_WIDTH, TILE_WIDTH);
+
+	Box boxAboveGroundLeft = Box();
+	boxAboveGroundLeft.m_dimensions = groundBoxLeft.m_dimensions;
+	boxAboveGroundLeft.m_position = glm::vec2(groundBoxLeft.m_position.x, groundBoxLeft.m_position.y + TILE_WIDTH);
+
+	Box boxAboveGroundRight = Box();
+	boxAboveGroundRight.m_dimensions = groundBoxRight.m_dimensions;
+	boxAboveGroundRight.m_position = glm::vec2(groundBoxRight.m_position.x, groundBoxRight.m_position.y + TILE_WIDTH);
+
+	if (canWalkForward(levelBoxes, groundBoxLeft, boxAboveGroundLeft))
+	{
+		return false;
+	}
+	else if (canWalkForward(levelBoxes, groundBoxRight, boxAboveGroundRight))
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool Agent::canWalkForward(std::vector<Box>& levelBoxes, Box& groundBox, Box& boxAboveGround){
+	bool wallAboveGround = false;
+	bool foundGroundBox = false;
+
+	glm::vec4& penetrationDepth = glm::vec4();
+
+	for (size_t i = 0; i < levelBoxes.size(); i++)
+	{
+		/*	Box boxAboveLevelGround = Box();
+		boxAboveLevelGround.m_dimensions = box.m_dimensions;
+		boxAboveLevelGround.m_position = glm::vec2(box.m_position.x, box.m_position.y + TILE_WIDTH);*/
+		if (collideBoxWithBox(boxAboveGround, levelBoxes[i], penetrationDepth))
+		{
+			wallAboveGround = true;
+			break;
+		}
+
+		if (collideBoxWithBox(groundBox, levelBoxes[i], penetrationDepth))
+		{
+			foundGroundBox = true;
+		}
+	}
+
+	return (foundGroundBox == true && wallAboveGround == false);
+
+}
+
+bool Agent::halfHoleAhead(std::vector<Box>& halfHoleBoxes, Box& groundBox){
+	return collideBoxWithBoxes(groundBox, halfHoleBoxes);
+}
+
+bool Agent::holeAhead(std::vector<Box>& holeBoxes, Box& groundBox){
+	return collideBoxWithBoxes(groundBox, holeBoxes);
 }

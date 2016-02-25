@@ -64,6 +64,15 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 		speed = m_speed;
 	}
 
+	if (isInAir(level.getLevelBoxes()))
+	{
+		m_inAir = true;
+	}
+	else
+	{
+		m_inAir = false;
+	}
+
 	if (m_inHoleCounter == 0){
 
 		if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y && abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 500
@@ -77,7 +86,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 			static std::mt19937 randomEngine(time(nullptr));
 
-			static std::uniform_int_distribution<int> randMov(0, 2);
+			static std::uniform_int_distribution<int> randMov(0, 4);
 
 			static std::uniform_int_distribution<int> randDir(-1, 1);
 
@@ -96,8 +105,32 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 					/*m_directionSteps = randSteps(randomEngine);
 					m_direction.x = 0;
 					m_direction.y = randDir(randomEngine);*/
+					if (m_inAir == false && rand >= 4)
+					{
+						m_directionSteps = randSteps(randomEngine);
+						m_direction.y = 0;
+						m_direction.x = randDir(randomEngine);
+						if (m_direction.x == 0)
+						{
+							m_direction.x = 1;
+						}
+
+					}
+					else
+					if(m_directionSteps <= 0)
+					{
+						m_directionSteps = randSteps(randomEngine);
+						m_direction.x = 0;
+						m_direction.y = randDir(randomEngine);
+						if (m_direction.x == 0)
+						{
+							m_direction.x = 1;
+						}
+					}
+
+					
 				}
-				else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 2 && m_wasOnLadder == false)
+				else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 4 && m_wasOnLadder == false)
 				{
 					m_directionSteps = randSteps(randomEngine);
 					m_direction.x = 0;
@@ -122,17 +155,20 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 				}
 
 
+
 				//	m_direction = glm::normalize(m_direction);
 
 				m_collisionBox.m_position += m_direction *  speed * deltaTime;
 
 				bool collision = collideWithLevel(level.getLevelBoxes());
+
 				if (collision == false && m_direction.y != 0)
 				{
 					m_onLadder = true;
 					m_wasOnLadder = false;
 				}
-				else if (collision)
+				else
+					if (collision)
 				{
 					if (m_onLadder){
 						m_wasOnLadder = true;

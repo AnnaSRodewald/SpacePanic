@@ -65,6 +65,8 @@ private:
 	/// Draws the HUD
 	void drawHUD();
 
+	void cleanLevel();
+
 	LevelState m_currentLevelState = LevelState::INIT;
 
 	GameEngine::SpriteBatch m_spriteBatch;
@@ -83,7 +85,7 @@ private:
 //	Player m_player;
 
 	std::vector<Player*> m_players; ///< Vector of players alive
-	std::vector<Player*> m_deadPlayers; ///< Vector of players dead
+//	std::vector<Player*> m_deadPlayers; ///< Vector of players dead
 	std::vector<Monster*> m_monsters; ///< Vector of all monsters alive
 
 	//std::vector<Box> m_boxes;
@@ -91,6 +93,7 @@ private:
 	std::vector<Level*> m_levels; ///< Vector of all levels
 
 	int m_currentLevel;
+	int m_playersDead = 0;
 
 
 

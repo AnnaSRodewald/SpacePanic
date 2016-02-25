@@ -138,7 +138,7 @@ namespace GameEngine {
 		GameEngine::init();
 
 		//Initialize sound, must happen after GameEngine::init()
-		m_audioEngine.init();
+		audioEngine.init();
 
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 

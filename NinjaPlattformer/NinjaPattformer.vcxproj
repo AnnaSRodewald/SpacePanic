@@ -78,6 +78,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="GameplayScreen.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -85,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Capsule.h" />
     <ClInclude Include="GameplayScreen.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>

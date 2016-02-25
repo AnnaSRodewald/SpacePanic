@@ -29,7 +29,10 @@ namespace GameEngine{
 			return m_fps;
 		}
 
+		
+
 		InputManager inputManager;
+		GameEngine::AudioEngine audioEngine;
 
 	protected:
 		virtual void update();
@@ -43,8 +46,6 @@ namespace GameEngine{
 		bool m_isRunning = false;
 		float m_fps = 0.0f;
 		Window m_window;
-
-		GameEngine::AudioEngine m_audioEngine;
 	
 	};
 

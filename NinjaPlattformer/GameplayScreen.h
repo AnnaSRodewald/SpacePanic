@@ -40,7 +40,7 @@ private:
 	GameEngine::Window* m_window;
 	GameEngine::DebugRenderer m_debugRenderer;
 
-	bool m_renderDebug = true;
+	bool m_renderDebug = false;
 
 	Player m_player;
 

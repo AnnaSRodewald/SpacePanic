@@ -17,11 +17,10 @@ Player::~Player()
 }
 
 
-void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed){
+void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed, GameEngine::SoundEffect digHoleSound, GameEngine::SoundEffect closeHoleSound, GameEngine::SoundEffect dyingSound){
 	m_speed = speed;
 	m_inputManager = inputManager;
 	//	m_camera = camera;dww
-
 
 	m_health = 150;
 
@@ -29,6 +28,10 @@ void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 positi
 	GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture(textureFilePath);
 
 	m_collisionBox.init(position, dimensions, &texture, color, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f));
+
+	m_digHoleSound = digHoleSound;
+	m_closeHoleSound = closeHoleSound;
+	m_dyingSound = dyingSound;
 
 }
 
@@ -149,6 +152,10 @@ void Player::draw(GameEngine::SpriteBatch& spriteBatch){
 	m_collisionBox.draw(spriteBatch);
 }
 
+void Player::kill(){
+	m_isAlive = false;
+	//TODO: trigger death animation and change sprite to "dead-state" sprite
+}
 
 void Player::updateMovements(Level& level, std::vector<Player*>& players, float deltaTime) {
 	bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
@@ -170,7 +177,14 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 			if (collideWithLevel(level.getLevelBoxes()) == false && collideWithHalfHole(level.getHalfHoleBoxes()) == false &&
 				collideWithHole(level.getHoleBoxes()) == false)
 			{
-				m_onLadder = true;
+				if (isInAir(level.getLevelBoxes()))
+				{
+					m_onLadder = true;
+				}
+				else
+				{
+					m_onLadder = false;
+				}
 			}
 			else
 			{
@@ -205,7 +219,7 @@ void Player::updateActions(Level& level, std::vector<Player*>& players, std::vec
 	if (m_inputManager->isKeyPressed(SDLK_SPACE)){
 		Box& groundBox = Box();
 		if (tryDigging(level, players, monsters, groundBox) == true){
-			playDiggingSound();
+			//playDiggingSound();
 		}
 	}
 	/*}*/
@@ -248,13 +262,22 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				for (auto monster : monsters)
 				{
 					if (monster->isInHole() && monster->getHolteCounter() > 0 && isSameBox(&monster->getHole(), &groundBox)){
+						//monster is stuck in the hole
 						//now kill the monster
 						monster->kill(this);
+						playCloseHoleSound();
 					}
 					else if (monster->isInHole() && isSameBox(&monster->getHole(), &groundBox))
 					{
+						//monster is no longer stuck in the hole
 						monsterIsInHole = true;
 					}
+					else if (monster->isInHole() && collideBoxWithBox(boxAboveGround, monster->getBox()))
+					{
+						//monster isn't stuck yet in the hole but going to in a few seconds
+						monsterIsInHole = true;
+					}
+					
 				}
 
 				if (monsterIsInHole == false)
@@ -267,6 +290,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 					groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
 					levelBoxes.push_back(groundBox);
+					playCloseHoleSound();
 				}
 
 				break;
@@ -302,6 +326,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 					//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
 					holeBoxes.push_back(groundBox);
+					playDiggingSound();
 				}
 
 				break;
@@ -344,6 +369,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				//levelBoxes.erase(std::remove(levelBoxes.begin(), levelBoxes.end(), groundBox), levelBoxes.end());
 				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id;
 				halfHoleBoxes.push_back(groundBox);
+				playDiggingSound();
 			}
 		}
 	}
@@ -353,4 +379,14 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 void Player::playDiggingSound(){
 	std::printf("DIG");
+	m_digHoleSound.play();
+}
+
+void Player::playCloseHoleSound(){
+	std::printf("Close");
+	m_closeHoleSound.play();
+}
+
+void Player::fallThroughHole(Box& holeBox){
+
 }

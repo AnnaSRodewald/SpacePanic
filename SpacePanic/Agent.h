@@ -75,6 +75,7 @@ protected:
 	bool collideWithBox(const Box* otherBox, glm::vec4& penetrationDepth);
 
 	bool collideBoxWithBox(const Box& box, const Box& otherBox);
+	bool collideBoxWithBox(const Box& box, const Box& otherBox, glm::vec4& penetrationDepth);
 	bool collideBoxWithBoxes(Box& box, std::vector<Box>& boxes);
 
 	Box* collideWithLadderAndGetLadderBox(std::vector<Box>& ladderBoxes);
@@ -83,6 +84,11 @@ protected:
 	void handleCollisionWithUnmoveableObject(glm::vec4 penetrationDepth);
 
 	bool isSameBox(Box* box, Box* otherBox);
+	bool isInAir(std::vector<Box>& levelBoxes);
+	bool canWalkForward(std::vector<Box>& levelBoxes, Box& groundBox, Box& boxAboveGround);
+
+	bool halfHoleAhead(std::vector<Box>& halfHoleBoxes, Box& groundBox);
+	bool holeAhead(std::vector<Box>& holeBoxes, Box& groundBox);
 
 	bool m_onLadder = false;
 

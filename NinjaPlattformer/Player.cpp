@@ -4,30 +4,35 @@
 #include <iostream>
 
 
-Player::Player()
-{
-}
 
-
-Player::~Player()
-{
-}
-
-
-void Player::init(b2World* world, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color){
+void Player::init(b2World* world, const glm::vec2 position, const glm::vec2 drawDims, const glm::vec2 collisionDims, std::string textureFilePath, GameEngine::ColorRGBA8 color){
 	//Load the texture
-	GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture(textureFilePath);
+	m_texture = GameEngine::ResourceManager::getTexture(textureFilePath);
+	m_color = color;
+	m_drawDims = drawDims;
 
-	m_collisionBox.init(world, position, dimensions, texture, color, true, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f));
+	m_capsule.init(world, position, collisionDims, 1.0f, 0.1f, true);
+	//m_capsule.init(world, position, dimensions, texture, color, true, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f));
 }
 
 void Player::draw(GameEngine::SpriteBatch& spriteBatch){
-	m_collisionBox.draw(spriteBatch);
+	glm::vec4 destRect;
+	b2Body* body = m_capsule.getBody();
+	destRect.x = body->GetPosition().x - m_drawDims.x / 2.0f;
+	destRect.y = body->GetPosition().y - m_capsule.getDimensions().y / 2.0f;
+	destRect.z = m_drawDims.x;
+	destRect.w = m_drawDims.y;
+
+	spriteBatch.draw(destRect, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f), m_texture.id, 0.0f, m_color, body->GetAngle());
+
 }
 
+void Player::drawDebug(GameEngine::DebugRenderer& debugRenderer){
+	m_capsule.drawDebug(debugRenderer);
+}
 
 void Player::update(GameEngine::InputManager& inputManager){
-	b2Body* body = m_collisionBox.getBody();
+	b2Body* body = m_capsule.getBody();
 	if (inputManager.isKeyDown(SDLK_a))
 	{
 		body->ApplyForceToCenter(b2Vec2(-100.0, 0.0), true);
@@ -66,7 +71,7 @@ void Player::update(GameEngine::InputManager& inputManager){
 			for (size_t i = 0; i < b2_maxManifoldPoints; i++)
 			{
 				if (manifold.points[i
-				].y < body->GetPosition().y - m_collisionBox.getDimensions().y / 2.0f + 0.01f)
+				].y < body->GetPosition().y - m_capsule.getDimensions().y / 2.0f + 0.01f)
 				{
 					below = true;
 					break;

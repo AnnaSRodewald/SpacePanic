@@ -68,6 +68,10 @@ void GameplayScreen::onEntry() {
 	//Load the levels and init the first one level
 	loadLevels();
 
+	//Start playing music
+	GameEngine::Music music = m_game->audioEngine.loadMusic("Music/Electrix_NES.mp3");
+	music.play(-1);
+
 	m_currentLevelState = LevelState::INPROGRESS;
 
 }
@@ -93,32 +97,36 @@ void GameplayScreen::onExit() {
 
 void GameplayScreen::update() {
 
-	m_camera.update();
-	m_hudCamera.update();
-	checkInput();
-	processInput();
+	if (m_currentLevelState != LevelState::INIT)
+	{
+		m_camera.update();
+		m_hudCamera.update();
+		checkInput();
+		processInput();
 
-	if (!checkWinCondition() && m_currentLevelState != LevelState::GAMEOVER && m_currentLevelState != LevelState::COMPLETED)
-	{ //The player hasn't won yet..
-		if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f))
-		{
-			m_camera.setPosition(m_levels[m_currentLevel]->getCameraPosition());
-		}
-		else if (m_players.size() > 0)
-		{
-			m_camera.setPosition(m_players[0]->getPosition());
-		}
-		else{
-			m_camera.setPosition(glm::vec2(m_window->getScreenWidth() / 2, m_window->getScreenHeight() / 2));
-		}
+		if (!checkWinCondition() && m_currentLevelState != LevelState::GAMEOVER && m_currentLevelState != LevelState::COMPLETED)
+		{ //The player hasn't won yet..
+			if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f))
+			{
+				m_camera.setPosition(m_levels[m_currentLevel]->getCameraPosition());
+			}
+			else if (m_players.size() > 0)
+			{
+				m_camera.setPosition(m_players[0]->getPosition());
+			}
+			else{
+				m_camera.setPosition(glm::vec2(m_window->getScreenWidth() / 2, m_window->getScreenHeight() / 2));
+			}
 
-		updateAgents(1.0f);
-		updateLevel(*m_levels[m_currentLevel]);
+			updateAgents(1.0f);
+			updateLevel(*m_levels[m_currentLevel]);
+		}
+		else if (checkWinCondition())
+		{ //The player won!
+			m_currentLevelState = LevelState::COMPLETED;
+		}
 	}
-	else if (checkWinCondition())
-	{ //The player won!
-		m_currentLevelState = LevelState::COMPLETED;
-	}
+
 }
 
 void GameplayScreen::draw() {
@@ -276,53 +284,22 @@ void GameplayScreen::processInput(){
 	if (inputManager.isKeyPressed(SDLK_ESCAPE)) {
 		m_currentState = GameEngine::ScreenState::EXIT_APPLICATION;
 	}
+	if ((m_currentLevelState == LevelState::GAMEOVER || (m_currentLevelState == LevelState::COMPLETED && m_currentLevel < m_levels.size() - 1)) && inputManager.isKeyPressed(SDLK_SPACE))
+	{
+		//Clean up the current level
+		cleanLevel();
 
-	if (m_currentLevelState == LevelState::GAMEOVER && inputManager.isKeyPressed(SDLK_SPACE)) {
-		//Reload current level
-
-		m_currentLevelState = LevelState::INIT;
-
-		for (size_t i = 0; i < m_monsters.size(); i++)
-		{
-			//Delete all monsters
-			delete m_monsters[i];
-			m_monsters[i] = m_monsters.back();
-			m_monsters.pop_back();
+		//Reload the level or init the next one
+		if (m_currentLevelState == LevelState::GAMEOVER) {
+			//Reload current level
+			m_levels[m_currentLevel]->reload();
+		} 
+		else if (m_currentLevelState == LevelState::COMPLETED && m_currentLevel < m_levels.size() - 1) {
+			//Init the next level
+			m_currentLevel++;
 		}
-		if (m_monsters.size() != 0)
-		{
-			delete m_monsters[0];
-			m_monsters[0] = m_monsters.back();
-			m_monsters.pop_back();
-		}
-
-		for (size_t i = 0; i < m_players.size(); i++)
-		{
-			delete m_players[i];
-			m_players[i] = m_players.back();
-			m_players.pop_back();
-		}
-
-		m_levels[m_currentLevel]->reload();
 
 		initLevel(m_levels[m_currentLevel]);
-
-		m_currentLevelState = LevelState::INPROGRESS;
-	}
-	if (m_currentLevelState == LevelState::COMPLETED && inputManager.isKeyPressed(SDLK_SPACE) && m_currentLevel < m_levels.size() - 1) {
-		//Init the next level
-		m_currentLevelState = LevelState::INIT;
-
-		for (size_t i = 0; i < m_players.size(); i++)
-		{
-			delete m_players[i];
-			m_players[i] = m_players.back();
-			m_players.pop_back();
-		}
-
-		m_currentLevel++;
-		initLevel(m_levels[m_currentLevel]);
-
 		m_currentLevelState = LevelState::INPROGRESS;
 	}
 }
@@ -338,21 +315,31 @@ void GameplayScreen::initShaders() {
 
 void GameplayScreen::loadLevels(){
 	// Level 1
-	m_levels.push_back(new Level("Levels/level4.txt"));
+	m_levels.push_back(new Level("Levels/level6.txt"));
 	initLevel(m_levels.back());
 	m_currentLevel = 0;
 
 	m_levels.push_back(new Level("Levels/level5.txt"));
+	m_levels.push_back(new Level("Levels/level4.txt"));
 }
 
 void GameplayScreen::initLevel(Level* level){
+	m_currentLevelState = LevelState::INIT;
 	//Add player
 	m_players.push_back(new Player);
 	//Init player
 	//"Assets/blue_ninja.png"
 	//"Textures/player.png"
-	m_players.back()->init(&m_game->inputManager, level->getStartPlayerPos(), glm::vec2(55.0f, 128.0f), "Assets/blue_ninja.png", GameEngine::ColorRGBA8(0, 255, 255, 255), PLAYER_SPEED);
-
+	m_players.back()->init(
+		&m_game->inputManager, 
+		level->getStartPlayerPos(), 
+		glm::vec2(55.0f, 128.0f), 
+		"Assets/blue_ninja.png", 
+		GameEngine::ColorRGBA8(0, 255, 255, 255), 
+		PLAYER_SPEED, 
+		m_game->audioEngine.loadSoundEffect("Sound/Digging/Shovel_Into_Dirt_Louder.wav"), 
+		m_game->audioEngine.loadSoundEffect("Sound/Digging/DirtShovelOnCoffin.wav"), 
+		m_game->audioEngine.loadSoundEffect("Sound/shots/pistol.wav"));
 
 	std::mt19937 randomEngine;
 	randomEngine.seed(time(nullptr));
@@ -369,6 +356,7 @@ void GameplayScreen::initLevel(Level* level){
 		////m_boxes.push_back(monster.getBox());
 	}
 
+	m_playersDead = 0;
 }
 
 bool GameplayScreen::checkWinCondition(){
@@ -390,7 +378,10 @@ void GameplayScreen::updateAgents(float deltaTime){
 	//Update the players
 	for (auto player : m_players)
 	{
-		player->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+		if (player->isAlive())
+		{
+			player->update(*m_levels[m_currentLevel], m_players, m_monsters, deltaTime);
+		}
 	}
 
 	//Update the monsters
@@ -403,9 +394,13 @@ void GameplayScreen::updateAgents(float deltaTime){
 			for (auto player : m_players)
 			{
 				if (m_monsters[i]->collideWithAgent(player, penetrationDepth) && abs(penetrationDepth.z - penetrationDepth.x) >= 30){
-					std::printf("YOU LOSE");
+					std::printf("A player died :(");
+					//Mark the player as dead
+					player->kill();
+					m_playersDead++;
 
-					if (m_players.size()<=1)
+					//Check if all players are dead
+					if (m_playersDead >= m_players.size())
 					{
 						//change into game over state
 						m_currentLevelState = LevelState::GAMEOVER;
@@ -515,8 +510,16 @@ void GameplayScreen::drawHUD(){
 
 		if (m_currentLevel < m_levels.size() - 1)
 		{
-			sprintf_s(buffer, "Enter the next level by pressing SPACE");
+			sprintf_s(buffer, "Enter the next level");
 			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 4), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+			sprintf_s(buffer, "by pressing SPACE");
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 6), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+		}
+		else{
+			sprintf_s(buffer, "Wow, you completed all levels!");
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 4), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+			sprintf_s(buffer, "You ROCK!");
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 6), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 		}
 
 	}
@@ -547,4 +550,28 @@ void GameplayScreen::drawHUD(){
 	m_hudSpriteBatch.end();
 
 	m_hudSpriteBatch.renderBatch();
+}
+
+void GameplayScreen::cleanLevel() {
+	//Clean up the current level
+	for (size_t i = 0; i < m_monsters.size(); i++)
+	{
+		//Delete all monsters
+		delete m_monsters[i];
+		m_monsters[i] = m_monsters.back();
+		m_monsters.pop_back();
+	}
+	if (m_monsters.size() != 0)
+	{
+		delete m_monsters[0];
+		m_monsters[0] = m_monsters.back();
+		m_monsters.pop_back();
+	}
+
+	for (size_t i = 0; i < m_players.size(); i++)
+	{
+		delete m_players[i];
+		m_players[i] = m_players.back();
+		m_players.pop_back();
+	}
 }

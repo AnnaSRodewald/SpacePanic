@@ -62,5 +62,6 @@ private:
 	//m_holeBox.init(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), GameEngine::ColorRGBA8(255, 255, 255, 255));
 	bool m_died = false;
 	Player* m_killedBy;
+	bool m_inAir = false;
 };
 
