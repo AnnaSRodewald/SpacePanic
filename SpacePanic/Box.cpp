@@ -31,10 +31,19 @@ void Box::init(
 
 void Box::draw(GameEngine::SpriteBatch& spriteBatch){
 	glm::vec4 destRect;
-	destRect.x = m_position.x;// -m_dimensions.x / 2.0f;
-	destRect.y = m_position.y;// -m_dimensions.y / 2.0f;
-	destRect.z = m_dimensions.x;
-	destRect.w = m_dimensions.y;
+	if (m_drawDims == glm::vec2(0.0f, 0.0f))
+	{
+		destRect.x = m_position.x;// -m_dimensions.x / 2.0f;
+		destRect.y = m_position.y;// -m_dimensions.y / 2.0f;
+		destRect.z = m_dimensions.x;
+		destRect.w = m_dimensions.y;
+	}
+	else {
+		destRect.x = m_position.x - m_drawDims.x / 4.0f;
+		destRect.y = m_position.y;// - m_dimensions.y / 2.0f;
+		destRect.z = m_drawDims.x;
+		destRect.w = m_drawDims.y;
+	}
 
 	spriteBatch.draw(destRect, m_uvRect, m_textureID, 0.0f, m_color);
 }

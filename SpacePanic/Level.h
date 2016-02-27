@@ -5,9 +5,12 @@
 
 #include <GameEngine\SpriteBatch.h>
 #include "Box.h"
+#include "Node.h"
 
 
 const float TILE_WIDTH = 64.0f;
+
+
 
 class Level
 {
@@ -44,9 +47,15 @@ public:
 
 	glm::vec2 getCameraPosition() const { return m_cameraPosition; }
 
+	std::vector<Node&> getLevelMap() const { return m_levelMap; }
+
 private:
 
 	void progressLevelData();
+
+	void defineNeighbors(Node& node);
+	bool isInBounds(glm::vec2 position);
+	bool isInBounds(float x, float y);
 
 	std::vector<std::string> m_levelData;
 	int m_numPlayer;
@@ -55,6 +64,7 @@ private:
 	std::vector<Box> m_ladderBoxes;
 	std::vector<Box> m_halfHoleBoxes;
 	std::vector<Box> m_holeBoxes;
+	std::vector<Node&> m_levelMap;
 
 	glm::vec2 m_startPlayerPos;
 	std::vector<glm::vec2> m_startMonsterPositions;

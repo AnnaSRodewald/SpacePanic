@@ -17,7 +17,7 @@ public:
 	Player();
 	~Player();
 
-	void init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed, GameEngine::SoundEffect digHoleSound, GameEngine::SoundEffect closeHoleSound, GameEngine::SoundEffect dyingSound);
+	void init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 drawDims, const glm::vec2 collisionDims, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed, GameEngine::SoundEffect digHoleSound, GameEngine::SoundEffect closeHoleSound, GameEngine::SoundEffect dyingSound);
 
 	virtual void update(const std::vector<std::string>& levelData, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
 

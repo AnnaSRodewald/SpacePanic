@@ -505,7 +505,12 @@ bool Agent::canWalkForward(std::vector<Box>& levelBoxes, Box& groundBox, Box& bo
 
 		if (collideBoxWithBox(groundBox, levelBoxes[i], penetrationDepth))
 		{
-			foundGroundBox = true;
+			float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
+			float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
+			if (yDepth >= groundBox.getDimensions().y-5)
+			{
+				foundGroundBox = true;
+			}
 		}
 	}
 

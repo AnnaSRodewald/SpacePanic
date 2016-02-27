@@ -17,7 +17,7 @@ Player::~Player()
 }
 
 
-void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 dimensions, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed, GameEngine::SoundEffect digHoleSound, GameEngine::SoundEffect closeHoleSound, GameEngine::SoundEffect dyingSound){
+void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 drawDims, const glm::vec2 collisionDims, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed, GameEngine::SoundEffect digHoleSound, GameEngine::SoundEffect closeHoleSound, GameEngine::SoundEffect dyingSound){
 	m_speed = speed;
 	m_inputManager = inputManager;
 	//	m_camera = camera;dww
@@ -27,11 +27,12 @@ void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 positi
 	//Load the texture
 	GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture(textureFilePath);
 
-	m_collisionBox.init(position, dimensions, &texture, color, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f));
+	m_collisionBox.init(position, collisionDims, &texture, color, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f));
 
 	m_digHoleSound = digHoleSound;
 	m_closeHoleSound = closeHoleSound;
 	m_dyingSound = dyingSound;
+	m_collisionBox.setDrawDims(drawDims);
 
 }
 

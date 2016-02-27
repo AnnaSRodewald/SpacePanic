@@ -5,6 +5,10 @@
 #include <GameEngine\ResourceManager.h>
 #include <random>
 #include <ctime>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <iostream>
 
 Monster::Monster()
 {
@@ -117,18 +121,18 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 					}
 					else
-					if(m_directionSteps <= 0)
-					{
-						m_directionSteps = randSteps(randomEngine);
-						m_direction.x = 0;
-						m_direction.y = randDir(randomEngine);
-						if (m_direction.x == 0)
+						if (m_directionSteps <= 0)
 						{
-							m_direction.x = 1;
+							m_directionSteps = randSteps(randomEngine);
+							m_direction.x = 0;
+							m_direction.y = randDir(randomEngine);
+							if (m_direction.x == 0)
+							{
+								m_direction.x = 1;
+							}
 						}
-					}
 
-					
+
 				}
 				else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 4 && m_wasOnLadder == false)
 				{
@@ -169,22 +173,22 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 				}
 				else
 					if (collision)
-				{
-					if (m_onLadder){
-						m_wasOnLadder = true;
-					}
-					else {
-						m_wasOnLadder = false;
-					}
-					m_onLadder = false;
-					//	m_direction.y = m_direction.y * (-1.0);
-					m_direction.y = 0;
-					m_direction.x = randDir(randomEngine);
-					if (m_direction.x == 0)
 					{
-						m_direction.x = 1;
+						if (m_onLadder){
+							m_wasOnLadder = true;
+						}
+						else {
+							m_wasOnLadder = false;
+						}
+						m_onLadder = false;
+						//	m_direction.y = m_direction.y * (-1.0);
+						m_direction.y = 0;
+						m_direction.x = randDir(randomEngine);
+						if (m_direction.x == 0)
+						{
+							m_direction.x = 1;
+						}
 					}
-				}
 
 
 			}
@@ -328,4 +332,90 @@ void Monster::draw(GameEngine::SpriteBatch& spriteBatch){
 void Monster::kill(Player* killedBy) {
 	m_died = true;
 	m_killedBy = killedBy;
+}
+
+void Monster::changeDirectionTo(Box& box){
+	glm::vec2 diff = box.getPosition() - m_collisionBox.getPosition();
+	m_direction = glm::normalize(diff);
+}
+
+std::vector<Node&> Monster::determinePathToPlayer(Level& level, std::vector<Monster*>& monsters, Player& player){
+	glm::vec2 playerTilePosition = glm::vec2(round(player.getBox().getPosition().x / TILE_WIDTH), round(player.getBox().getPosition().y / TILE_WIDTH));
+
+	float restX = std::fmod(player.getBox().getPosition().x, TILE_WIDTH);
+	float restY = std::fmod(player.getBox().getPosition().y, TILE_WIDTH);
+
+	Node start = Node(playerTilePosition);
+	Node goal = Node(glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
+
+	std::unordered_map<Node&, Node&> came_from;
+	std::unordered_map<Node&, int> cost_so_far;
+
+	came_from = useAStarAgl(level.getLevelMap(), monsters, start, goal, came_from, cost_so_far);
+	return reconstruct_path(start, goal, came_from);
+}
+
+//A* Pathfinding Algorithim
+std::unordered_map<Node&, Node&> Monster::useAStarAgl(
+	std::vector<Node&> levelMap,
+	std::vector<Monster*>& monsters,
+	Node& start,
+	Node& goal,
+	std::unordered_map<Node&, Node&>& came_from,
+	std::unordered_map<Node&, int>& cost_so_far)
+{
+	PriorityQueue< Node> frontier;
+	frontier.put(start, 0);
+
+	came_from[start] = start;
+	cost_so_far[start] = 0;
+
+	while (!frontier.empty())
+	{
+		auto current = frontier.get();
+
+		if (current.getPosition() == goal.getPosition())
+		{
+			break;
+		}
+
+		std::cout << "Visiting " << current.getX() << ", " << current.getY() << std::endl;
+		for (auto next : current.getNeighbors()) {
+			int new_cost = cost_so_far[current] + current.costTo(next);
+			if (!cost_so_far.count(next) || new_cost < cost_so_far[next]) {
+				cost_so_far[next] = new_cost;
+				int priority = new_cost + heuristic(next.getPosition(), goal.getPosition());
+				frontier.put(next, priority);
+				came_from[next] = current;
+			}
+		}
+	}
+
+	return came_from;
+
+	//glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
+
+
+	//define neighbors
+
+}
+
+std::vector<Node&> reconstruct_path(
+	Node& start,
+	Node& goal,
+	std::unordered_map<Node&, Node&>& came_from)
+{
+	std::vector<Node&> path;
+	Node& current = goal;
+	path.push_back(current);
+	while (current.getPosition() != start.getPosition()) {
+		current = came_from[current];
+		path.push_back(current);
+	}
+	std::reverse(path.begin(), path.end());
+	return path;
+}
+
+int heuristic(glm::vec2 a, glm::vec2 b){
+	return abs(a.x - b.x) + abs(a.y - b.y);
 }

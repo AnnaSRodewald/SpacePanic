@@ -24,6 +24,7 @@ public:
 
 	void draw(GameEngine::SpriteBatch& spriteBatch);
 
+	void collideWithBox(Box box);
 
 	const glm::vec2& getPosition() const { return m_position; }
 	const glm::vec2& getDimensions() const { return m_dimensions; }
@@ -33,7 +34,8 @@ public:
 
 	const GLuint getTextureID() const { return m_textureID; }
 
-	void collideWithBox(Box box);
+	glm::vec2 getDrawDims() const { return m_drawDims; }
+	void setDrawDims(glm::vec2 drawDims){ m_drawDims = drawDims; }
 
 private:
 	glm::vec4 m_uvRect;
@@ -42,6 +44,7 @@ private:
 	glm::vec2 m_dimensions;
 	GameEngine::GLTexture* m_texture;
 	GLuint m_textureID;
+	glm::vec2 m_drawDims = glm::vec2(0.0f, 0.0f);
 
 };
 

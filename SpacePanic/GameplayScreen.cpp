@@ -332,7 +332,8 @@ void GameplayScreen::initLevel(Level* level){
 	//"Textures/player.png"
 	m_players.back()->init(
 		&m_game->inputManager, 
-		level->getStartPlayerPos(), 
+		level->getStartPlayerPos(),
+		glm::vec2(110.0f, 140.0f),
 		glm::vec2(55.0f, 128.0f), 
 		"Assets/blue_ninja.png", 
 		GameEngine::ColorRGBA8(0, 255, 255, 255), 

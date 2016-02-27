@@ -93,7 +93,6 @@ void Level::progressLevelData(){
 			// Get dest rect
 			glm::vec4 destRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 			Box newBox;
-
 			// Process the tile
 			switch (tile)
 			{
@@ -112,6 +111,7 @@ void Level::progressLevelData(){
 				whiteColor);*/
 				break;
 			case 'G':
+				//ground
 				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/glass.png"), whiteColor, uvRect);
 				m_boxes.push_back(newBox);
 
@@ -152,10 +152,23 @@ void Level::progressLevelData(){
 				m_levelData[y][x] = '.';
 				m_cameraPosition.x = x * TILE_WIDTH;
 				m_cameraPosition.y = y * TILE_WIDTH;
+
 				break;
 			default:
 				std::printf("Unexpected symbol %c at (%d, %e)", tile, x, y);
 				break;
+			}
+
+			//Check if the tile should be added to the level map which is used by the monsters etc.
+			if (tile != 'R' && tile != 'G')
+			{
+				if (0 <= y - 1 < m_levelData[0].size() &&
+					(m_levelData[x][y] == 'L' || m_levelData[x][y - 1] == 'R' || m_levelData[x][y - 1] == 'G'))
+				{
+					Node node = Node(glm::vec2(x, y));
+					defineNeighbors(node);
+					m_levelMap.push_back(node);
+				}
 			}
 
 		}
@@ -163,4 +176,45 @@ void Level::progressLevelData(){
 	}
 	m_spriteBatch.end();
 
+}
+
+void Level::defineNeighbors(Node& node){
+	std::vector<glm::vec2> dirs;
+	//east 
+	dirs.emplace_back((1, 0));
+	//north
+	dirs.emplace_back((0, 1));
+	//west
+	dirs.emplace_back((-1, 0));
+	//south
+	dirs.emplace_back((0, -1));
+
+	for (auto dir : dirs)
+	{
+		Node neighbor = Node(glm::vec2(node.getX() + dir.x, node.getY() + dir.y));
+		//check if possible neigbor is in bounds
+		if (isInBounds(neighbor.getPosition()))
+			//(0 <= neighbor.getX() < m_levelData.size() && 0 <= neighbor.getY() < m_levelData[0].size())
+		{
+			//check if the node is not a wall or ground
+			if (m_levelData[neighbor.getX()][neighbor.getY()] != 'R' && m_levelData[neighbor.getX()][neighbor.getY()] != 'G')
+			{
+				//now add only the nodes that touch the ground or is a ladder => in other words check if they are traversable
+				if ( 0 <= neighbor.getY()-1 < m_levelData[0].size() && 
+					(m_levelData[neighbor.getX()][neighbor.getY()] == 'L' || m_levelData[neighbor.getX()][neighbor.getY() - 1] == 'R' || m_levelData[neighbor.getX()][neighbor.getY() - 1] == 'G'))
+				{
+					node.addNeighbor(neighbor);
+				}
+			}
+		}
+	}
+}
+
+
+bool Level::isInBounds(glm::vec2 position) {
+	return isInBounds(position.x, position.y);
+}
+
+bool Level::isInBounds(float x, float y) {
+	return 0 <= x < m_levelData.size() && 0 <= y < m_levelData[0].size();
 }
