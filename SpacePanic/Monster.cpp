@@ -61,7 +61,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 	static std::uniform_int_distribution<int> randSteps(80, 150);
 
-	static std::uniform_int_distribution<int> randFollowPlayer(-5, 210);
+	static std::uniform_int_distribution<int> randFollowPlayer(-100, 210);
 
 
 	float speed = 1;
@@ -437,7 +437,7 @@ void Monster::draw(GameEngine::SpriteBatch& spriteBatch){
 	}
 
 	//set uvRect
-	m_collisionBox.setUVRect(m_collisionBox.m_texture.getUVs(0));
+	m_collisionBox.setUVRect(m_collisionBox.m_texture.getUVs(tileIndex));
 
 	//set destRect
 	glm::vec4 destRect;
