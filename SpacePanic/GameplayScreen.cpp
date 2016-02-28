@@ -393,7 +393,7 @@ void GameplayScreen::updateAgents(float deltaTime){
 
 			for (auto player : m_players)
 			{
-				if (m_monsters[i]->collideWithAgent(player, penetrationDepth) && abs(penetrationDepth.z - penetrationDepth.x) >= 30){
+				if (m_monsters[i]->collideWithAgent(player, penetrationDepth) && abs(penetrationDepth.z - penetrationDepth.x) >= 20){
 					std::printf("A player died :(");
 					//Mark the player as dead
 					player->kill();

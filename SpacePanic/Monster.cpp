@@ -521,7 +521,7 @@ bool Monster::changeDirectionToFuturePath(){
 	//current.x = current.x *TILE_WIDTH;
 	//current.y = current.y *TILE_WIDTH;
 
-	glm::vec2 monsterPosition = glm::vec2((m_collisionBox.getPosition().x / TILE_WIDTH)+1, (m_collisionBox.getPosition().y / TILE_WIDTH));
+	glm::vec2 monsterPosition = glm::vec2((m_collisionBox.getPosition().x / TILE_WIDTH), (m_collisionBox.getPosition().y / TILE_WIDTH));
 
 	//glm::vec2 next = m_futurePath.at(m_futurePath.size() - 2);
 

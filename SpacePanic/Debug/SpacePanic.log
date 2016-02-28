@@ -1,12 +1,46 @@
-﻿Build started 28.02.2016 21:10:44.
+﻿Build started 28.02.2016 21:16:02.
      1>Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\SpacePanic\SpacePanic.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Level.cpp
-         Level.cpp
-     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\level.cpp(90): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\level.cpp(92): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\level.cpp(185): warning C4804: '<' : unsafe use of type 'bool' in operation
-     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\level.cpp(185): warning C4018: '<' : signed/unsigned mismatch
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Monster.cpp
+         Monster.cpp
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.h(119): warning C4413: 'Monster::m_holeBox' : reference member is initialized to a temporary that doesn't persist after the constructor exits
+                 c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.h(119) : see declaration of 'Monster::m_holeBox'
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(55): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(101): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(127): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(175): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(187): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(200): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(211): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(245): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(260): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(274): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(369): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\program files (x86)\microsoft visual studio 12.0\vc\include\tuple(80): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\tuple(258) : see reference to function template instantiation 'std::_Tuple_val<_This>::_Tuple_val<T&>(_Other)' being compiled
+                 with
+                 [
+                     _This=int
+         ,            T=float
+         ,            _Other=float &
+                 ]
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\tuple(258) : see reference to function template instantiation 'std::_Tuple_val<_This>::_Tuple_val<T&>(_Other)' being compiled
+                 with
+                 [
+                     _This=int
+         ,            T=float
+         ,            _Other=float &
+                 ]
+                 c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(497) : see reference to function template instantiation 'std::tuple<int,int>::tuple<T&,T&,std::_Tuple_enable<std::tuple<>,std::tuple<>>::type>(std::tuple<T &,T &> &&)' being compiled
+                 with
+                 [
+                     T=float
+                 ]
+                 c:\users\d059264\documents\studium\master\master\projektarbeit\spacepanic\spacepanic\spacepanic\monster.cpp(497) : see reference to function template instantiation 'std::tuple<int,int>::tuple<T&,T&,std::_Tuple_enable<std::tuple<>,std::tuple<>>::type>(std::tuple<T &,T &> &&)' being compiled
+                 with
+                 [
+                     T=float
+                 ]
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\SpacePanic.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib SDL2_ttf.lib SDL2_mixer.lib opengl32.lib glew32.lib GameEngine.lib Box2D.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\SpacePanic.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Debug\SpacePanic.lib" /MACHINE:X86 Debug\Agent.obj
          Debug\App.obj
@@ -24,4 +58,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.26
+Time Elapsed 00:00:01.56
