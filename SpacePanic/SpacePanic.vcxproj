@@ -81,7 +81,8 @@
     <ClInclude Include="GameplayScreen.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />
-    <ClInclude Include="Node.h" />
+    <ClInclude Include="LevelNode.h" />
+    <ClInclude Include="PathFinder.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
@@ -92,8 +93,10 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Monster.cpp" />
-    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="LevelNode.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RedblobGamesimpl.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

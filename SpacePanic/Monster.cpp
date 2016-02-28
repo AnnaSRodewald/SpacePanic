@@ -5,10 +5,8 @@
 #include <GameEngine\ResourceManager.h>
 #include <random>
 #include <ctime>
-#include <queue>
-#include <unordered_set>
-#include <unordered_map>
-#include <iostream>
+
+
 
 Monster::Monster()
 {
@@ -54,11 +52,22 @@ void Monster::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players
 void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 	Player* closestPlayer = getNearestPlayer(players);
 
+	static std::mt19937 randomEngine(time(nullptr));
+
+	static std::uniform_int_distribution<int> randMov(0, 4);
+
+	static std::uniform_int_distribution<int> randDir(0, 1);
+
+	static std::uniform_int_distribution<int> randSteps(80, 150);
+
+	static std::uniform_int_distribution<int> randFollowPlayer(-5, 210);
+
+
 	float speed = 1;
 
 	if (m_inHalfHole)
 	{
-		speed = m_speed / 1.5;
+		speed = m_speed / 1;
 	}
 	else if (m_inHole)
 	{
@@ -77,142 +86,56 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 		m_inAir = false;
 	}
 
-	if (m_inHoleCounter == 0){
+		if (m_inHoleCounter == 0){
 
-		if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y && abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 500
-			) || m_sawPlayer == true) && m_onLadder == false)){
-			m_directionSteps = 10; //
-			m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
-			m_collisionBox.m_position += m_direction * speed * deltaTime;
-		}
-		else {
-			//otherwise move in random directions
-
-			static std::mt19937 randomEngine(time(nullptr));
-
-			static std::uniform_int_distribution<int> randMov(0, 4);
-
-			static std::uniform_int_distribution<int> randDir(-1, 1);
-
-			static std::uniform_int_distribution<int> randSteps(80, 150);
-
-			glm::vec4 collisionWithLadderDepth = collideWithLadderAndGetCollisionDepth(level.getLadderBoxes());
-
-			bool collidedWithLadder = (collisionWithLadderDepth != glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-			//bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
-
-			if (collidedWithLadder) {
-				int rand = randMov(randomEngine);
-				float xDepth = abs(collisionWithLadderDepth.z - collisionWithLadderDepth.x);
-
-				if (m_onLadder == true){
-					/*m_directionSteps = randSteps(randomEngine);
-					m_direction.x = 0;
-					m_direction.y = randDir(randomEngine);*/
-					if (m_inAir == false && rand >= 4)
+			if (players[0] != nullptr && m_futurePath.size() == 0 && m_sawPlayer == true)
+			{
+				m_futurePath = determinePathToPlayer(level, monsters, *players[0]);
+				m_calculatedNewPath = true;
+				if (m_futurePath.size() != 0)
+				{
+					if (changeDirectionToFuturePath())
 					{
 						m_directionSteps = randSteps(randomEngine);
 						m_direction.y = 0;
-						m_direction.x = randDir(randomEngine);
+						m_direction.x = randDir(randomEngine) * 2 - 1;
 						if (m_direction.x == 0)
 						{
 							m_direction.x = 1;
 						}
-
+						m_sawPlayer = false;
 					}
-					else
-						if (m_directionSteps <= 0)
-						{
-							m_directionSteps = randSteps(randomEngine);
-							m_direction.x = 0;
-							m_direction.y = randDir(randomEngine);
-							if (m_direction.x == 0)
-							{
-								m_direction.x = 1;
-							}
-						}
+					m_collisionBox.m_position += glm::vec2(m_direction.x * speed * deltaTime, m_direction.y * speed * deltaTime);
 
+					collideWithHalfHole(level.getHalfHoleBoxes());
+					collideWithHole(level.getHoleBoxes());
+					if (collideWithLevel(level.getLevelBoxes())){
+					}
 
-				}
-				else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 4 && m_wasOnLadder == false)
-				{
-					m_directionSteps = randSteps(randomEngine);
-					m_direction.x = 0;
-					m_direction.y = randDir(randomEngine);
-					if (m_direction.y == 0)
-					{
-						m_direction.y = 1;
+					if (m_wasOnLadder == true){
+						m_wasOnLadder = false;
 					}
 
 				}
-				else if (m_directionSteps <= 0)
-				{
-					m_directionSteps = randSteps(randomEngine);
-					m_direction.y = 0;
-					m_direction.x = randDir(randomEngine);
-					if (m_direction.x == 0)
-					{
-						m_direction.x = 1;
-					}
-
-					m_wasOnLadder = false;
-				}
-
-
-
-				//	m_direction = glm::normalize(m_direction);
-
-				m_collisionBox.m_position += m_direction *  speed * deltaTime;
-
-				bool collision = collideWithLevel(level.getLevelBoxes());
-
-				if (collision == false && m_direction.y != 0)
-				{
-					m_onLadder = true;
-					m_wasOnLadder = false;
-				}
-				else
-					if (collision)
-					{
-						if (m_onLadder){
-							m_wasOnLadder = true;
-						}
-						else {
-							m_wasOnLadder = false;
-						}
-						m_onLadder = false;
-						//	m_direction.y = m_direction.y * (-1.0);
-						m_direction.y = 0;
-						m_direction.x = randDir(randomEngine);
-						if (m_direction.x == 0)
-						{
-							m_direction.x = 1;
-						}
-					}
-
-
 			}
-			else{
-
-				if (m_directionSteps <= 0)
+			else if (m_futurePath.size() != 0 && m_sawPlayer == true)
+			{
+				if (changeDirectionToFuturePath())
 				{
 					m_directionSteps = randSteps(randomEngine);
 					m_direction.y = 0;
-					m_direction.x = randDir(randomEngine);
+					m_direction.x = randDir(randomEngine) * 2 - 1;
 					if (m_direction.x == 0)
 					{
 						m_direction.x = 1;
 					}
+					m_sawPlayer = false;
 				}
+				m_collisionBox.m_position += glm::vec2(m_direction.x * speed * deltaTime, m_direction.y * speed * deltaTime);
 
-				//	m_direction = glm::normalize(m_direction);
-
-				m_collisionBox.m_position += m_direction *  speed * deltaTime;
-
-				//Apply Physics for player here
+				collideWithHalfHole(level.getHalfHoleBoxes());
+				collideWithHole(level.getHoleBoxes());
 				if (collideWithLevel(level.getLevelBoxes())){
-					m_directionSteps = randSteps(randomEngine);
-					m_direction.x = m_direction.x * (-1.0);
 				}
 
 				if (m_wasOnLadder == true){
@@ -220,17 +143,161 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 				}
 
 			}
+			else {
 
-			m_directionSteps--;
+				if ((closestPlayer != nullptr && ((closestPlayer->getPosition().y == m_collisionBox.m_position.y && abs(closestPlayer->getPosition().x - m_collisionBox.m_position.x) <= 20
+					) || m_sawPlayer == true) && m_onLadder == false)){
+					m_directionSteps = 10; //
+					m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
+					m_collisionBox.m_position += m_direction * speed * deltaTime;
+					m_sawPlayer = false;
+				}
+				else {
+					//otherwise move in random directions
+
+					glm::vec4 collisionWithLadderDepth = collideWithLadderAndGetCollisionDepth(level.getLadderBoxes());
+
+					bool collidedWithLadder = (collisionWithLadderDepth != glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+					//bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
+
+					if (collidedWithLadder) {
+						int rand = randMov(randomEngine);
+						float xDepth = abs(collisionWithLadderDepth.z - collisionWithLadderDepth.x);
+
+						if (m_onLadder == true){
+							/*m_directionSteps = randSteps(randomEngine);
+							m_direction.x = 0;
+							m_direction.y = randDir(randomEngine);*/
+							if (m_inAir == false && rand >= 4)
+							{
+								m_directionSteps = randSteps(randomEngine);
+								m_direction.y = 0;
+								m_direction.x = randDir(randomEngine) * 2 - 1;
+								if (m_direction.x == 0)
+								{
+									m_direction.x = 1;
+								}
+
+							}
+							else
+								if (m_directionSteps <= 0)
+								{
+									m_directionSteps = randSteps(randomEngine);
+									m_direction.x = 0;
+									m_direction.y = randDir(randomEngine) * 2 - 1;
+									if (m_direction.x == 0)
+									{
+										m_direction.x = 1;
+									}
+								}
+
+
+						}
+						else if (xDepth >= m_collisionBox.getDimensions().x && rand >= 4 && m_wasOnLadder == false)
+						{
+							m_directionSteps = randSteps(randomEngine);
+							m_direction.x = 0;
+							m_direction.y = randDir(randomEngine) * 2 - 1;
+							if (m_direction.y == 0)
+							{
+								m_direction.y = 1;
+							}
+
+						}
+						else if (m_directionSteps <= 0)
+						{
+							m_directionSteps = randSteps(randomEngine);
+							m_direction.y = 0;
+							m_direction.x = randDir(randomEngine) * 2 - 1;
+							if (m_direction.x == 0)
+							{
+								m_direction.x = 1;
+							}
+
+							m_wasOnLadder = false;
+						}
+
+
+
+						//	m_direction = glm::normalize(m_direction);
+
+						m_collisionBox.m_position += m_direction *  speed * deltaTime;
+
+						bool collision = collideWithLevel(level.getLevelBoxes());
+
+						if (collision == false && m_direction.y != 0)
+						{
+							m_onLadder = true;
+							m_wasOnLadder = false;
+						}
+						else
+							if (collision)
+							{
+								if (m_onLadder){
+									m_wasOnLadder = true;
+								}
+								else {
+									m_wasOnLadder = false;
+								}
+								m_onLadder = false;
+								//	m_direction.y = m_direction.y * (-1.0);
+								m_direction.y = 0;
+								m_direction.x = randDir(randomEngine) * 2 - 1;
+								if (m_direction.x == 0)
+								{
+									m_direction.x = 1;
+								}
+							}
+
+
+					}
+					else{
+
+						if (m_directionSteps <= 0)
+						{
+							m_directionSteps = randSteps(randomEngine);
+							m_direction.y = 0;
+							m_direction.x = randDir(randomEngine) * 2 - 1;
+							if (m_direction.x == 0)
+							{
+								m_direction.x = 1;
+							}
+						}
+
+						//	m_direction = glm::normalize(m_direction);
+
+						m_collisionBox.m_position += m_direction *  speed * deltaTime;
+
+						//Apply Physics for player here
+						if (collideWithLevel(level.getLevelBoxes())){
+							m_directionSteps = randSteps(randomEngine);
+							m_direction.x = m_direction.x * (-1.0);
+						}
+
+						if (m_wasOnLadder == true){
+							m_wasOnLadder = false;
+						}
+
+					}
+
+					m_directionSteps--;
+
+				}
+				collideWithHalfHole(level.getHalfHoleBoxes());
+				collideWithHole(level.getHoleBoxes());
+
+				int followPRand = randFollowPlayer(randomEngine);
+				if (followPRand  >= 200)
+				{
+					m_sawPlayer = true;
+				}
+			}
 		}
-		collideWithHalfHole(level.getHalfHoleBoxes());
-		collideWithHole(level.getHoleBoxes());
+		else{
+			m_inHoleCounter--;
+		}
 
-	}
-	else{
-		m_inHoleCounter--;
-	}
-
+	
 }
 
 bool Monster::collideWithHalfHole(std::vector<Box>& levelBoxes){
@@ -320,7 +387,7 @@ Player* Monster::getNearestPlayer(std::vector<Player*>& players){
 
 void Monster::setDirection(glm::vec2 newDirection){
 	m_direction = newDirection;
-	m_directionSteps = 1;
+	m_directionSteps = 10;
 }
 
 
@@ -339,83 +406,164 @@ void Monster::changeDirectionTo(Box& box){
 	m_direction = glm::normalize(diff);
 }
 
-std::vector<Node&> Monster::determinePathToPlayer(Level& level, std::vector<Monster*>& monsters, Player& player){
+std::vector<glm::vec2> Monster::determinePathToPlayer(Level& level, std::vector<Monster*>& monsters, Player& player){
 	glm::vec2 playerTilePosition = glm::vec2(round(player.getBox().getPosition().x / TILE_WIDTH), round(player.getBox().getPosition().y / TILE_WIDTH));
 
 	float restX = std::fmod(player.getBox().getPosition().x, TILE_WIDTH);
 	float restY = std::fmod(player.getBox().getPosition().y, TILE_WIDTH);
 
-	Node start = Node(playerTilePosition);
-	Node goal = Node(glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
+	/*LevelNode start = LevelNode(playerTilePosition);
+	LevelNode goal = LevelNode(glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
+	*/
+	std::vector<glm::vec2> result = determinePathTo(level, monsters,
+		glm::vec2(round(player.getBox().getPosition().x / TILE_WIDTH), round(player.getBox().getPosition().y / TILE_WIDTH)),
+		glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
 
-	std::unordered_map<Node&, Node&> came_from;
-	std::unordered_map<Node&, int> cost_so_far;
+	return result;
+	//std::unordered_map<LevelNode, LevelNode> came_from;
+	//std::unordered_map<LevelNode, int> cost_so_far;
+	/*
+		came_from = useAStarSearch(level.getLevelMap(), monsters, start, goal, came_from, cost_so_far);
+		return reconstruct_path(start, goal, came_from);*/
+}
+//
+////A* Pathfinding Algorithim
+//std::unordered_map<LevelNode, LevelNode>& Monster::useAStarSearch(
+//	std::vector<LevelNode>& levelMap,
+//	std::vector<Monster*>& monsters,
+//	LevelNode& start,
+//	LevelNode& goal,
+//	std::unordered_map<LevelNode, LevelNode>& came_from,
+//	std::unordered_map<LevelNode, int>& cost_so_far)
+//{
+//	PriorityQueue frontier;
+//	frontier.put(start, 0);
+//
+//	came_from[start] = start;
+//	cost_so_far[start] = 0;
+//
+//	while (!frontier.empty())
+//	{
+//		auto& current = frontier.get();
+//
+//		if (current.getPosition() == goal.getPosition())
+//		{
+//			break;
+//		}
+//
+//		std::cout << "Visiting " << current.getX() << ", " << current.getY() << std::endl;
+//		for (auto& next : current.getNeighbors()) {
+//			int new_cost = cost_so_far[current] + current.costTo(next);
+//			if (!cost_so_far.count(next) || new_cost < cost_so_far[next]) {
+//				cost_so_far[next] = new_cost;
+//				int priority = new_cost + heuristic(next.getPosition(), goal.getPosition());
+//				frontier.put(next, priority);
+//				came_from[next] = current;
+//			}
+//		}
+//	}
+//
+//	return came_from;
+//
+//	//glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
+//
+//
+//	//define neighbors
+//
+//}
+//
+//std::vector<LevelNode> Monster::reconstruct_path(
+//	LevelNode& start,
+//	LevelNode& goal,
+//	std::unordered_map<LevelNode, LevelNode>& came_from)
+//{
+//	std::vector<LevelNode> path;
+//	LevelNode& current = goal;
+//	path.push_back(current);
+//	while (current.getPosition() != start.getPosition()) {
+//		current = came_from[current];
+//		path.push_back(current);
+//	}
+//	std::reverse(path.begin(), path.end());
+//	return path;
+//}
+//
+//int heuristic(glm::vec2 a, glm::vec2 b){
+//	return abs(a.x - b.x) + abs(a.y - b.y);
+//}
 
-	came_from = useAStarAgl(level.getLevelMap(), monsters, start, goal, came_from, cost_so_far);
-	return reconstruct_path(start, goal, came_from);
+std::vector<glm::vec2> Monster::determinePathTo(Level& level, std::vector<Monster*>& monsters, glm::vec2 startP, glm::vec2 goalP){
+
+	SquareGrid::Location start = std::tie(startP.x, startP.y);
+	SquareGrid::Location goal = std::tie(goalP.x, goalP.y);
+
+	std::vector<glm::vec2> result;
+
+	//std::vector<LevelNode> levelMap = level.getLevelMap();
+	std::unordered_map<typename SquareGrid::Location, typename SquareGrid::Location> came_from;
+	std::unordered_map<typename SquareGrid::Location, int> cost_so_far;
+
+	came_from = pathfinder.a_star_search(level.getMap(), start, goal, came_from, cost_so_far);
+	pathfinder.draw_grid(level.getMap(), 2, nullptr, &came_from);
+	std::cout << std::endl;
+	pathfinder.draw_grid(level.getMap(), 3, &cost_so_far, nullptr);
+	std::cout << std::endl;
+
+	//std::vector<SquareGrid::Location> path = pathfinder.reconstruct_path(start, goal, came_from);
+	//pathfinder.draw_grid(level.getMap(), 3, nullptr, nullptr, &path);
+
+	result = pathfinder.reconstruct_path2(start, goal, came_from);
+	return result;
 }
 
-//A* Pathfinding Algorithim
-std::unordered_map<Node&, Node&> Monster::useAStarAgl(
-	std::vector<Node&> levelMap,
-	std::vector<Monster*>& monsters,
-	Node& start,
-	Node& goal,
-	std::unordered_map<Node&, Node&>& came_from,
-	std::unordered_map<Node&, int>& cost_so_far)
-{
-	PriorityQueue< Node> frontier;
-	frontier.put(start, 0);
+bool Monster::changeDirectionToFuturePath(){
+	glm::vec2 current = m_futurePath.back(); //.at(m_currentPathStep);
+	//current.x = current.x *TILE_WIDTH;
+	//current.y = current.y *TILE_WIDTH;
 
-	came_from[start] = start;
-	cost_so_far[start] = 0;
+	glm::vec2 monsterPosition = glm::vec2((m_collisionBox.getPosition().x / TILE_WIDTH)+1, (m_collisionBox.getPosition().y / TILE_WIDTH));
 
-	while (!frontier.empty())
+	//glm::vec2 next = m_futurePath.at(m_futurePath.size() - 2);
+
+	if (current.x == monsterPosition.x && current.y == monsterPosition.y )
 	{
-		auto current = frontier.get();
-
-		if (current.getPosition() == goal.getPosition())
+		//	m_currentPathStep++;
+		m_reachedNextStep = true;
+		m_futurePath.pop_back();
+		if (m_futurePath.size() == 0)
 		{
-			break;
+			return true;
 		}
-
-		std::cout << "Visiting " << current.getX() << ", " << current.getY() << std::endl;
-		for (auto next : current.getNeighbors()) {
-			int new_cost = cost_so_far[current] + current.costTo(next);
-			if (!cost_so_far.count(next) || new_cost < cost_so_far[next]) {
-				cost_so_far[next] = new_cost;
-				int priority = new_cost + heuristic(next.getPosition(), goal.getPosition());
-				frontier.put(next, priority);
-				came_from[next] = current;
-			}
+		else{
+			current = m_futurePath.back(); //.at(m_currentPathStep);
+		/*	current.x = current.x *TILE_WIDTH;
+			current.y = current.y *TILE_WIDTH;*/
 		}
 	}
-
-	return came_from;
-
-	//glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH)));
-
-
-	//define neighbors
-
-}
-
-std::vector<Node&> reconstruct_path(
-	Node& start,
-	Node& goal,
-	std::unordered_map<Node&, Node&>& came_from)
-{
-	std::vector<Node&> path;
-	Node& current = goal;
-	path.push_back(current);
-	while (current.getPosition() != start.getPosition()) {
-		current = came_from[current];
-		path.push_back(current);
+	else{
+		m_reachedNextStep = false;
 	}
-	std::reverse(path.begin(), path.end());
-	return path;
-}
 
-int heuristic(glm::vec2 a, glm::vec2 b){
-	return abs(a.x - b.x) + abs(a.y - b.y);
+	
+	glm::vec2 direction = glm::normalize(current - monsterPosition); //glm::vec2(round(m_collisionBox.getPosition().x / TILE_WIDTH), round(m_collisionBox.getPosition().y / TILE_WIDTH))); //m_collisionBox.getPosition());
+		float x, y;
+		if (direction.x > 0)
+		{
+			x = std::ceil(direction.x);
+		}
+		else {
+			x = std::floor(direction.x);
+		}
+		if (direction.y > 0)
+		{
+			y = std::ceil(direction.y);
+		}
+		else {
+			y = std::floor(direction.y);
+		}
+
+		m_direction = glm::vec2(x, y);
+
+		return false;
+	
 }

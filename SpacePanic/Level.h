@@ -1,11 +1,12 @@
 #pragma once
 
-#include <string>
-#include <vector>
 
 #include <GameEngine\SpriteBatch.h>
 #include "Box.h"
-#include "Node.h"
+//#include "LevelNode.h"
+#include "PathFinder.h"
+
+
 
 
 const float TILE_WIDTH = 64.0f;
@@ -47,13 +48,14 @@ public:
 
 	glm::vec2 getCameraPosition() const { return m_cameraPosition; }
 
-	std::vector<Node&> getLevelMap() const { return m_levelMap; }
+	//std::vector<LevelNode>& getLevelMap() { return m_levelMap; }
+	SquareGrid& getMap() { return m_map; }
 
 private:
 
 	void progressLevelData();
 
-	void defineNeighbors(Node& node);
+	//void defineNeighbors(LevelNode& LevelNode);
 	bool isInBounds(glm::vec2 position);
 	bool isInBounds(float x, float y);
 
@@ -64,7 +66,8 @@ private:
 	std::vector<Box> m_ladderBoxes;
 	std::vector<Box> m_halfHoleBoxes;
 	std::vector<Box> m_holeBoxes;
-	std::vector<Node&> m_levelMap;
+	//std::vector<LevelNode> m_levelMap;
+	SquareGrid m_map;
 
 	glm::vec2 m_startPlayerPos;
 	std::vector<glm::vec2> m_startMonsterPositions;

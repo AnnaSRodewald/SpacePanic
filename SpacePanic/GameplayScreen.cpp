@@ -1,5 +1,4 @@
 #include "GameplayScreen.h"
-#include <iostream>
 #include <SDL\SDL.h>
 #include <GameEngine\IMainGame.h>
 #include <GameEngine\ResourceManager.h>
@@ -10,7 +9,7 @@
 #define DEBUG_RENDER
 
 const float PLAYER_SPEED = 5.0f;
-const float MONSTER_SPEED = 2.5f;
+const float MONSTER_SPEED = 4.0f;
 
 GameplayScreen::GameplayScreen(GameEngine::Window* window) : m_window(window)
 {
@@ -68,9 +67,9 @@ void GameplayScreen::onEntry() {
 	//Load the levels and init the first one level
 	loadLevels();
 
-	//Start playing music
-	GameEngine::Music music = m_game->audioEngine.loadMusic("Music/Electrix_NES.mp3");
-	music.play(-1);
+	////Start playing music
+	//GameEngine::Music music = m_game->audioEngine.loadMusic("Music/Electrix_NES.mp3");
+	//music.play(-1);
 
 	m_currentLevelState = LevelState::INPROGRESS;
 
@@ -488,6 +487,9 @@ void GameplayScreen::handleMonsterCollisionBehaviour(Monster* a, Monster* b, glm
 
 	a->setDirection(glm::vec2(a->getDirection().x*(-1), a->getDirection().y*(-1)));
 	b->setDirection(glm::vec2(b->getDirection().x*(-1), b->getDirection().y*(-1)));
+
+	a->deactivateSawPlayer();
+	b->deactivateSawPlayer();
 
 }
 

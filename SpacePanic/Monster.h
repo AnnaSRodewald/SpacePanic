@@ -1,26 +1,34 @@
 #pragma once
 #include "Agent.h"
 #include "Player.h"
+//#include "LevelNode.h"
+#include "PathFinder.h"
 
-// got the code from http://www.redblobgames.com/pathfinding/a-star/implementation.html 
-template<typename T, typename Number = int>
-struct PriorityQueue {
-	typedef pair<Number, T> PQElement;
-	priority_queue<PQElement, vector<PQElement>,
-		std::greater<PQElement >> elements;
 
-	inline bool empty() const { return elements.empty(); }
+//the compiler wouldn't let me use the code above
+//class PriorityQueue
+//{
+//public:
+//	
+//	inline bool empty() const { return elements.empty(); }
+//
+//	inline void put(LevelNode item, int priority){
+//		elements.emplace(priority, item);
+//	}
+//
+//	inline LevelNode get() {
+//		LevelNode best_item = elements.top().second;
+//		elements.pop();
+//		return best_item;
+//	}
+//
+//private:
+//	typedef std::pair<int, LevelNode> PQElement;
+//	std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
+//};
 
-	inline void put(T item, Number priority) {
-		elements.emplace(priority, item);
-	}
 
-	inline T get() {
-		T best_item = elements.top().second;
-		elements.pop();
-		return best_item;
-	}
-};
+
 
 
 
@@ -71,27 +79,36 @@ public:
 
 	int getHolteCounter() const { return m_inHoleCounter; }
 
+	bool sawPlayer() const { return m_sawPlayer; }
+
+	void deactivateSawPlayer() {
+		m_sawPlayer = false; 
+		m_futurePath.clear();
+	}
+
 
 private:
 
 	Player* getNearestPlayer(std::vector<Player*>& Player);
 	void changeDirectionTo(Box& box);
-	std::vector<Node&> determinePathToPlayer(Level& level, std::vector<Monster*>& monsters, Player& player);
+	std::vector<glm::vec2> determinePathToPlayer(Level& level, std::vector<Monster*>& monsters, Player& player);
+	std::vector<glm::vec2> determinePathTo(Level& level, std::vector<Monster*>& monsters, glm::vec2 startP, glm::vec2 goalP);
+	bool changeDirectionToFuturePath();
 
-	std::unordered_map<Node&, Node&> useAStarAgl(
-		std::vector<Node&> levelMap, 
-		std::vector<Monster*>& monsters, 
-		Node& start, 
-		Node& goal, 
-		std::unordered_map<Node&, Node&>& came_from,
-		std::unordered_map<Node&, int>& cost_so_far);
+	//std::unordered_map<LevelNode, LevelNode>& useAStarSearch(
+	//	std::vector<LevelNode>& levelMap, 
+	//	std::vector<Monster*>& monsters, 
+	//	LevelNode& start, 
+	//	LevelNode& goal, 
+	//	std::unordered_map<LevelNode, LevelNode>& came_from,
+	//	std::unordered_map<LevelNode, int>& cost_so_far);
 
-	std::vector<Node&> reconstruct_path(
-		Node& start,
-		Node& goal,
-		std::unordered_map<Node&, Node&>& came_from);
+	//std::vector<LevelNode> reconstruct_path(
+	//	LevelNode& start,
+	//	LevelNode& goal,
+	//	std::unordered_map<LevelNode, LevelNode>& came_from);
 
-	int heuristic(glm::vec2 a, glm::vec2 b);
+	//int heuristic(glm::vec2 a, glm::vec2 b);
 
 	int m_directionSteps = -1;
 	bool m_sawPlayer = false;
@@ -104,6 +121,9 @@ private:
 	bool m_died = false;
 	Player* m_killedBy;
 	bool m_inAir = false;
-	std::vector<Node&> m_futurePath;
+	std::vector<glm::vec2> m_futurePath;
+	bool m_calculatedNewPath = false;
+    bool m_reachedNextStep = true;
+	PathFinder pathfinder = PathFinder();
 };
 

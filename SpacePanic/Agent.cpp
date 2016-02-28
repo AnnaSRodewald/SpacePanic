@@ -1,8 +1,7 @@
 #include "Agent.h"
 #include <GameEngine/ResourceManager.h>
 #include "Level.h"
-#include <algorithm>
-#include <iostream>
+
 
 Agent::Agent(){
 
