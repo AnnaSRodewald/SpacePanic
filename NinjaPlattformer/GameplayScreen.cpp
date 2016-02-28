@@ -63,7 +63,7 @@ void GameplayScreen::onEntry() {
 	//Load the texture
 	m_texture = GameEngine::ResourceManager::getTexture("Assets/bricks_top.png");
 
-	const int NUM_BOXES = 50;
+	const int NUM_BOXES = 10;
 
 	for (size_t i = 0; i < NUM_BOXES; i++)
 	{

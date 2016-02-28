@@ -1,9 +1,12 @@
 #pragma once
 
 #include <GameEngine\SpriteBatch.h>
-#include <GameEngine\GLTexture.h>
+#include <GameEngine\TileSheet.h>
 #include <GameEngine\InputManager.h>
 #include "Capsule.h"
+
+
+enum class PlayerMoveState { STANDING, RUNNING, PUNCHING, IN_AIR };
 
 class Player
 {
@@ -23,7 +26,12 @@ public:
 private:
 	glm::vec2 m_drawDims;
 	Capsule m_capsule;
-	GameEngine::GLTexture m_texture;
+	GameEngine::TileSheet m_texture;
 	GameEngine::ColorRGBA8 m_color;
+	bool m_onGround = false;
+	int m_direction = 1;
+	float m_animTime = 0.0f;
+	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
+	bool m_isPunching = false;
 };
 
