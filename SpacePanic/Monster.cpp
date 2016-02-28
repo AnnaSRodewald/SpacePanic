@@ -94,6 +94,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 				m_calculatedNewPath = true;
 				if (m_futurePath.size() != 0)
 				{
+					m_direction = glm::vec2(0.0f);
 					if (changeDirectionToFuturePath())
 					{
 						m_directionSteps = randSteps(randomEngine);
@@ -209,7 +210,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 							m_directionSteps = randSteps(randomEngine);
 							m_direction.y = 0;
 							m_direction.x = randDir(randomEngine) * 2 - 1;
-							if (m_direction.x == 0)
+						if (m_direction.x == 0)
 							{
 								m_direction.x = 1;
 							}
@@ -504,11 +505,11 @@ std::vector<glm::vec2> Monster::determinePathTo(Level& level, std::vector<Monste
 	std::unordered_map<typename SquareGrid::Location, int> cost_so_far;
 
 	came_from = pathfinder.a_star_search(level.getMap(), start, goal, came_from, cost_so_far);
-	pathfinder.draw_grid(level.getMap(), 2, nullptr, &came_from);
+	/*pathfinder.draw_grid(level.getMap(), 2, nullptr, &came_from);
 	std::cout << std::endl;
 	pathfinder.draw_grid(level.getMap(), 3, &cost_so_far, nullptr);
 	std::cout << std::endl;
-
+*/
 	//std::vector<SquareGrid::Location> path = pathfinder.reconstruct_path(start, goal, came_from);
 	//pathfinder.draw_grid(level.getMap(), 3, nullptr, nullptr, &path);
 
@@ -562,7 +563,15 @@ bool Monster::changeDirectionToFuturePath(){
 			y = std::floor(direction.y);
 		}
 
-		m_direction = glm::vec2(x, y);
+		if ((x!= 0 && m_direction.x == x*(-1)) || (y != 0 && m_direction.y == y*(-1)))
+		{
+			//stuttering problem 
+			m_sawPlayer = false;
+			m_futurePath.clear();
+		}
+		else{
+			m_direction = glm::vec2(x, y);
+		}
 
 		return false;
 	
