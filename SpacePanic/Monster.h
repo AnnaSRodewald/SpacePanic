@@ -39,7 +39,7 @@ public:
 	Monster();
 	~Monster();
 
-	void init(float speed, glm::vec2 position, glm::vec2 dimensions);
+	void init(float speed, glm::vec2 position, const glm::vec2 drawDims, const glm::vec2 collisionDims);
 
 	virtual void update(const std::vector<std::string>& levelData,
 		std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) override;
@@ -125,5 +125,6 @@ private:
 	bool m_calculatedNewPath = false;
     bool m_reachedNextStep = true;
 	PathFinder pathfinder = PathFinder();
+	float m_animTime = 0.0f;
 };
 

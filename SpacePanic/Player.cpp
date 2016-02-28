@@ -92,8 +92,6 @@ void Player::update(Level& level, std::vector<Player*>& players, std::vector<Mon
 
 	updateMovements(level, players, deltaTime);
 	updateActions(level, players, monsters, deltaTime);
-
-
 }
 
 
@@ -150,6 +148,87 @@ bool Player::collideWithHole(std::vector<Box>& levelBoxes){
 
 
 void Player::draw(GameEngine::SpriteBatch& spriteBatch){
+	glm::vec4 uvRect;
+
+	int tileIndex;
+	int numTiles;
+
+	float animSpeed = 0.2f;
+
+	//Calculate animation
+	if (m_onGround == true)
+	{
+		if (m_isDigging == true)
+		{
+			numTiles = 4;
+			tileIndex = 18;
+			if (m_moveState != PlayerMoveState::DIGGING)
+			{
+				m_moveState = PlayerMoveState::DIGGING;
+				m_animTime = 0.0f;
+			}
+		}
+		else if (m_moved == true)
+		{ //Running
+			numTiles = 6;
+			tileIndex = 10;
+			animSpeed = 10 * 0.025f;
+			if (m_moveState != PlayerMoveState::RUNNING)
+			{
+				m_moveState = PlayerMoveState::RUNNING;
+				m_animTime = 0.0f;
+			}
+		}
+		else
+		{ //Standing still
+			numTiles = 1;
+			tileIndex = 0;
+			m_moveState = PlayerMoveState::STANDING;
+		}
+	}
+	else
+	{
+		//In the air
+			numTiles = 1;
+			if (m_onLadder)
+			{
+				//Climbing
+				tileIndex = 16;
+				m_moveState = PlayerMoveState::CLIMBING;
+			}
+			else 
+			{
+				//Falling
+				tileIndex = 17;
+				m_moveState = PlayerMoveState::FALLING;
+			}
+		
+	}
+
+	//Increment animation time
+	//TODO: add deltaTime
+	m_animTime += animSpeed;
+
+	//Check for digging end
+	if (m_animTime > numTiles)
+	{
+		m_isDigging = false;
+	}
+
+	//Apply animation
+	tileIndex = tileIndex + ((int)m_animTime % numTiles);
+
+	//get the uv coordinates from the tile index
+	uvRect = m_collisionBox.m_texture.getUVs(tileIndex);
+
+	//Check direction
+	if (m_direction == glm::vec2(-1.0f, 0.0f))
+	{
+		uvRect.x += 1.0f / m_collisionBox.m_texture.dims.x;
+		uvRect.z *= -1;
+	}
+
+	m_collisionBox.setUVRect(uvRect);
 	m_collisionBox.draw(spriteBatch);
 }
 
@@ -161,9 +240,14 @@ void Player::kill(){
 void Player::updateMovements(Level& level, std::vector<Player*>& players, float deltaTime) {
 	bool collidedWithLadder = collideWithLadder(level.getLadderBoxes());
 
+	m_onGround = true;
+
+	m_moved = false;
+
 	if (collidedWithLadder) {
 
 		if (m_inputManager->isKeyDown(SDLK_w) || m_inputManager->isKeyDown(SDLK_s)){
+			m_moved = true;
 			if (m_inputManager->isKeyDown(SDLK_w))
 			{
 				m_collisionBox.m_position.y += m_speed * deltaTime;
@@ -175,17 +259,27 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 				m_direction = glm::vec2(0.0f, -1.0f);
 			}
 
-			if (collideWithLevel(level.getLevelBoxes()) == false && collideWithHalfHole(level.getHalfHoleBoxes()) == false &&
-				collideWithHole(level.getHoleBoxes()) == false)
+			bool collidedWithLevel = collideWithLevel(level.getLevelBoxes());
+			bool collidedWithHalfHole = collideWithHalfHole(level.getHalfHoleBoxes());
+			bool collidedWithHole = collideWithHole(level.getHoleBoxes());
+
+			if (collidedWithLevel == false && collidedWithHalfHole == false &&
+				collidedWithHole == false)
 			{
 				if (isInAir(level.getLevelBoxes()))
 				{
 					m_onLadder = true;
+					m_onGround = false;
 				}
 				else
 				{
 					m_onLadder = false;
 				}
+			}
+			else if (collidedWithHole == false)
+			{
+				//TODO: FALLING
+				m_onGround = false;
 			}
 			else
 			{
@@ -199,31 +293,30 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 		{
 			m_collisionBox.m_position.x -= m_speed * deltaTime;
 			m_direction = glm::vec2(-1.0f, 0.0f);
+			m_moved = true;
 		}
 		else if (m_inputManager->isKeyDown(SDLK_d))
 		{
 			m_collisionBox.m_position.x += m_speed * deltaTime;
 			m_direction = glm::vec2(1.0f, 0.0f);
+			m_moved = true;
 		}
 	}
 
-	//Apply Physics for player here
-
+	//Apply Collision Physics for player here
 	collideWithLevel(level.getLevelBoxes());
 	collideWithHalfHole(level.getHalfHoleBoxes());
 	collideWithHole(level.getHoleBoxes());
 }
 
 void Player::updateActions(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime) {
-	/*if (collideWithLadder(level.getLadderBoxes()) == false)
-	{*/
+
 	if (m_inputManager->isKeyPressed(SDLK_SPACE)){
 		Box& groundBox = Box();
 		if (tryDigging(level, players, monsters, groundBox) == true){
-			//playDiggingSound();
+			m_isDigging = true;
 		}
 	}
-	/*}*/
 }
 
 bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, Box& groundBox){
@@ -288,7 +381,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 					groundBox.m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
 					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
-					groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
+					groundBox.m_texture.texture = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
 					levelBoxes.push_back(groundBox);
 					playCloseHoleSound();
@@ -323,7 +416,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 
 					groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 255);
 					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/glass.png").id;
-					groundBox.m_texture = &GameEngine::ResourceManager::getTexture("Textures/glass.png");
+					groundBox.m_texture.texture = GameEngine::ResourceManager::getTexture("Textures/glass.png");
 
 					//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
 					holeBoxes.push_back(groundBox);

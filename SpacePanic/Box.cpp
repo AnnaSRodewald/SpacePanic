@@ -23,11 +23,27 @@ void Box::init(
 	m_position = position;
 	m_dimensions = dimensions;
 	m_color = color;
-	m_texture = texture;
 	m_uvRect = uvRect;
 	m_textureID = texture->id;
+
+	m_texture.init(*texture, glm::ivec2(10, 2));
 }
 
+void Box::init(
+	const glm::vec2 position,
+	const glm::vec2 dimensions,
+	GameEngine::GLTexture* texture,
+	glm::ivec2 tileDimns,
+	GameEngine::ColorRGBA8 color,
+	glm::vec4 uvRect /* = glm::vec4 uvRect */){
+	m_position = position;
+	m_dimensions = dimensions;
+	m_color = color;
+	m_uvRect = uvRect;
+	m_textureID = texture->id;
+
+	m_texture.init(*texture, tileDimns);
+}
 
 void Box::draw(GameEngine::SpriteBatch& spriteBatch){
 	glm::vec4 destRect;
@@ -45,5 +61,9 @@ void Box::draw(GameEngine::SpriteBatch& spriteBatch){
 		destRect.w = m_drawDims.y;
 	}
 
+	spriteBatch.draw(destRect, m_uvRect, m_textureID, 0.0f, m_color);
+}
+
+void Box::draw(GameEngine::SpriteBatch& spriteBatch, glm::vec4 destRect){
 	spriteBatch.draw(destRect, m_uvRect, m_textureID, 0.0f, m_color);
 }

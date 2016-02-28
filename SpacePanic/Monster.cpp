@@ -19,9 +19,10 @@ Monster::~Monster()
 
 }
 
-void Monster::init(float speed, glm::vec2 position, glm::vec2 dimensions){
+void Monster::init(float speed, glm::vec2 position, const glm::vec2 drawDims, const glm::vec2 collisionDims){
 	m_speed = speed;
-	m_collisionBox.init(position, dimensions, &GameEngine::ResourceManager::getTexture("Textures/zombie.png"), GameEngine::ColorRGBA8(255, 255, 255, 255));
+	m_collisionBox.init(position, collisionDims, &GameEngine::ResourceManager::getTexture("Assets/cvJmPda.png"), glm::ivec2(3, 2), GameEngine::ColorRGBA8(255, 255, 255, 255));
+	m_collisionBox.setDrawDims(drawDims);
 }
 
 void Monster::update(const std::vector<std::string>& levelData,
@@ -90,6 +91,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 
 			if (players[0] != nullptr && m_futurePath.size() == 0 && m_sawPlayer == true)
 			{
+				m_animTime = 0.0f;
 				m_futurePath = determinePathToPlayer(level, monsters, *players[0]);
 				m_calculatedNewPath = true;
 				if (m_futurePath.size() != 0)
@@ -131,6 +133,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 						m_direction.x = 1;
 					}
 					m_sawPlayer = false;
+					m_animTime = 0.0f;
 				}
 				m_collisionBox.m_position += glm::vec2(m_direction.x * speed * deltaTime, m_direction.y * speed * deltaTime);
 
@@ -152,6 +155,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 					m_direction = glm::normalize(closestPlayer->getPosition() - m_collisionBox.m_position);
 					m_collisionBox.m_position += m_direction * speed * deltaTime;
 					m_sawPlayer = false;
+					m_animTime = 0.0f;
 				}
 				else {
 					//otherwise move in random directions
@@ -178,6 +182,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 								{
 									m_direction.x = 1;
 								}
+								m_animTime = 0.0f;
 
 							}
 							else
@@ -190,6 +195,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 									{
 										m_direction.x = 1;
 									}
+									m_animTime = 0.0f;
 								}
 
 
@@ -203,7 +209,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 							{
 								m_direction.y = 1;
 							}
-
+							m_animTime = 0.0f;
 						}
 						else if (m_directionSteps <= 0)
 						{
@@ -214,7 +220,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 							{
 								m_direction.x = 1;
 							}
-
+							m_animTime = 0.0f;
 							m_wasOnLadder = false;
 						}
 
@@ -248,6 +254,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 								{
 									m_direction.x = 1;
 								}
+								m_animTime = 0.0f;
 							}
 
 
@@ -263,6 +270,7 @@ void Monster::update(Level& level, std::vector<Player*>& players, std::vector<Mo
 							{
 								m_direction.x = 1;
 							}
+							m_animTime = 0.0f;
 						}
 
 						//	m_direction = glm::normalize(m_direction);
@@ -393,7 +401,67 @@ void Monster::setDirection(glm::vec2 newDirection){
 
 
 void Monster::draw(GameEngine::SpriteBatch& spriteBatch){
-	m_collisionBox.draw(spriteBatch);
+	glm::vec4 uvRect;
+
+	int tileIndex;
+	int numTiles;
+
+	float animSpeed = 0.2f;
+
+	if (m_sawPlayer ==true)
+	{
+		tileIndex = 0;
+	}
+	else {
+		//monsters are always running
+		tileIndex = 3;
+	}
+	numTiles = 3;
+	animSpeed = 10 * 0.025f;
+
+	//Increment animation time
+	//TODO: add deltaTime
+	m_animTime += animSpeed;
+
+	//Apply animation
+	tileIndex = tileIndex + ((int)m_animTime % numTiles);
+
+	//get the uv coordinates from the tile index
+	uvRect = m_collisionBox.m_texture.getUVs(tileIndex);
+
+	//Check direction
+	if (m_direction == glm::vec2(-1.0f, 0.0f))
+	{
+		uvRect.x += 1.0f / m_collisionBox.m_texture.dims.x;
+		uvRect.z *= -1;
+	}
+
+	//set uvRect
+	m_collisionBox.setUVRect(m_collisionBox.m_texture.getUVs(0));
+
+	//set destRect
+	glm::vec4 destRect;
+
+	glm::vec2 position = m_collisionBox.getPosition();
+	glm::vec2 dimensions = m_collisionBox.getDimensions();
+
+	glm::vec2 drawDims = m_collisionBox.getDrawDims();
+
+	if (drawDims == glm::vec2(0.0f, 0.0f))
+	{
+		destRect.x = position.x;// -m_dimensions.x / 2.0f;
+		destRect.y = position.y;// -m_dimensions.y / 2.0f;
+		destRect.z = dimensions.x;
+		destRect.w = dimensions.y;
+	}
+	else {
+		destRect.x = position.x - drawDims.x / 8.0f;
+		destRect.y = position.y;// - m_dimensions.y / 2.0f;
+		destRect.z = drawDims.x;
+		destRect.w = drawDims.y;
+	}
+
+	m_collisionBox.draw(spriteBatch, destRect);
 }
 
 

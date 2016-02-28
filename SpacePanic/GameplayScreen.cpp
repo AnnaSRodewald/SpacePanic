@@ -191,19 +191,19 @@ void GameplayScreen::draw() {
 	if (m_renderDebug)
 	{
 		glm::vec4 destRect;
-		//for (auto& box : m_boxes)
-		//{
+		for (auto& monster : m_monsters)
+		{
+			auto box = monster->getBox();
+			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
+			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.z = box.getDimensions().x;
+			destRect.w = box.getDimensions().y;
 
-		//	destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-		//	destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
-		//	destRect.z = box.getDimensions().x;
-		//	destRect.w = box.getDimensions().y;
+			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
 
-		//	m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
-
-		//	/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
-		//	*/
-		//}
+			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
+			*/
+		}
 
 		std::vector<Box> levelBoxes = m_levels[m_currentLevel]->getLevelBoxes();
 
@@ -351,7 +351,7 @@ void GameplayScreen::initLevel(Level* level){
 	//Add all the monsters
 	for (auto& monsterPosition : level->getStartMonsterPositions()){
 		m_monsters.push_back(new Monster);
-		m_monsters.back()->init(MONSTER_SPEED, monsterPosition, glm::vec2(60.0f, 128.0f));
+		m_monsters.back()->init(MONSTER_SPEED, monsterPosition, glm::vec2(80.0f, 60.0f), glm::vec2(60.0f, 128.0f));
 		//m_monsters.push_back(&monster);
 		////m_boxes.push_back(monster.getBox());
 	}

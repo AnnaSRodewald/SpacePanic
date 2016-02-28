@@ -10,6 +10,8 @@
 #include "Monster.h"
 #include "Level.h"
 
+enum class PlayerMoveState { STANDING, RUNNING, DIGGING, CLIMBING, FALLING };
+
 class Player :
 	public Agent
 {
@@ -68,5 +70,10 @@ private:
 	GameEngine::SoundEffect m_closeHoleSound; 
 	GameEngine::SoundEffect m_dyingSound;
 
+	bool m_onGround = true;
+	float m_animTime = 0.0f;
+	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
+	bool m_isDigging = false;
+	bool m_moved = false;
 };
 
