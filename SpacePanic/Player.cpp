@@ -20,9 +20,8 @@ Player::~Player()
 void Player::init(GameEngine::InputManager* inputManager, const glm::vec2 position, const glm::vec2 drawDims, const glm::vec2 collisionDims, std::string textureFilePath, GameEngine::ColorRGBA8 color, float speed, GameEngine::SoundEffect digHoleSound, GameEngine::SoundEffect closeHoleSound, GameEngine::SoundEffect dyingSound){
 	m_speed = speed;
 	m_inputManager = inputManager;
-	//	m_camera = camera;dww
-
-	m_health = 150;
+	//	m_camera = camera;
+	m_health = 3;
 
 	//Load the texture
 	GameEngine::GLTexture texture = GameEngine::ResourceManager::getTexture(textureFilePath);
@@ -250,7 +249,7 @@ void Player::draw(GameEngine::SpriteBatch& spriteBatch){
 
 void Player::kill(){
 	m_isAlive = false;
-	//TODO: trigger death animation and change sprite to "dead-state" sprite
+	//triggers death animation and changes sprite to "dead-state" sprite in the draw-function
 }
 
 void Player::updateMovements(Level& level, std::vector<Player*>& players, float deltaTime) {
@@ -294,7 +293,6 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 			}
 			else if (collidedWithHole == false)
 			{
-				//TODO: FALLING
 				m_onGround = false;
 			}
 			else
@@ -433,8 +431,6 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 					groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 0);
 					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
 					groundBox.m_texture.texture = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
-
-					//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
 					holeBoxes.push_back(groundBox);
 					playDiggingSound();
 				}
@@ -477,8 +473,6 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 			else if (foundGroundBox == true)
 			{
 				groundBox.m_color = GameEngine::ColorRGBA8(0, 255, 0, 255);
-
-				//levelBoxes.erase(std::remove(levelBoxes.begin(), levelBoxes.end(), groundBox), levelBoxes.end());
 				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id;
 				halfHoleBoxes.push_back(groundBox);
 				playDiggingSound();
@@ -530,7 +524,7 @@ void Player::fallThroughHole(Box& holeBox, float deltaTime){
 		m_direction = glm::normalize(holeBox.getPosition() - m_collisionBox.getPosition());
 	}
 
-	if (m_fallingThroughHoleStep == 3 && collideWithBox(&groundBoxBelowHole, penetrationDepth))// && (abs(penetrationDepth.w - penetrationDepth.y) >= TILE_WIDTH || abs(penetrationDepth.w - penetrationDepth.y) >= m_collisionBox.getDimensions().y))
+	if (m_fallingThroughHoleStep == 3 && collideWithBox(&groundBoxBelowHole, penetrationDepth))
 	{
 		//landed on the ground
 		m_fallingThroughHoleStep = 0;
