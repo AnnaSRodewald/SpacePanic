@@ -248,6 +248,8 @@ void Player::draw(GameEngine::SpriteBatch& spriteBatch){
 }
 
 void Player::kill(){
+	//Take one live away
+	m_health--;
 	m_isAlive = false;
 	//triggers death animation and changes sprite to "dead-state" sprite in the draw-function
 }
@@ -393,7 +395,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 					holeBoxes[i] = holeBoxes.back();
 					holeBoxes.pop_back();
 
-					groundBox.m_color = GameEngine::ColorRGBA8(255, 255, 255, 255);
+					groundBox.m_color = GameEngine::ColorRGBA8(0, 255, 255, 255);
 					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
 					groundBox.m_texture.texture = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
@@ -454,7 +456,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				}
 
 				if (foundGroundBox == false && collideBoxWithBox(groundBox, levelBoxes[i]) && //and black color glass
-					(levelBoxes[i].getColor().r != 0 || levelBoxes[i].getColor().g || 0 && levelBoxes[i].getColor().b || 0))
+					(levelBoxes[i].getColor().r != 0 || levelBoxes[i].getColor().g != 0 || levelBoxes[i].getColor().b != 0))
 				{
 					groundBox = levelBoxes[i];
 					foundGroundBox = true;
@@ -472,7 +474,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 			}
 			else if (foundGroundBox == true)
 			{
-				groundBox.m_color = GameEngine::ColorRGBA8(0, 255, 0, 255);
+				groundBox.m_color = GameEngine::ColorRGBA8(0, 80, 128, 255);
 				groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/light_bricks.png").id;
 				halfHoleBoxes.push_back(groundBox);
 				playDiggingSound();

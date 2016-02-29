@@ -94,7 +94,7 @@ void GameplayScreen::update() {
 		checkInput();
 		processInput();
 
-		if (!checkWinCondition() && m_currentLevelState != LevelState::GAMEOVER && m_currentLevelState != LevelState::COMPLETED)
+		if (!checkWinCondition() && m_currentLevelState != LevelState::GAMEOVER && m_currentLevelState != LevelState::LOSTALIVE && m_currentLevelState != LevelState::COMPLETED)
 		{ //The player hasn't won yet..
 			if (m_levels[m_currentLevel]->getCameraPosition() != glm::vec2(0.0f, 0.0f))
 			{
@@ -253,7 +253,7 @@ void GameplayScreen::processInput(){
 	if (inputManager.isKeyPressed(SDLK_ESCAPE)) {
 		m_currentState = GameEngine::ScreenState::EXIT_APPLICATION;
 	}
-	if ((m_currentLevelState == LevelState::GAMEOVER || (m_currentLevelState == LevelState::COMPLETED && m_currentLevel < m_levels.size() - 1)) && inputManager.isKeyPressed(SDLK_SPACE))
+	if (m_currentLevelState == LevelState::GAMEOVER && inputManager.isKeyPressed(SDLK_SPACE))
 	{
 		//Clean up the current level
 		cleanLevel();
@@ -269,6 +269,27 @@ void GameplayScreen::processInput(){
 		}
 
 		initLevel(m_levels[m_currentLevel]);
+		m_currentLevelState = LevelState::INPROGRESS;
+	}
+	if ((m_currentLevelState == LevelState::LOSTALIVE || (m_currentLevelState == LevelState::COMPLETED && m_currentLevel < m_levels.size() - 1)) && inputManager.isKeyPressed(SDLK_SPACE))
+	{
+		float saveHealth = m_players[0]->getHealth();
+
+		//Clean up the current level
+		cleanLevel();
+
+		//Reload the level or init the next one
+		if (m_currentLevelState == LevelState::GAMEOVER) {
+			//Reload current level
+			m_levels[m_currentLevel]->reload();
+		}
+		else if (m_currentLevelState == LevelState::COMPLETED && m_currentLevel < m_levels.size() - 1) {
+			//Init the next level
+			m_currentLevel++;
+		}
+
+		initLevel(m_levels[m_currentLevel]);
+		m_players[0]->setHealth(saveHealth);
 		m_currentLevelState = LevelState::INPROGRESS;
 	}
 }
@@ -369,8 +390,15 @@ void GameplayScreen::updateAgents(float deltaTime){
 					//Check if all players are dead
 					if (m_playersDead >= m_players.size())
 					{
-						//change into game over state
-						m_currentLevelState = LevelState::GAMEOVER;
+						if (player->getHealth()>0)
+						{
+							//change into the "you lost a live" state
+							m_currentLevelState = LevelState::LOSTALIVE;
+						}
+						else{
+							//change into game over state
+							m_currentLevelState = LevelState::GAMEOVER;
+						}
 						break;
 					}
 				}
@@ -495,25 +523,42 @@ void GameplayScreen::drawHUD(){
 	}
 	else if (m_currentLevelState == LevelState::GAMEOVER)
 	{
-		sprintf_s(buffer, "YOU LOSE!");
+		sprintf_s(buffer, "GAMEOVER");
 		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 4, m_window->getScreenHeight() / 2), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
 		sprintf_s(buffer, "Try again by pressing SPACE");
 		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 3), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
 	}
-	else {
-		sprintf_s(buffer, "Num Humans %d", m_players.size());
-		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+	else if (m_currentLevelState == LevelState::LOSTALIVE)
+	{
+		sprintf_s(buffer, "YOU LOSE");
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 4, m_window->getScreenHeight() / 2), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
-		sprintf_s(buffer, "Num Zombies %d", m_monsters.size());
-		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 36), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+		sprintf_s(buffer, "a live");
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 3, m_window->getScreenHeight() / 2.5), glm::vec2(2.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+		sprintf_s(buffer, "Try again by pressing SPACE");
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(m_window->getScreenWidth() / 10, m_window->getScreenHeight() / 4), glm::vec2(1.0), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+
+	}
+	else {
+
+		sprintf_s(buffer, "Num Monsters %d", m_monsters.size());
+		m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
 		if (m_players.size() > 0)
 		{
 			sprintf_s(buffer, "Score P1 %d", m_players[0]->getPoints());
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 36), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
+			
+			sprintf_s(buffer, "Lives left: %d", (int)m_players[0]->getHealth());
 			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 72), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 
+		}
+		if (m_players.size() > 1){
+			sprintf_s(buffer, "Num Players %d", m_players.size());
+			m_spriteFont->draw(m_hudSpriteBatch, buffer, glm::vec2(0, 108), glm::vec2(0.5), 0.0f, GameEngine::ColorRGBA8(255, 255, 255, 255));
 		}
 	}
 

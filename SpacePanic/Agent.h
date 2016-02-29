@@ -58,6 +58,10 @@ public:
 		return m_health;
 	};
 
+	virtual void setHealth(float health) {
+		m_health = health;
+	};
+
 	const Box& getBox() const { return m_collisionBox; }
 
 	glm::vec2 getDirection() const { return m_direction; }

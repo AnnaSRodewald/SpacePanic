@@ -109,7 +109,7 @@ void Level::progressLevelData(){
 			case 'B':
 				break;
 			case 'R':
-				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), whiteColor, uvRect);
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/red_bricks.png"), GameEngine::ColorRGBA8(0, 255, 255, 255), uvRect);
 				m_boxes.push_back(newBox);
 
 				m_map.walls.emplace(std::tie(x, y));
@@ -140,7 +140,7 @@ void Level::progressLevelData(){
 				whiteColor);*/
 				break;
 			case 'L':
-				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/light_bricks.png"), whiteColor, uvRect);
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/light_bricks.png"), GameEngine::ColorRGBA8(128, 0, 0, 255), uvRect);
 				m_ladderBoxes.push_back(newBox);
 
 				//Draw the box
