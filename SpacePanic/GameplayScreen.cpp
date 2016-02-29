@@ -68,8 +68,11 @@ void GameplayScreen::onEntry() {
 	loadLevels();
 
 	////Start playing music
-	//GameEngine::Music music = m_game->audioEngine.loadMusic("Music/Electrix_NES.mp3");
-	//music.play(-1);
+	if (m_playMusic == true)
+	{
+		GameEngine::Music music = m_game->audioEngine.loadMusic("Music/Electrix_NES.mp3");
+		music.play(-1);
+	}
 
 	m_currentLevelState = LevelState::INPROGRESS;
 
@@ -77,20 +80,8 @@ void GameplayScreen::onEntry() {
 
 void GameplayScreen::onExit() {
 	m_debugRenderer.dispose();
-
-	////Delete levels, players and monsters
-	//for (int i = 0; i < m_levels.size(); i++)
-	//{
-	//	delete m_levels[i];
-	//}
-	//for (int i = 0; i < m_players.size(); i++)
-	//{
-	//	delete m_players[i];
-	//}
-	//for (int i = 0; i < m_monsters.size(); i++)
-	//{
-	//	delete m_monsters[i];
-	//}
+	m_levels[m_currentLevel]->clear();
+	cleanLevel();
 }
 
 
@@ -149,12 +140,6 @@ void GameplayScreen::draw() {
 
 	m_spriteBatch.begin();
 
-	////Draw all the boxes
-	//for (auto& box : m_boxes)
-	//{
-	//	box.draw(m_spriteBatch);
-	//}
-
 	const glm::vec2 agentDims(AGENT_RADIUS * 2.0f);
 
 	//Draw the players
@@ -175,9 +160,6 @@ void GameplayScreen::draw() {
 		}
 	}
 
-
-	//m_player.draw(m_spriteBatch);
-
 	m_spriteBatch.end();
 
 	m_spriteBatch.renderBatch();
@@ -194,68 +176,56 @@ void GameplayScreen::draw() {
 		for (auto& monster : m_monsters)
 		{
 			auto box = monster->getBox();
-			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.x = box.getPosition().x;
+			destRect.y = box.getPosition().y;
 			destRect.z = box.getDimensions().x;
 			destRect.w = box.getDimensions().y;
 
 			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
-
-			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
-			*/
 		}
 
 		std::vector<Box> levelBoxes = m_levels[m_currentLevel]->getLevelBoxes();
 
 		for (auto& box : levelBoxes)
 		{
-			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.x = box.getPosition().x;
+			destRect.y = box.getPosition().y;
 			destRect.z = box.getDimensions().x;
 			destRect.w = box.getDimensions().y;
 
 			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
-
-			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
-			*/
 		}
 
 		std::vector<Box> holeBoxes = m_levels[m_currentLevel]->getHoleBoxes();
 
 		for (auto& box : holeBoxes)
 		{
-			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.x = box.getPosition().x;
+			destRect.y = box.getPosition().y;
 			destRect.z = box.getDimensions().x;
 			destRect.w = box.getDimensions().y;
 
 			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(0, 255, 255, 255), 0.0f);
-
-			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
-			*/
 		}
 
 		std::vector<Box> halfHoleBoxes = m_levels[m_currentLevel]->getHalfHoleBoxes();
 
 		for (auto& box : halfHoleBoxes)
 		{
-			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.x = box.getPosition().x;
+			destRect.y = box.getPosition().y;
 			destRect.z = box.getDimensions().x;
 			destRect.w = box.getDimensions().y;
 
 			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 0, 255, 255), 0.0f);
-
-			/*	m_debugRenderer.drawCircle(glm::vec2(box.getBody()->GetPosition().x, box.getBody()->GetPosition().y), GameEngine::ColorRGBA8(255, 255, 255, 255), box.getDimensions().x / 2.0f);
-			*/
 		}
 
 		for (auto player : m_players)
 		{
 			//Render player
 			auto box = player->getBox();
-			destRect.x = box.getPosition().x;// -box.getDimensions().x / 2.0f;
-			destRect.y = box.getPosition().y;// -box.getDimensions().y / 2.0f;
+			destRect.x = box.getPosition().x;
+			destRect.y = box.getPosition().y;
 			destRect.z = box.getDimensions().x;
 			destRect.w = box.getDimensions().y;
 			m_debugRenderer.drawBox(destRect, GameEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
@@ -347,14 +317,10 @@ void GameplayScreen::initLevel(Level* level){
 	std::uniform_int_distribution<int> randX(2, level->getWidth() - 2);
 	std::uniform_int_distribution<int> randY(2, level->getHeight() - 2);
 
-	//m_boxes.push_back(m_player.getBox());
-
 	//Add all the monsters
 	for (auto& monsterPosition : level->getStartMonsterPositions()){
 		m_monsters.push_back(new Monster);
 		m_monsters.back()->init(MONSTER_SPEED, monsterPosition, glm::vec2(80.0f, 60.0f), glm::vec2(60.0f, 128.0f));
-		//m_monsters.push_back(&monster);
-		////m_boxes.push_back(monster.getBox());
 	}
 
 	m_playersDead = 0;
@@ -373,7 +339,7 @@ bool GameplayScreen::checkWinCondition(){
 void GameplayScreen::updateAgents(float deltaTime){
 
 	int killPoints = 0;
-	Player* latestPlayerToKillMonster = nullptr; // TODO: change into vector
+	Player* latestPlayerToKillMonster = nullptr; // TODO: change into vector?
 	glm::vec4 penetrationDepth;
 
 	//Update the players

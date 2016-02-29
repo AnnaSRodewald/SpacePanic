@@ -81,6 +81,7 @@ private:
 	GameEngine::DebugRenderer m_debugRenderer;
 
 	bool m_renderDebug = true;
+	bool m_playMusic = false;
 
 //	Player m_player;
 
@@ -94,7 +95,6 @@ private:
 
 	int m_currentLevel;
 	int m_playersDead = 0;
-
 
 
 };

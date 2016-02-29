@@ -26,6 +26,8 @@ public:
 
 	void draw();
 
+	void clear();
+
 	//Getters
 	const std::vector<std::string>& getLevelData(){ return m_levelData; }
 

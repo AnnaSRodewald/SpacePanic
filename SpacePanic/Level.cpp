@@ -41,11 +41,7 @@ Level::~Level()
 }
 
 void Level::reload(){
-	m_boxes.clear();
-	m_holeBoxes.clear();
-	m_halfHoleBoxes.clear();
-	m_ladderBoxes.clear();
-
+	clear();
 	progressLevelData();
 }
 
@@ -72,6 +68,13 @@ void Level::update(){
 
 void Level::draw(){
 	m_spriteBatch.renderBatch();
+}
+
+void Level::clear(){
+	m_boxes.clear();
+	m_holeBoxes.clear();
+	m_halfHoleBoxes.clear();
+	m_ladderBoxes.clear();
 }
 
 void Level::progressLevelData(){
