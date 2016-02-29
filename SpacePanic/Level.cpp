@@ -128,7 +128,7 @@ void Level::progressLevelData(){
 				newBox.draw(m_spriteBatch);
 				break;
 			case 'L':
-				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/light_bricks.png"), GameEngine::ColorRGBA8(128, 0, 0, 255), uvRect);
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/light_bricks.png"), GameEngine::ColorRGBA8(255, 0, 255, 255), uvRect);
 				m_ladderBoxes.push_back(newBox);
 
 				//Draw the box
