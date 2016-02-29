@@ -86,6 +86,8 @@ void Level::progressLevelData(){
 	whiteColor.b = 255;
 	whiteColor.a = 255;
 
+	GameEngine::ColorRGBA8 blackColor(0,0,0,255);
+
 	// Render all the tiles
 	for (int y = 0; y < m_levelData.size(); y++)
 	{
@@ -120,7 +122,7 @@ void Level::progressLevelData(){
 				break;
 			case 'G':
 				//ground
-				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/glass.png"), whiteColor, uvRect);
+				newBox.init(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), &GameEngine::ResourceManager::getTexture("Textures/glass.png"), blackColor, uvRect);
 				m_boxes.push_back(newBox);
 
 				m_map.walls.emplace(std::tie(x, y));

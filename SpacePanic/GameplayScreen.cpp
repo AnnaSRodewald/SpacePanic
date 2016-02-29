@@ -314,12 +314,13 @@ void GameplayScreen::initShaders() {
 
 void GameplayScreen::loadLevels(){
 	// Level 1
-	m_levels.push_back(new Level("Levels/level6.txt"));
+	m_levels.push_back(new Level("Levels/level7.txt"));
 	initLevel(m_levels.back());
 	m_currentLevel = 0;
 
 	m_levels.push_back(new Level("Levels/level5.txt"));
 	m_levels.push_back(new Level("Levels/level4.txt"));
+	m_levels.push_back(new Level("Levels/level6.txt"));
 }
 
 void GameplayScreen::initLevel(Level* level){

@@ -56,7 +56,7 @@ private:
 	void playDiggingSound();
 	void playCloseHoleSound();
 
-	void fallThroughHole(Box& holeBox);
+	void fallThroughHole(Box& holeBox, float deltaTime);
 
 	GameEngine::InputManager* m_inputManager;
 
@@ -75,5 +75,7 @@ private:
 	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
 	bool m_isDigging = false;
 	bool m_moved = false;
+	int m_fallingThroughHoleStep = 0;
+	Box& m_holeBox = Box();
 };
 

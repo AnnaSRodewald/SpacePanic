@@ -89,9 +89,15 @@ void Player::update(std::vector<Box>& levelBoxes, std::vector<Player*>& players,
 void Player::update(Level& level, std::vector<Player*>& players, std::vector<Monster*>& monsters, float deltaTime){
 
 	m_consecutiveMonsterKills = 0;
-
-	updateMovements(level, players, deltaTime);
-	updateActions(level, players, monsters, deltaTime);
+	if (m_fallingThroughHoleStep == 0)
+	{
+		updateMovements(level, players, deltaTime);
+		updateActions(level, players, monsters, deltaTime);
+	}
+	else
+	{
+		fallThroughHole(m_holeBox, deltaTime);
+	}
 }
 
 
@@ -137,6 +143,8 @@ bool Player::collideWithHole(std::vector<Box>& levelBoxes){
 		if (collideWithBox(&boxAboveGround, penetrationDepth) == true)
 		{
 			handleCollisionWithUnmoveableObject(penetrationDepth);
+			m_holeBox = box;
+			m_fallingThroughHoleStep = 1;
 			return true;
 		}
 
@@ -155,40 +163,42 @@ void Player::draw(GameEngine::SpriteBatch& spriteBatch){
 
 	float animSpeed = 0.2f;
 
-	//Calculate animation
-	if (m_onGround == true)
+	if (m_isAlive == true)
 	{
-		if (m_isDigging == true)
+		//Calculate animation
+		if (m_onGround == true)
 		{
-			numTiles = 4;
-			tileIndex = 18;
-			if (m_moveState != PlayerMoveState::DIGGING)
+			if (m_isDigging == true)
 			{
-				m_moveState = PlayerMoveState::DIGGING;
-				m_animTime = 0.0f;
+				numTiles = 4;
+				tileIndex = 18;
+				if (m_moveState != PlayerMoveState::DIGGING)
+				{
+					m_moveState = PlayerMoveState::DIGGING;
+					m_animTime = 0.0f;
+				}
 			}
-		}
-		else if (m_moved == true)
-		{ //Running
-			numTiles = 6;
-			tileIndex = 10;
-			animSpeed = 10 * 0.025f;
-			if (m_moveState != PlayerMoveState::RUNNING)
-			{
-				m_moveState = PlayerMoveState::RUNNING;
-				m_animTime = 0.0f;
+			else if (m_moved == true)
+			{ //Running
+				numTiles = 6;
+				tileIndex = 10;
+				animSpeed = 10 * 0.025f;
+				if (m_moveState != PlayerMoveState::RUNNING)
+				{
+					m_moveState = PlayerMoveState::RUNNING;
+					m_animTime = 0.0f;
+				}
+			}
+			else
+			{ //Standing still
+				numTiles = 1;
+				tileIndex = 0;
+				m_moveState = PlayerMoveState::STANDING;
 			}
 		}
 		else
-		{ //Standing still
-			numTiles = 1;
-			tileIndex = 0;
-			m_moveState = PlayerMoveState::STANDING;
-		}
-	}
-	else
-	{
-		//In the air
+		{
+			//In the air
 			numTiles = 1;
 			if (m_onLadder)
 			{
@@ -196,13 +206,19 @@ void Player::draw(GameEngine::SpriteBatch& spriteBatch){
 				tileIndex = 16;
 				m_moveState = PlayerMoveState::CLIMBING;
 			}
-			else 
+			else
 			{
 				//Falling
 				tileIndex = 17;
 				m_moveState = PlayerMoveState::FALLING;
 			}
-		
+
+		}
+	}
+	else
+	{
+		numTiles = 1;
+		tileIndex = 19;
 	}
 
 	//Increment animation time
@@ -288,7 +304,7 @@ void Player::updateMovements(Level& level, std::vector<Player*>& players, float 
 		}
 	}
 
-	if (m_onLadder == false) {
+	if (m_onLadder == false || isInAir(level.getLevelBoxes()) == false) {
 		if (m_inputManager->isKeyDown(SDLK_a))
 		{
 			m_collisionBox.m_position.x -= m_speed * deltaTime;
@@ -371,7 +387,7 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 						//monster isn't stuck yet in the hole but going to in a few seconds
 						monsterIsInHole = true;
 					}
-					
+
 				}
 
 				if (monsterIsInHole == false)
@@ -402,8 +418,8 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				for (auto monster : monsters)
 				{
 					if (monster->isInHalfHole() && collideBoxWithBox(boxAboveGround, monster->getBox())){
-							monsterIsInHole = true;
-						}
+						monsterIsInHole = true;
+					}
 				}
 
 				foundGroundBox = true;
@@ -414,9 +430,9 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 					halfHoleBoxes[i] = halfHoleBoxes.back();
 					halfHoleBoxes.pop_back();
 
-					groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 255);
-					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/glass.png").id;
-					groundBox.m_texture.texture = GameEngine::ResourceManager::getTexture("Textures/glass.png");
+					groundBox.m_color = GameEngine::ColorRGBA8(255, 0, 0, 0);
+					groundBox.m_textureID = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png").id;
+					groundBox.m_texture.texture = GameEngine::ResourceManager::getTexture("Textures/red_bricks.png");
 
 					//halfHoleBoxes.erase(std::remove(halfHoleBoxes.begin(), halfHoleBoxes.end(), groundBox), halfHoleBoxes.end());
 					holeBoxes.push_back(groundBox);
@@ -441,7 +457,8 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 					break;
 				}
 
-				if (foundGroundBox == false && collideBoxWithBox(groundBox, levelBoxes[i]))
+				if (foundGroundBox == false && collideBoxWithBox(groundBox, levelBoxes[i]) && //and black color glass
+					(levelBoxes[i].getColor().r != 0 || levelBoxes[i].getColor().g || 0 && levelBoxes[i].getColor().b || 0))
 				{
 					groundBox = levelBoxes[i];
 					foundGroundBox = true;
@@ -457,7 +474,8 @@ bool Player::tryDigging(Level& level, std::vector<Player*>& players, std::vector
 				foundGroundBox = false;
 				levelBoxes.push_back(groundBox); // add groundBox back to level boxes
 			}
-			else{
+			else if (foundGroundBox == true)
+			{
 				groundBox.m_color = GameEngine::ColorRGBA8(0, 255, 0, 255);
 
 				//levelBoxes.erase(std::remove(levelBoxes.begin(), levelBoxes.end(), groundBox), levelBoxes.end());
@@ -481,6 +499,50 @@ void Player::playCloseHoleSound(){
 	m_closeHoleSound.play();
 }
 
-void Player::fallThroughHole(Box& holeBox){
+void Player::fallThroughHole(Box& holeBox, float deltaTime){
+	glm::vec4 penetrationDepth;
+	float speed = 4.0f;
 
+	Box boxAboveHole = Box();
+	boxAboveHole.m_dimensions = holeBox.m_dimensions;
+	boxAboveHole.m_position = glm::vec2(holeBox.m_position.x, holeBox.m_position.y + TILE_WIDTH);
+
+	//ground box 2 tiles below holeBox
+	Box groundBoxBelowHole = Box();
+	groundBoxBelowHole.m_dimensions = holeBox.m_dimensions;
+	groundBoxBelowHole.m_position = glm::vec2(holeBox.m_position.x, holeBox.m_position.y - (TILE_WIDTH * 3));
+
+
+	if (m_fallingThroughHoleStep == 1 && collideWithBox(&boxAboveHole, penetrationDepth) && (abs(penetrationDepth.z - penetrationDepth.x) >= TILE_WIDTH || abs(penetrationDepth.z - penetrationDepth.x) >= m_collisionBox.getDimensions().x))
+	{
+		m_fallingThroughHoleStep = 2;
+	}
+	else if (m_fallingThroughHoleStep == 1)
+	{
+		m_direction = glm::normalize(boxAboveHole.getPosition() - m_collisionBox.getPosition());
+	}
+
+	if (m_fallingThroughHoleStep == 2 && collideWithBox(&holeBox, penetrationDepth) && (abs(penetrationDepth.w - penetrationDepth.y) >= TILE_WIDTH || abs(penetrationDepth.w - penetrationDepth.y) >= m_collisionBox.getDimensions().y))
+	{
+		m_fallingThroughHoleStep = 3;
+	}
+	else if (m_fallingThroughHoleStep == 2){
+		m_direction = glm::normalize(holeBox.getPosition() - m_collisionBox.getPosition());
+	}
+
+	if (m_fallingThroughHoleStep == 3 && collideWithBox(&groundBoxBelowHole, penetrationDepth))// && (abs(penetrationDepth.w - penetrationDepth.y) >= TILE_WIDTH || abs(penetrationDepth.w - penetrationDepth.y) >= m_collisionBox.getDimensions().y))
+	{
+		//landed on the ground
+		m_fallingThroughHoleStep = 0;
+	}
+	else if (m_fallingThroughHoleStep == 3)
+	{
+		m_direction = glm::normalize(groundBoxBelowHole.getPosition() - m_collisionBox.getPosition());
+	}
+
+	if (m_fallingThroughHoleStep != 0)
+	{
+		m_collisionBox.m_position += m_direction * speed * deltaTime;
+	}
+	m_moved = true;
 }

@@ -41,7 +41,7 @@ public:
 		return m_color;
 	}
 
-	const GLuint getTextureID() const { return m_textureID; }
+	const GLuint getTextureID() const { return m_texture.texture.id; }
 
 	glm::vec2 getDrawDims() const { return m_drawDims; }
 	void setDrawDims(glm::vec2 drawDims){ m_drawDims = drawDims; }

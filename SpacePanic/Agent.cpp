@@ -447,7 +447,7 @@ void Agent::handleCollisionWithUnmoveableObject(glm::vec4 penetrationDepth){
 }
 
 bool Agent::isSameBox(Box* box, Box* otherBox){
-	return box->getPosition().x == otherBox->getPosition().x && box->getPosition().y == otherBox->getPosition().y && box->getDimensions().x == otherBox->getDimensions().x && box->getDimensions().y == otherBox->getDimensions().y;
+	return (box->getPosition().x == otherBox->getPosition().x && box->getPosition().y == otherBox->getPosition().y && box->getDimensions().x == otherBox->getDimensions().x && box->getDimensions().y == otherBox->getDimensions().y);
 }
 
 bool Agent::isInAir(std::vector<Box>& levelBoxes){
@@ -506,7 +506,7 @@ bool Agent::canWalkForward(std::vector<Box>& levelBoxes, Box& groundBox, Box& bo
 		{
 			float xDepth = abs(penetrationDepth.z - penetrationDepth.x);
 			float yDepth = abs(penetrationDepth.w - penetrationDepth.y);
-			if (yDepth >= groundBox.getDimensions().y-5)
+			if (yDepth >= groundBox.getDimensions().y-15)
 			{
 				foundGroundBox = true;
 			}
