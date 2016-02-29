@@ -1,9 +1,35 @@
-﻿Build started 17.01.2016 16:30:05.
+﻿Build started 29.02.2016 03:36:33.
      1>Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" on node 2 (Build target(s)).
-     1>Lib:
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AudioEngine.cpp IMainGame.cpp ScreenList.cpp
+         AudioEngine.cpp
+         IMainGame.cpp
+         ScreenList.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Release\GameEngine.lib" /NOLOGO /LTCG Release\AudioEngine.obj
+         Release\Camera2D.obj
+         Release\DebugRenderer.obj
+         Release\GameEngineErrors.obj
+         Release\GameEngine.obj
+         Release\GLSLProgram.obj
+         Release\ImageLoader.obj
+         Release\IMainGame.obj
+         Release\InputManager.obj
+         Release\IOManager.obj
+         Release\ParticleBatch2D.obj
+         Release\ParticleEngine2D.obj
+         Release\picoPNG.obj
+         Release\ResourceManager.obj
+         Release\ScreenList.obj
+         Release\Sprite.obj
+         Release\SpriteBatch.obj
+         Release\SpriteFont.obj
+         Release\TextureCache.obj
+         Release\Timing.obj
+         Release\Window.obj
          GameEngine.vcxproj -> C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\Release\GameEngine.lib
      1>Done Building Project "C:\Users\D059264\Documents\Studium\Master\Master\Projektarbeit\SpacePanic\SpacePanic\GameEngine\GameEngine.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.05
+Time Elapsed 00:00:02.36
